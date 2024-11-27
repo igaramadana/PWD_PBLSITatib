@@ -62,7 +62,7 @@ class AuthController
         // Menghancurkan session untuk logout
         session_start();
         session_destroy();
-        header("Location: /index.php"); // Redirect ke halaman login
+        header("Location: ../views/login.php"); // Redirect ke halaman login
         exit();
     }
 }

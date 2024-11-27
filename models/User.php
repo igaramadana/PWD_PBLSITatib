@@ -13,7 +13,10 @@ class User
     public function login($username, $password)
     {
         // Query untuk mencari user berdasarkan username dan memverifikasi password hash
-        $query = "SELECT UserID, Username, Password, Role FROM " . $this->table . " WHERE Username = ? AND Password = CONVERT(VARBINARY, HASHBYTES('SHA2_256', ?))";
+        $query = "SELECT UserID, Username, Password, Role 
+          FROM " . $this->table . " 
+          WHERE Username = ? AND Password = HASHBYTES('SHA2_256', ?)";
+
 
         // Menyiapkan query
         $stmt = sqlsrv_prepare($this->connection, $query, array(&$username, &$password));

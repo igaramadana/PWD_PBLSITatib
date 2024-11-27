@@ -2,10 +2,10 @@
 
 class Database
 {
-    private $serverName = "DESKTOP-8U7FH51"; // Sesuaikan dengan server Anda
+    private $serverName = "pop-os"; // Sesuaikan dengan server Anda
     private $database = "DBEthicX"; // Nama database Anda
-    private $username = ""; // Username SQL Server
-    private $password = ""; // Password SQL Server
+    private $username = "sa"; // Username SQL Server
+    private $password = "Igaramadana123#"; // Password SQL Server
     private $connection;
 
     public function getConnection()

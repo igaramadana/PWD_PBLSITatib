@@ -17,3 +17,4 @@ switch ($action) {
         // Handle 404
         break;
 }
+
