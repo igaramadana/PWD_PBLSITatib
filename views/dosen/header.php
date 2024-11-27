@@ -20,10 +20,10 @@ $currentDate = date('l, d F Y');
 	<meta name="format-detection" content="telephone=no">
 
 	<!-- PAGE TITLE HERE -->
-	<title>Mahasiswa</title>
+	<title>Dashboard - Dosen</title>
 
 	<!-- FAVICONS ICON -->
-	<link rel="shortcut icon" type="image/png" href="../../../template/Fillow/images/favicon.png">
+	<link rel="shortcut icon" type="image/png" href="../template/images/favicon.png">
 	<link href="../template/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
 	<link href="../template/vendor/owl-carousel/owl.carousel.css" rel="stylesheet">
 	<link rel="stylesheet" href="../template/vendor/nouislider/nouislider.min.css">
@@ -161,7 +161,7 @@ $currentDate = date('l, d F Y');
 					</li>
 					<li class="nav-item dropdown  header-profile">
 						<a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
-							<img src="../../../template/Fillow/images/avatar/1.jpg" width="56" alt="">
+							<img src="../template/images/avatar/1.jpg" width="56" alt="">
 						</a>
 						<div class="dropdown-menu dropdown-menu-end">
 							<a href="app-profile.html" class="dropdown-item ai-icon">
