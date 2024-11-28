@@ -1,3 +1,8 @@
+<?php
+session_start();
+$error = isset($_SESSION['error']) ? $_SESSION['error'] : null;
+unset($_SESSION['error']);
+?>
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 
@@ -6,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login - EthicX</title>
-    <link href="views/template/css/style.css" rel="stylesheet">
+    <link href="../assets/template/css/style.css" rel="stylesheet">
 </head>
 
 <body class="vh-100">
@@ -25,9 +30,9 @@
 
                             <!-- Form Login -->
                             <?php if (isset($error)): ?>
-                                <div class="alert alert-danger"><?= $error ?></div>
+                                <div class="alert alert-danger text-center"><?= $error ?></div>
                             <?php endif; ?>
-                            <form action="index.php?action=login" method="POST">
+                            <form action="../process/process_login.php" method="POST">
                                 <div class="mb-3">
                                     <label class="mb-1"><strong>Username</strong></label>
                                     <input type="text" class="form-control" name="username" id="username" placeholder="Masukkan Username Anda." required>
@@ -50,8 +55,8 @@
         </div>
     </div>
 
-    <script src="views/template/vendor/global/global.min.js"></script>
-    <script src="views/template/js/custom.min.js"></script>
+    <script src="../assets/template/vendor/global/global.min.js"></script>
+    <script src="../assets/template/js/custom.min.js"></script>
 </body>
 
 </html>

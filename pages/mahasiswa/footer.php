@@ -14,24 +14,24 @@
         Scripts
     ***********************************-->
 <!-- Required vendors -->
-<script src="../template/vendor/global/global.min.js"></script>
-<script src="../template/vendor/chart.js/Chart.bundle.min.js"></script>
-<script src="../template/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+<script src="../../assets/template/vendor/global/global.min.js"></script>
+<script src="../../assets/template/vendor/chart.js/Chart.bundle.min.js"></script>
+<script src="../../assets/template/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
 
 <!-- Apex Chart -->
-<script src="../template/vendor/apexchart/apexchart.js"></script>
+<script src="../../assets/template/vendor/apexchart/apexchart.js"></script>
 
-<script src="../template/vendor/chart.js/Chart.bundle.min.js"></script>
+<script src="../../assets/template/vendor/chart.js/Chart.bundle.min.js"></script>
 
 <!-- Chart piety plugin files -->
-<script src="../template/vendor/peity/jquery.peity.min.js"></script>
+<script src="../../assets/template/vendor/peity/jquery.peity.min.js"></script>
 <!-- Dashboard 1 -->
-<script src="../template/js/dashboard/dashboard-1.js"></script>
+<script src="../../assets/template/js/dashboard/dashboard-1.js"></script>
 
-<script src="../template/vendor/owl-carousel/owl.carousel.js"></script>
+<script src="../../assets/template/vendor/owl-carousel/owl.carousel.js"></script>
 
-<script src="../template/js/custom.min.js"></script>
-<script src="../template/js/dlabnav-init.js"></script>
+<script src="../../assets/template/js/custom.min.js"></script>
+<script src="../../assets/template/js/dlabnav-init.js"></script>
 <!-- <script src="../template/Fillow/js/demo.js"></script>
 		<script src="../template/Fillow/js/styleSwitcher.js"></script> -->
 <script>

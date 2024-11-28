@@ -1,24 +1,17 @@
 <?php
+// Konfigurasi koneksi database menggunakan driver sqlsrv
 
-class Database
-{
-    private $serverName = "pop-os"; // Sesuaikan dengan server Anda
-    private $database = "DBEthicX"; // Nama database Anda
-    private $username = "sa"; // Username SQL Server
-    private $password = "Igaramadana123#"; // Password SQL Server
-    private $connection;
+$serverName = "pop-os"; // Ganti dengan nama server Anda
+$connectionOptions = array(
+    "Database" => "DBEthicX", // Ganti dengan nama database Anda
+    "Uid" => "sa", // Ganti dengan username SQL Server Anda
+    "PWD" => "Igaramadana123#" // Ganti dengan password SQL Server Anda
+);
 
-    public function getConnection()
-    {
-        // Koneksi ke SQL Server menggunakan sqlsrv_connect
-        $connectionInfo = array("Database" => $this->database, "Uid" => $this->username, "PWD" => $this->password);
-        $this->connection = sqlsrv_connect($this->serverName, $connectionInfo);
+// Membuat koneksi ke database menggunakan sqlsrv_connect
+$conn = sqlsrv_connect($serverName, $connectionOptions);
 
-        if ($this->connection === false) {
-            die(print_r(sqlsrv_errors(), true));
-        }
-
-        return $this->connection;
-    }
+// Mengecek apakah koneksi berhasil
+if ($conn === false) {
+    die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika koneksi gagal
 }
-?>

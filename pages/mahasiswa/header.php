@@ -24,12 +24,12 @@ $currentDate = date('l, d F Y');
 
     <!-- FAVICONS ICON -->
     <link rel="shortcut icon" type="image/png" href="images/favicon.png">
-    <link href="../template/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
-    <link href="../template/vendor/owl-carousel/owl.carousel.css" rel="stylesheet">
-    <link rel="stylesheet" href="../template/vendor/nouislider/nouislider.min.css">
+    <link href="../../assets/template/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
+    <link href="../../assets/template/vendor/owl-carousel/owl.carousel.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/template/vendor/nouislider/nouislider.min.css">
 
     <!-- Style css -->
-    <link href="../template/css/style.css" rel="stylesheet">
+    <link href="../../assets/template/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -43,7 +43,7 @@ $currentDate = date('l, d F Y');
 					<defs>
 					</defs>
 				</svg> -->
-        <img src="../template/images/jti_polinema.png" alt="" class="log-abbr" width="55" height="55">
+        <img src="../../assets/template/images/jti_polinema.png" alt="" class="log-abbr" width="55" height="55">
         <div class="brand-title">
             <h2 class="">EthicX</h2>
             <span class="brand-sub-title">Sistem Informasi Tata Tertib</span>
@@ -161,7 +161,7 @@ $currentDate = date('l, d F Y');
                     </li>
                     <li class="nav-item dropdown  header-profile">
                         <a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
-                            <img src="../template/images/avatar/1.jpg" width="56" alt="">
+                            <img src="../../assets/template/images/avatar/1.jpg" width="56" alt="">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
                             <a href="app-profile.html" class="dropdown-item ai-icon">
