@@ -106,10 +106,10 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                                             </span>
                                         </div>
                                     </div>
-                                    <div>
-                                        <a href="tambah_mahasiswa.php"><button class="btn btn-md btn-success">+ Tambah Data</button></a>
-                                    </div>
                                 </form>
+                                <div>
+                                    <a href="tambah_mahasiswa.php"><button class="btn btn-md btn-success">+ Tambah Data</button></a>
+                                </div>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-responsive-md">
                                         <thead class="bg-primary text-white">

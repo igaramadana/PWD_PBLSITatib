@@ -4,7 +4,6 @@ include '../../config/database.php';
 // Proses jika formulir disubmit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ambil data dari formulir
-    $userID = $_POST['UserID'];  // Ambil UserID yang dimasukkan oleh admin
     $nim = $_POST['NIM'];
     $nama = $_POST['Nama'];
     $jurusan = $_POST['Jurusan'];
@@ -14,26 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['Username'];
     $password = $_POST['Password'];
 
-    // Cek apakah UserID ada di tabel Users
-    $checkUserQuery = "SELECT 1 FROM Users WHERE UserID = ?";
-    $checkUserStmt = sqlsrv_query($conn, $checkUserQuery, array($userID));
-
-    if ($checkUserStmt === false) {
-        die("Error: " . print_r(sqlsrv_errors(), true));
-    }
-
-    $userExists = sqlsrv_fetch_array($checkUserStmt, SQLSRV_FETCH_ASSOC);
-
-    if (!$userExists) {
-        die("Error: UserID yang dimasukkan tidak ada di tabel Users.");
-    }
-
     // Hash password menggunakan algoritma yang lebih aman (misalnya bcrypt)
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-    // Mengonversi hashed password menjadi format binary yang bisa disimpan di SQL Server
-    $binaryPassword = bin2hex($hashedPassword); // Mengubah hash password menjadi format hexadecimal
-    $binaryPassword = strtoupper($binaryPassword); // Menjamin formatnya sesuai dengan SQL Server expectation
 
     // Mulai transaksi untuk memastikan data tersimpan secara atomik
     sqlsrv_begin_transaction($conn);
@@ -43,18 +24,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $role = 'mahasiswa';  // Menambahkan role mahasiswa
         $insertUserQuery = "
             INSERT INTO Users (Username, Password, Role)
+            OUTPUT INSERTED.UserID
             VALUES (?, CONVERT(VARBINARY(MAX), ?), ?)
         ";
 
-        // Kirimkan password dalam bentuk hexadecimal dan role
-        $insertUserStmt = sqlsrv_query($conn, $insertUserQuery, array($username, $binaryPassword, $role));
+        // Kirimkan data username, hashed password, dan role
+        $insertUserStmt = sqlsrv_query($conn, $insertUserQuery, array($username, $hashedPassword, $role));
 
         if ($insertUserStmt === false) {
             throw new Exception("Gagal memasukkan data ke tabel Users: " . print_r(sqlsrv_errors(), true));
         }
 
-        // Dapatkan UserID yang baru saja ditambahkan
-        $userID = sqlsrv_fetch_array(sqlsrv_query($conn, "SELECT SCOPE_IDENTITY() AS UserID"), SQLSRV_FETCH_ASSOC)['UserID'];
+        // Ambil UserID yang baru dimasukkan menggunakan OUTPUT
+        $row = sqlsrv_fetch_array($insertUserStmt, SQLSRV_FETCH_ASSOC);
+        $userID = $row['UserID'];
 
         // Insert data ke tabel Mahasiswa (untuk NIM, Nama, Jurusan, Prodi, Kelas, Angkatan, dan UserID)
         $insertMahasiswaQuery = "
@@ -62,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ";
 
+        // Insert data mahasiswa
         $insertMahasiswaStmt = sqlsrv_query($conn, $insertMahasiswaQuery, array($userID, $nim, $nama, $jurusan, $prodi, $kelas, $angkatan));
 
         if ($insertMahasiswaStmt === false) {
@@ -126,10 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="card-body">
                                 <form action="tambah_mahasiswa.php" method="post" class="form-container">
-                                    <div class="form-group">
-                                        <label for="UserID">User ID</label>
-                                        <input type="text" class="form-control" id="UserID" name="UserID" required>
-                                    </div>
                                     <div class="form-group">
                                         <label for="NIM">NIM</label>
                                         <input type="text" class="form-control" id="NIM" name="NIM" required>

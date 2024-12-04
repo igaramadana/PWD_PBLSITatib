@@ -2,7 +2,7 @@
 include '../../config/database.php';
 
 // Jumlah data per halaman
-$perPage = 10;
+$perPage = 2;
 
 // Mengambil nomor halaman dari URL, jika tidak ada maka default ke halaman 1
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -97,7 +97,7 @@ $totalPages = ceil($totalDosen / $perPage);
                                 <h4 class="card-title">Daftar Dosen</h4>
                             </div>
                             <div class="card-body">
-                                <form action="daftar_dosen.php" method="get" class="d-flex justify-content-between align-items-center mb-3">
+                                <!-- <form action="daftar_dosen.php" method="get" class="d-flex justify-content-between align-items-center mb-3"> -->
                                     <div class="search-area w-50">
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari disini...">
