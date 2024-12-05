@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['Password'];
 
     // Hash password menggunakan algoritma yang lebih aman (misalnya bcrypt)
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // Mulai transaksi untuk memastikan data tersimpan secara atomik
     sqlsrv_begin_transaction($conn);
