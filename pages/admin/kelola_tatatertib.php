@@ -6,7 +6,7 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Halaman yang diminta
 $startFrom = ($page - 1) * $perPage; // Menentukan data yang akan diambil
 
 // Menangani pencarian (jika ada)
-$search = isset($_GET['search']) ? $_GET['search'] : '';
+$search = isset($_GET['search']) ? $_GET['search']:'';
 
 // Query untuk mengambil data pelanggaran dengan pencarian dan pagination
 $sql = "SELECT Pelanggaran.PelanggaranID, Pelanggaran.NamaPelanggaran, TingkatPelanggaran.Tingkat 
@@ -254,7 +254,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    <!-- <script>
+    <script>
         // Mengambil data dari tombol Edit dan memasukkannya ke dalam modal
         $('#editModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Tombol yang memicu modal
@@ -287,7 +287,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             // Mengarahkan link Hapus ke URL yang benar dengan ID yang sesuai
             modal.find('#deleteLink').attr('href', '../../process/admin/process_hapus_pelanggaran.php?id=' + pelanggaranID);
         });
-    </script> -->
+    </script>
 
 </body>
 
