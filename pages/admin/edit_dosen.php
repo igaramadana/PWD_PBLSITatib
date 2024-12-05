@@ -96,26 +96,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="card-body">
                                 <form action="edit_dosen.php?id=<?php echo $dosenID; ?>" method="post">
                                     <div class="form-group mb-3">
-                                        <label for="NIP">NIP</label>
+                                        <label for="NIP"><strong>NIP</strong></label>
                                         <input type="text" class="form-control" id="NIP" name="NIP" value="<?php echo $dosen['NIP']; ?>" required>
                                     </div>
 
                                     <div class="form-group mb-3">
-                                        <label for="Nama">Nama Dosen</label>
+                                        <label for="Nama"><strong>Nama Dosen</strong></label>
                                         <input type="text" class="form-control" id="Nama" name="Nama" value="<?php echo $dosen['Nama']; ?>" required>
                                     </div>
 
                                     <div class="form-group mb-3">
-                                        <label for="Username">Username</label>
+                                        <label for="Username"><strong>Username</strong></label>
                                         <input type="text" class="form-control" id="Username" name="Username" value="<?php echo $dosen['Username']; ?>" required>
                                     </div>
 
                                     <div class="form-group mb-3">
-                                        <label for="Password">Password</label>
+                                        <label for="Password"><strong>Password</strong></label>
                                         <input type="password" class="form-control" id="Password" name="Password" value="<?php echo $dosen['Password']; ?>" required>
                                     </div>
 
-                                    <div class="text-center">
+                                    <div class="text-end">
                                         <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan</button>
                                     </div>
                                 </form>
