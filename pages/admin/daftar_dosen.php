@@ -120,7 +120,6 @@ $totalPages = ceil($totalDosen / $perPage);
                                 </a>
                             </div>
                         </div>
-
                         <!-- Sort Filter -->
                         <form action="daftar_dosen.php" method="get" class="mb-3">
                             <div class="d-flex justify-content-end">
@@ -191,6 +190,7 @@ $totalPages = ceil($totalDosen / $perPage);
         </div>
     </div>
 </div>
+
 
     <!-- Footer Scripts -->
     <?php include("footer.php"); ?>
