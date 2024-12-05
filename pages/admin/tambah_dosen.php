@@ -9,32 +9,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['Username'];
     $password = $_POST['Password'];
 
-    // Hash password menggunakan password_hash (lebih aman)
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // Hash password menggunakan algoritma yang lebih aman (misalnya bcrypt)
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
     // Mulai transaksi untuk memastikan data tersimpan secara atomik
     sqlsrv_begin_transaction($conn);
 
     try {
-        // Validasi username sudah ada atau belum
-        $sqlCheck = "SELECT COUNT(*) AS Count FROM Users WHERE Username = ?";
-        $checkStmt = sqlsrv_query($conn, $sqlCheck, array($username));
-        
-        if ($checkStmt === false) {
-            throw new Exception("Gagal mengecek username: " . print_r(sqlsrv_errors(), true));
-        }
-        
-        $row = sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC);
-        if ($row['Count'] > 0) {
-            throw new Exception("Username '$username' sudah terdaftar. Silakan pilih username lain.");
-        }
-
         // Insert data ke tabel Users (untuk username, password, dan role)
-        $role = 'dosen';  // Role yang ditetapkan untuk dosen
+        $role = 'dosen';  // Atau sesuaikan dengan nilai yang sesuai
         $insertUserQuery = "
             INSERT INTO Users (Username, Password, Role)
             OUTPUT INSERTED.UserID
-            VALUES (?, ?, ?)
+            VALUES (?, CONVERT(VARBINARY(MAX), ?), ?)
         ";
 
         // Kirimkan data username, hashed password, dan role
@@ -127,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <input type="password" class="form-control" id="Password" name="Password" placeholder="Masukkan Password..." required>
                                     </div>
 
-                                    <div class="text-center">
+                                    <div class="text-end">
                                         <button type="submit" class="btn btn-success btn-md mt-3">Tambah Dosen</button>
                                     </div>
                                 </form>
