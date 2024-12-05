@@ -64,11 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Dosen</title>
 </head>
+
 <body>
     <div id="main-wrapper">
         <?php include("header.php"); ?>
@@ -92,27 +94,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="card-body">
                                 <form action="tambah_dosen.php" method="post">
-                                    <div class="form-group">
-                                        <label for="NIP">NIP</label>
-                                        <input type="text" class="form-control" id="NIP" name="NIP" required>
+                                    <div class="form-group mb-3">
+                                        <label for="NIP"><strong>NIP</strong></label>
+                                        <input type="text" class="form-control" id="NIP" name="NIP" placeholder="Masukkan NIP..." required>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="Nama">Nama Dosen</label>
-                                        <input type="text" class="form-control" id="Nama" name="Nama" required>
+                                    <div class="form-group mb-3">
+                                        <label for="Nama"><strong>Nama Dosen</strong></label>
+                                        <input type="text" class="form-control" id="Nama" name="Nama" placeholder="Masukkan Nama Dosen..." required>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="Username">Username</label>
-                                        <input type="text" class="form-control" id="Username" name="Username" required>
+                                    <div class="form-group mb-3">
+                                        <label for="Username"><strong>Username</strong></label>
+                                        <input type="text" class="form-control" id="Username" name="Username" placeholder="Masukkan Username..." required>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="Password">Password</label>
-                                        <input type="password" class="form-control" id="Password" name="Password" required>
+                                    <div class="form-group mb-3">
+                                        <label for="Password"><strong>Password</strong></label>
+                                        <input type="password" class="form-control" id="Password" name="Password" placeholder="Masukkan Password..." required>
                                     </div>
 
-                                    <button type="submit" class="btn btn-success mt-3">Tambah Dosen</button>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-success btn-md mt-3">Tambah Dosen</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -124,4 +128,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php include("footer.php"); ?>
     </div>
 </body>
+
 </html>
