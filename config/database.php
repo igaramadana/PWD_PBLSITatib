@@ -1,9 +1,9 @@
 <?php
-$serverName = "pop-os"; 
+$serverName = "PINED"; 
 $connectionOptions = array(
     "Database" => "DBEthicX",
     "Uid" => "sa", 
-    "PWD" => "Igaramadana123#" 
+    "PWD" => "nopakepin21" 
 );
 
 $conn = sqlsrv_connect($serverName, $connectionOptions);
