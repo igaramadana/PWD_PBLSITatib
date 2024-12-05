@@ -3,8 +3,8 @@ session_start();
 include('../config/database.php'); // Koneksi ke database
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
     // Query untuk mengambil data user berdasarkan username
     $sql = "SELECT UserID, Username, Password, Role 
@@ -21,11 +21,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validasi username dan password
     if ($user) {
-        // Buat hash dari password yang diinputkan pengguna untuk membandingkan dengan database
-        $hashedPassword = hash('sha256', $password, true);
-
-        if ($user['Password'] === $hashedPassword) {
-            // Set session dasar
+        // Gunakan password_verify untuk memverifikasi password
+        if (password_verify($password, $user['Password'])) {
+            // Jika password cocok, lanjutkan proses login
             $_SESSION['user_id'] = $user['UserID'];
             $_SESSION['username'] = $user['Username'];
             $_SESSION['role'] = $user['Role'];
