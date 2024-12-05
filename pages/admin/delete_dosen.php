@@ -9,7 +9,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     sqlsrv_begin_transaction($conn);
 
     try {
-        // 1. Mengambil UserID yang terkait dengan DosenID
         $getUserIDQuery = "SELECT UserID FROM Dosen WHERE DosenID = ?";
         $getUserIDStmt = sqlsrv_query($conn, $getUserIDQuery, array($dosenID));
 

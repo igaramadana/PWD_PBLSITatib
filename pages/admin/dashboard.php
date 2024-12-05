@@ -1,3 +1,7 @@
+<?php 
+include "../../config/database.php";
+?>
+
 <body>
 
     <!--*******************
@@ -55,34 +59,48 @@
                         </div>
                     </div>
 
-                    <!-- Point Pelanggaran -->
+                    <!-- Total Mahasiswa -->
+                    <?php
+                    // Mengambil jumlah mahasiswa dari tabel Mahasiswa
+                    $queryMahasiswa = "SELECT COUNT(*) AS total_mahasiswa FROM Mahasiswa";
+                    $resultMahasiswa = sqlsrv_query($conn, $queryMahasiswa);
+                    $mahasiswaRow = sqlsrv_fetch_array($resultMahasiswa, SQLSRV_FETCH_ASSOC);
+                    $totalMahasiswa = $mahasiswaRow['total_mahasiswa'];
+                    ?>
                     <div class="col-xl-3 col-lg-6 col-sm-6">
                         <div class="widget-stat card bg-success">
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center">
                                     <span class="me-3">
-                                        <i class="flaticon-381-diamond fs-3 text-white"></i>
+                                        <i class="fa-solid fa-graduation-cap text-white fs-3"></i>
                                     </span>
                                     <div class="media-body text-white text-end">
-                                        <p class="mb-1 fw-bold">Point Pelanggaran</p>
-                                        <h3 class="text-white mb-0">12</h3>
+                                        <p class="mb-1 fw-bold">Total Mahasiswa</p>
+                                        <h3 class="text-white mb-0"><?php echo $totalMahasiswa; ?></h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Status Terkini -->
+                    <!-- Total Dosen -->
+                    <?php
+                    // Mengambil jumlah dosen dari tabel Dosen
+                    $queryDosen = "SELECT COUNT(*) AS total_dosen FROM Dosen";
+                    $resultDosen = sqlsrv_query($conn, $queryDosen);
+                    $dosenRow = sqlsrv_fetch_array($resultDosen, SQLSRV_FETCH_ASSOC);
+                    $totalDosen = $dosenRow['total_dosen'];
+                    ?>
                     <div class="col-xl-3 col-lg-6 col-sm-6">
                         <div class="widget-stat card bg-info">
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center">
                                     <span class="me-3">
-                                        <i class="flaticon-381-heart fs-3 text-white"></i>
+                                        <i class="fa-solid fa-person text-white fs-3"></i>
                                     </span>
                                     <div class="media-body text-white text-end">
-                                        <p class="mb-1 fw-bold text-white">Status Terkini</p>
-                                        <h3 class="text-white mb-0">Ringan</h3>
+                                        <p class="mb-1 fw-bold">Total Dosen</p>
+                                        <h3 class="text-white mb-0"><?php echo $totalDosen; ?></h3>
                                     </div>
                                 </div>
                             </div>
@@ -95,10 +113,10 @@
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center">
                                     <span class="me-3">
-                                        <i class="flaticon-381-user-7 fs-3 text-white"></i>
+                                        <i class="fa-solid fa-code-pull-request text-white fs-3"></i>
                                     </span>
                                     <div class="media-body text-white text-end">
-                                        <p class="mb-1 fw-bold">Sanksi Saat Ini</p>
+                                        <p class="mb-1 fw-bold">Request Pelanggaran</p>
                                         <h3 class="text-white mb-0">Tidak ada</h3>
                                     </div>
                                 </div>

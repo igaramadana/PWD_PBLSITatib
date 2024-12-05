@@ -2,7 +2,7 @@
 include '../../config/database.php';
 
 // Jumlah data per halaman
-$perPage = 2;
+$perPage = 10;
 
 // Mengambil nomor halaman dari URL, jika tidak ada maka default ke halaman 1
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -62,8 +62,8 @@ $totalDosen = $totalRow['total'];
 // Menghitung total halaman
 $totalPages = ceil($totalDosen / $perPage);
 ?>
-
 <body>
+
     <!-- Preloader -->
     <div id="preloader">
         <div class="lds-ripple">
@@ -75,7 +75,10 @@ $totalPages = ceil($totalDosen / $perPage);
     <!-- Main wrapper -->
     <div id="main-wrapper">
 
+        <!-- Header -->
         <?php include("header.php"); ?>
+
+        <!-- Sidebar -->
         <?php include("sidebar.php"); ?>
 
         <!-- Content body -->
@@ -97,19 +100,36 @@ $totalPages = ceil($totalDosen / $perPage);
                                 <h4 class="card-title">Daftar Dosen</h4>
                             </div>
                             <div class="card-body">
-                                <!-- <form action="daftar_dosen.php" method="get" class="d-flex justify-content-between align-items-center mb-3"> -->
-                                    <div class="search-area w-50">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari disini...">
-                                            <span class="input-group-text">
-                                                <button type="submit" class="btn btn-link"><i class="flaticon-381-search-2"></i></button>
-                                            </span>
-                                        </div>
+                                <!-- Pencarian dan Tombol Tambah Data -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <form action="daftar_dosen.php" method="get" class="d-flex">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari disini...">
+                                                <span class="input-group-append">
+                                                    <button type="submit" class="btn btn-primary">Search</button>
+                                                </span>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div>
+                                    <div class="col-md-6 text-end">
                                         <a href="tambah_dosen.php"><button class="btn btn-md btn-success">+ Tambah Data</button></a>
                                     </div>
+                                </div>
+
+                                <!-- Filter A-Z dan Z-A -->
+                                <form action="daftar_dosen.php" method="get" class="mb-3">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="input-group w-25">
+                                            <select name="sort" class="form-control" onchange="this.form.submit()">
+                                                <option value="">Sort by</option>
+                                                <option value="asc" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'asc' ? 'selected' : ''; ?>>A-Z</option>
+                                                <option value="desc" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'desc' ? 'selected' : ''; ?>>Z-A</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </form>
+
                                 <div class="table-responsive">
                                     <table class="table table-striped table-responsive-md">
                                         <thead class="bg-primary text-white">
@@ -133,8 +153,8 @@ $totalPages = ceil($totalDosen / $perPage);
                                                 echo "<td class='text-center'>{$dosen['Nama']}</td>";
                                                 echo "<td class='text-center'>{$dosen['Username']}</td>";
                                                 echo "<td class='text-center'>
-                                                        <a href='edit_dosen.php?id={$dosen['DosenID']}' class='btn btn-warning'>Edit</a>
-                                                        <a href='delete_dosen.php?id={$dosen['DosenID']}' class='btn btn-danger' onclick='return confirm(\"Apakah Anda yakin ingin menghapus dosen ini?\")'>Hapus</a>
+                                                        <a href='edit_dosen.php?id={$dosen['DosenID']}' class='btn btn-warning btn-sm'><i class='fa-solid fa-pencil'></i></a>
+                                                        <a href='delete_dosen.php?id={$dosen['DosenID']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Apakah Anda yakin ingin menghapus dosen ini?\")'><i class='fa-solid fa-trash'></i></a>
                                                       </td>";
                                                 echo "</tr>";
                                             }
@@ -144,11 +164,11 @@ $totalPages = ceil($totalDosen / $perPage);
                                 </div>
                             </div>
                             <!-- Pagination Section -->
-                            <nav class="pb-2">
+                            <nav class="pb-2 text-center">
                                 <ul class="pagination pagination-gutter justify-content-center">
                                     <!-- Halaman Sebelumnya -->
-                                    <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
+                                    <li class="page-item<?php echo $page <= 1 ? ' disabled' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo urlencode($sort); ?>">
                                             <i class="la la-angle-left"></i>
                                         </a>
                                     </li>
@@ -156,13 +176,13 @@ $totalPages = ceil($totalDosen / $perPage);
                                     <!-- Halaman 1 sampai Total Halaman -->
                                     <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
                                         <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
+                                            <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo urlencode($sort); ?>"><?php echo $i; ?></a>
                                         </li>
                                     <?php endfor; ?>
 
                                     <!-- Halaman Berikutnya -->
-                                    <li class="page-item <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
+                                    <li class="page-item <?php echo $page >= $totalPages ? ' disabled' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo urlencode($sort); ?>">
                                             <i class="la la-angle-right"></i>
                                         </a>
                                     </li>
@@ -173,9 +193,11 @@ $totalPages = ceil($totalDosen / $perPage);
                 </div>
             </div>
         </div>
-
-        <?php include("footer.php"); ?>
     </div>
+
+    <!-- Footer Scripts -->
+    <?php include("footer.php"); ?>
+
 </body>
 
 </html>

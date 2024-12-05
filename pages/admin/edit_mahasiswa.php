@@ -103,13 +103,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <form action="edit_mahasiswa.php?id=<?php echo $MhsID; ?>" method="post">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label for="NIM">NIM</label>
                                                 <input type="text" class="form-control" id="NIM" name="NIM" value="<?php echo htmlspecialchars($mahasiswa['NIM']); ?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label for="Nama">Nama</label>
                                                 <input type="text" class="form-control" id="Nama" name="Nama" value="<?php echo htmlspecialchars($mahasiswa['Nama']); ?>" required>
                                             </div>
@@ -118,12 +118,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label for="Jurusan">Jurusan</label>
                                                 <input type="text" class="form-control" id="Jurusan" name="Jurusan" value="<?php echo htmlspecialchars($mahasiswa['Jurusan']); ?>" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                             <div class="form-group">
                                                 <label for="Prodi">Prodi</label>
                                                 <input type="text" class="form-control" id="Prodi" name="Prodi" value="<?php echo htmlspecialchars($mahasiswa['Prodi']); ?>" required>
@@ -133,21 +133,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label for="Kelas">Kelas</label>
                                                 <input type="text" class="form-control" id="Kelas" name="Kelas" value="<?php echo htmlspecialchars($mahasiswa['Kelas']); ?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label for="Username">Username</label>
                                                 <input type="text" class="form-control" id="Username" name="Username" value="<?php echo htmlspecialchars($mahasiswa['Username']); ?>" required>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
-                                    <a href="daftar_mahasiswa.php" class="btn btn-secondary">Kembali</a>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan</button>
+                                        <a href="daftar_mahasiswa.php" class="btn btn-danger"><i class="fa-solid fa-backward"></i> Kembali</a>
+                                    </div>
                                 </form>
                             </div>
                         </div>

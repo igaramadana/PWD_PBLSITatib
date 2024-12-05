@@ -139,8 +139,8 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                                                 echo "<td class='text-center'>{$mahasiswa['Kelas']}</td>";
                                                 echo "<td class='text-center'>{$mahasiswa['Username']}</td>";
                                                 echo "<td class='text-center'>
-                                                        <a href='edit_mahasiswa.php?id={$mahasiswa['MhsID']}' class='btn btn-warning btn-sm'>Edit</a>
-                                                        <a href='delete_mahasiswa.php?id={$mahasiswa['MhsID']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Apakah Anda yakin ingin menghapus mahasiswa ini?\")'>Hapus</a>
+                                                        <a href='edit_mahasiswa.php?id={$mahasiswa['MhsID']}' class='btn btn-warning btn-sm'><i class='fa-solid fa-pencil'></i></a>
+                                                        <a href='delete_mahasiswa.php?id={$mahasiswa['MhsID']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Apakah Anda yakin ingin menghapus mahasiswa ini?\")'><i class='fa-solid fa-trash'></i></a>
                                                       </td>";
                                                 echo "</tr>";
                                             }
@@ -179,9 +179,8 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                 </div>
             </div>
         </div>
-
-        <?php include("footer.php"); ?>
     </div>
+    <?php include("footer.php"); ?>
 </body>
 
 </html>
