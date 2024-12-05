@@ -62,7 +62,6 @@ $totalMahasiswa = $totalRow['total'];
 // Menghitung total halaman
 $totalPages = ceil($totalMahasiswa / $perPage);
 ?>
-
 <body>
     <!-- Preloader -->
     <div id="preloader">
@@ -98,20 +97,25 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                             </div>
                             <div class="card-body">
                                 <form action="daftar_mahasiswa.php" method="get" class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="search-area w-50">
+                                    <!-- Search Area -->
+                                    <div class="search-area w-75">
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari disini...">
-                                            <span class="input-group-text">
-                                                <button type="submit" class="btn btn-link"><i class="flaticon-381-search-2"></i></button>
-                                            </span>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa-solid fa-search"></i>
+                                            </button>
                                         </div>
                                     </div>
+
+                                    <!-- Add Data Button -->
+                                    <div class="add-button">
+                                        <a href="tambah_mahasiswa.php" class="btn btn-md btn-success d-flex align-items-center">
+                                            <i class="fa-solid fa-plus me-2"></i> Tambah Data
+                                        </a>
+                                    </div>
                                 </form>
-                                <div>
-                                    <a href="tambah_mahasiswa.php"><button class="btn btn-md btn-success">+ Tambah Data</button></a>
-                                </div>
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-responsive-md">
+                                    <table class="table table-striped">
                                         <thead class="bg-primary text-white">
                                             <tr>
                                                 <th class="text-center">No.</th>
@@ -131,7 +135,7 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                                             foreach ($mahasiswaList as $mahasiswa) {
                                                 echo "<tr>";
                                                 echo "<td class='text-center'>" . $no++ . "</td>";
-                                                echo "<td class='text-center'><img src='../../assets/template/images/avatar/1.jpg' alt='Foto Profil' class='img-fluid' width='50' height='50'></td>"; // Ganti dengan path foto profil yang sesuai
+                                                echo "<td class='text-center'><img src='../../assets/template/images/avatar/1.jpg' alt='Foto Profil' class='img-fluid rounded-circle' width='50' height='50'></td>";
                                                 echo "<td class='text-center'>{$mahasiswa['NIM']}</td>";
                                                 echo "<td class='text-center'>{$mahasiswa['Nama']}</td>";
                                                 echo "<td class='text-center'>{$mahasiswa['Jurusan']}</td>";
@@ -139,8 +143,15 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                                                 echo "<td class='text-center'>{$mahasiswa['Kelas']}</td>";
                                                 echo "<td class='text-center'>{$mahasiswa['Username']}</td>";
                                                 echo "<td class='text-center'>
-                                                        <a href='edit_mahasiswa.php?id={$mahasiswa['MhsID']}' class='btn btn-warning btn-sm'><i class='fa-solid fa-pencil'></i></a>
-                                                        <a href='delete_mahasiswa.php?id={$mahasiswa['MhsID']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Apakah Anda yakin ingin menghapus mahasiswa ini?\")'><i class='fa-solid fa-trash'></i></a>
+                                                        <div class='dropdown'>
+                                                            <button class='btn btn-secondary dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                                                                <i class='fa-solid fa-ellipsis-vertical'></i>
+                                                            </button>
+                                                            <ul class='dropdown-menu'>
+                                                                <li><a class='dropdown-item' href='edit_mahasiswa.php?id={$mahasiswa['MhsID']}'><i class='fa-solid fa-pencil text-warning me-2'></i>Edit</a></li>
+                                                                <li><a class='dropdown-item' href='delete_mahasiswa.php?id={$mahasiswa['MhsID']}' onclick='return confirm(\"Apakah Anda yakin ingin menghapus mahasiswa ini?\")'><i class='fa-solid fa-trash text-danger me-2'></i>Hapus</a></li>
+                                                            </ul>
+                                                        </div>
                                                       </td>";
                                                 echo "</tr>";
                                             }
@@ -152,21 +163,16 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                             <!-- Pagination Section -->
                             <nav class="pb-2">
                                 <ul class="pagination pagination-gutter justify-content-center">
-                                    <!-- Halaman Sebelumnya -->
                                     <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
                                         <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
                                             <i class="la la-angle-left"></i>
                                         </a>
                                     </li>
-
-                                    <!-- Halaman 1 sampai Total Halaman -->
                                     <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
                                         <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
                                             <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
                                         </li>
                                     <?php endfor; ?>
-
-                                    <!-- Halaman Berikutnya -->
                                     <li class="page-item <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
                                         <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
                                             <i class="la la-angle-right"></i>
@@ -182,5 +188,3 @@ $totalPages = ceil($totalMahasiswa / $perPage);
     </div>
     <?php include("footer.php"); ?>
 </body>
-
-</html>
