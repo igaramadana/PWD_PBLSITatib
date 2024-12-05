@@ -14,7 +14,7 @@
 
             <!-- Manajemen Pengguna Menu -->
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">
                     <i class="bi bi-people-fill"></i>
                     <span class="nav-text">Manajemen User</span>
                 </a>
@@ -26,7 +26,7 @@
 
             <!-- Peraturan dan Tata Tertib -->
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">
                     <i class="bi bi-bookmark-fill"></i>
                     <span class="nav-text">Peraturan</span>
                 </a>
@@ -38,7 +38,7 @@
 
             <!-- Pelanggaran Menu -->
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">
                     <i class="bi bi-exclamation-circle-fill"></i>
                     <span class="nav-text">Pelanggaran</span>
                 </a>
@@ -58,7 +58,7 @@
 
             <!-- Pengaturan Sistem Menu -->
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">
                     <i class="bi bi-gear-fill"></i>
                     <span class="nav-text">Pengaturan Sistem</span>
                 </a>
@@ -80,7 +80,7 @@
 
             <!-- Logout Button -->
             <li>
-                <a href="#" id="logoutBtn" aria-expanded="false">
+                <a href="../logout.php" id="logoutBtn" aria-expanded="false">
                     <i class="bi bi-box-arrow-left text-danger"></i>
                     <span class="nav-text text-danger">Logout</span>
                 </a>
@@ -88,11 +88,12 @@
         </ul>
     </div>
 </div>
+
 <script>
     document.getElementById('logoutBtn').addEventListener('click', function () {
         const confirmLogout = confirm('Apakah Anda yakin ingin keluar dari aplikasi?');
         if (confirmLogout) {
-            window.location.href = '../login.php'; // Ubah URL ke halaman logout sesuai kebutuhan
+            window.location.href = '../logout.php'; // Pastikan URL logout benar
         }
     });
 </script>

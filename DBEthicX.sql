@@ -88,9 +88,12 @@ CREATE TABLE Dosen
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 
-SELECT * FROM Dosen;
-INSERT INTO Dosen (UserID, NIP, Nama) VALUES
-(5, '87654321', 'Dr. Spongebob');
+SELECT *
+FROM Dosen;
+INSERT INTO Dosen
+    (UserID, NIP, Nama)
+VALUES
+    (5, '87654321', 'Dr. Spongebob');
 
 CREATE TABLE Admin
 (
@@ -110,14 +113,93 @@ CREATE TABLE Users
 );
 
 SELECT Dosen.DosenID, Dosen.NIP, Dosen.Nama AS NamaDosen, Users.Username, Users.Role
-    FROM Dosen
+FROM Dosen
     INNER JOIN Users ON Dosen.UserID = Users.UserID
 WHERE Role = 'dosen';
 
 SELECT *
 FROM Users;
 
-SELECT * FROM Dosen;
+SELECT *
+FROM Dosen;
 
 DELETE FROM Dosen
 WHERE UserID IS NULL;
+
+-- Table Pelanggaran
+-- Membuat Tabel Pelanggaran
+CREATE TABLE Pelanggaran
+(
+    PelanggaranID INT IDENTITY(1,1) PRIMARY KEY,
+    -- Kolom auto-increment
+    NamaPelanggaran VARCHAR(200),
+    -- Nama pelanggaran (panjang maksimal 200 karakter)
+    Tingkat INT,
+    -- Tingkat pelanggaran (misalnya: tingkat 1, 2, 3, dll)
+    SanksiID INT NOT NULL,
+    -- SanksiID yang menghubungkan ke tabel Sanksi
+    CONSTRAINT fk_sanksi_id FOREIGN KEY (SanksiID) REFERENCES Sanksi(SanksiID)
+    -- Constraint FOREIGN KEY
+);
+
+
+CREATE TABLE Sanksi
+(
+    SanksiID INT IDENTITY
+(1,1) PRIMARY KEY,
+    NamaSanksi varchar
+(200)
+);
+
+ALTER TABLE Pelanggaran
+DROP COLUMN SanksiID;
+
+
+ALTER TABLE Sanksi
+ADD PelanggaranID INT
+CONSTRAINT fk_pelanggaran_id
+FOREIGN KEY (PelanggaranID) REFERENCES Pelanggaran(PelanggaranID);
+
+SELECT *
+FROM Sanksi;
+
+DROP TABLE Pelanggaran;
+
+CREATE TABLE Pelanggaran
+(
+    PelanggaranID INT IDENTITY(1,1) PRIMARY KEY,
+    NamaPelanggaran VARCHAR(255),
+    TingkatID INT
+        CONSTRAINT fk_tingkat_id2 FOREIGN KEY (TingkatID) REFERENCES TingkatPelanggaran(TingkatID)
+)
+
+CREATE TABLE TingkatPelanggaran
+(
+    TingkatID INT IDENTITY(1,1) PRIMARY KEY,
+    Tingkat INT,
+)
+
+CREATE TABLE Sanksi
+(
+    SanksiID INT IDENTITY(1,1) PRIMARY KEY,
+    TingkatID INT,
+    NamaSanksi VARCHAR(255)
+    CONSTRAINT fk_tingkat_id
+    FOREIGN KEY (TingkatID) REFERENCES TingkatPelanggaran(TingkatID)
+)
+
+ALTER TABLE TingkatPelanggaran
+ADD SanksiID INT CONSTRAINT fk_sanksi_id
+FOREIGN KEY (SanksiID) REFERENCES Sanksi(SanksiID)
+
+ALTER TABLE Sanksi
+ADD CONSTRAINT fk_tingkat_id
+FOREIGN KEY (TingkatID) REFERENCES TingkatPelanggaran(TingkatID)
+
+INSERT INTO TingkatPelanggaran (Tingkat)
+VALUES (1),(2),(3),(4),(5);
+
+SELECT * FROM Pelanggaran;
+INSERT INTO Pelanggaran (NamaPelanggaran, TingkatID)
+VALUES ('Berkomunikasi dengan tidak sopan, baik tertulis atau tidak
+tertulis kepada mahasiswa, dosen, karyawan, atau orang lain', 5);

@@ -254,7 +254,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    <script>
+    <!-- <script>
         // Mengambil data dari tombol Edit dan memasukkannya ke dalam modal
         $('#editModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Tombol yang memicu modal
@@ -267,12 +267,6 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             modal.find('#editPelanggaranID').val(pelanggaranID);
             modal.find('#editNamaPelanggaran').val(namaPelanggaran);
             modal.find('#editTingkat').val(tingkat);
-        });
-
-        // Menangani tombol close pada modal
-        document.querySelector('.btn-close').addEventListener('click', function() {
-            // Menutup modal tanpa reload halaman
-            $('#editModal').modal('hide');
         });
 
         // Jika modal ditutup dengan cara lain (misalnya klik di luar modal atau tekan Esc)
@@ -293,7 +287,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             // Mengarahkan link Hapus ke URL yang benar dengan ID yang sesuai
             modal.find('#deleteLink').attr('href', '../../process/admin/process_hapus_pelanggaran.php?id=' + pelanggaranID);
         });
-    </script>
+    </script> -->
 
 </body>
 

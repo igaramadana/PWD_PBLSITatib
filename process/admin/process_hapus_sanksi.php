@@ -15,13 +15,13 @@ if (isset($_GET['id'])) {
     // Cek apakah penghapusan berhasil
     if ($stmt) {
         // Redirect kembali ke halaman kelola sanksi dengan status berhasil
-        header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php?status=deleted");
+        header("Location: ../../pages/admin/kelola_sanksi.php?status=deleted");
     } else {
         // Jika gagal, redirect dengan status error
-        header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php?status=error");
+        header("Location: ../../pages/admin/kelola_sanksi.php?status=error");
     }
 } else {
     // Jika ID tidak ditemukan, redirect ke halaman kelola sanksi
-    header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php");
+    header("Location: ../../pages/admin/kelola_sanksi.php");
 }
 ?>
