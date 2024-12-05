@@ -16,7 +16,7 @@
 
     <!-- PAGE TITLE HERE -->
     <title>Register Mahasiswa</title>
-
+ 
     <!-- FAVICONS ICON -->
     <link rel="shortcut icon" type="image/png" href="images/favicon.png">
     <link href="../assets/template/css/style.css" rel="stylesheet">

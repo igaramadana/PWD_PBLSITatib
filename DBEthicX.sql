@@ -15,8 +15,9 @@ INSERT INTO Users
     (Username, Password, Role)
 VALUES
     ('admin', HASHBYTES('SHA2_256', 'admin1234'), 'admin'),
-    ('spongebob', HASHBYTES('SHA2_256', 'dosen1234'), 'dosen'),
-    ('patrik', HASHBYTES('SHA2_256', 'mahasiswa1234'), 'mahasiswa'),
+    ('jaksmiths', HASHBYTES('SHA2_256', 'dosen1234'), 'dosen'),
+    ('jakcrzy', HASHBYTES('SHA2_256', 'mahasiswa1987
+    '), 'mahasiswa'),
     ('igaramadana', HASHBYTES('SHA2_256', 'igaramadana'), 'admin');
 
 SELECT *

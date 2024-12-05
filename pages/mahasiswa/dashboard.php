@@ -29,167 +29,151 @@ Main wrapper start
         <!--**********************************
     Content body start
 ***********************************-->
-        <div class="content-body">
-            <!-- row -->
-            <div class="container-fluid">
-                <div class="row page-titles">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Dashboard</a></li>
-                    </ol>
-                </div>
-                <div class="row gy-4">
-                    <!-- Total Pelanggaran -->
-                    <div class="col-xl-3 col-lg-6 col-sm-6">
-                        <div class="widget-stat card bg-danger">
-                            <div class="card-body p-4">
-                                <div class="d-flex align-items-center">
-                                    <span class="me-3">
-                                        <i class="flaticon-381-calendar-1 fs-3 text-white"></i>
-                                    </span>
-                                    <div class="media-body text-white text-end">
-                                        <p class="mb-1 fw-bold">Total Pelanggaran</p>
-                                        <h3 class="text-white mb-0">76</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Dashboard</a></li>
+            </ol>
+        </div>
 
-                    <!-- Point Pelanggaran -->
-                    <div class="col-xl-3 col-lg-6 col-sm-6">
-                        <div class="widget-stat card bg-success">
-                            <div class="card-body p-4">
-                                <div class="d-flex align-items-center">
-                                    <span class="me-3">
-                                        <i class="flaticon-381-diamond fs-3 text-white"></i>
-                                    </span>
-                                    <div class="media-body text-white text-end">
-                                        <p class="mb-1 fw-bold">Point Pelanggaran</p>
-                                        <h3 class="text-white mb-0">12</h3>
-                                    </div>
-                                </div>
+        <!-- Selamat Datang & Dashboard Info dalam Satu Card -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card border-0 shadow-lg bg-white text-dark rounded-4 hover-shadow-lg">
+                    <div class="card-body p-5">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <!-- Teks Selamat Datang -->
+                            <div>
+                                <h2 class="fw-bold mb-2 text-primary">Selamat Datang</h2>
+                                <p class="mb-0 text-muted fs-5">
+                                    Pantau dan kelola informasi pelanggaran dengan mudah di sini. Semoga harimu menyenangkan!
+                                </p>
+                            </div>
+                            <!-- Ikon Teks Modern -->
+                            <div class="text-end">
+                                <i class="flaticon-381-dashboard fs-3 text-primary"></i>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Status Terkini -->
-                    <div class="col-xl-3 col-lg-6 col-sm-6">
-                        <div class="widget-stat card bg-info">
-                            <div class="card-body p-4">
-                                <div class="d-flex align-items-center">
-                                    <span class="me-3">
-                                        <i class="flaticon-381-heart fs-3 text-white"></i>
-                                    </span>
-                                    <div class="media-body text-white text-end">
-                                        <p class="mb-1 fw-bold text-white">Status Terkini</p>
-                                        <h3 class="text-white mb-0">Ringan</h3>
+                        <!-- Dashboard Stats -->
+                        <div class="row gy-4">
+                            <!-- Content Pelanggaran Terkini -->
+                            <div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
+                                <div class="card border-0 shadow-sm rounded-4">
+                                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                        <h4 class="card-title mb-0 text-primary">Pelanggaran Terkini</h4>
+                                        <a href="riwayat.php" class="btn btn-sm btn-outline-primary">Selengkapnya</a>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Tanggal Pelanggaran</th>
+                                                        <th>Nama Pelanggaran</th>
+                                                        <th>Tingkat Pelanggaran</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>10-11-2024</td>
+                                                        <td>Melakukan plagiasi</td>
+                                                        <td class="text-center">I/II</td>
+                                                        <td>
+                                                            <span class="badge badge-success">Selesai</span>
+                                                            <div class="dropdown d-inline-block ms-2">
+                                                                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="flaticon-381-settings-1 fs-5 text-muted"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                    <li><a class="dropdown-item" href="javascript:void(0);">Details</a></li>
+                                                                    <li><a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>10-11-2024</td>
+                                                        <td>Melakukan plagiasi</td>
+                                                        <td class="text-center">I/II</td>
+                                                        <td>
+                                                            <span class="badge badge-warning">Pending</span>
+                                                            <div class="dropdown d-inline-block ms-2">
+                                                                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="flaticon-381-settings-1 fs-5 text-muted"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                    <li><a class="dropdown-item" href="javascript:void(0);">Details</a></li>
+                                                                    <li><a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Sanksi Saat Ini -->
-                    <div class="col-xl-3 col-lg-6 col-sm-6">
-                        <div class="widget-stat card bg-primary">
-                            <div class="card-body p-4">
-                                <div class="d-flex align-items-center">
-                                    <span class="me-3">
-                                        <i class="flaticon-381-user-7 fs-3 text-white"></i>
-                                    </span>
-                                    <div class="media-body text-white text-end">
-                                        <p class="mb-1 fw-bold">Sanksi Saat Ini</p>
-                                        <h3 class="text-white mb-0">Tidak ada</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Content Pelanggaran Terkini -->
-                    <div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Pelanggaran Terkini</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive recentOrderTable">
-                                    <table class="table verticle-middle table-responsive-md">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">No.</th>
-                                                <th scope="col">Tanggal Pelanggaran</th>
-                                                <th scope="col">Nama Pelanggaran</th>
-                                                <th scope="col">Tingkat Pelanggaran</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>10-11-2024</td>
-                                                <td>Melakukan plagiasi</td>
-                                                <td class="text-center">I/II</td>
-                                                <td><span class="badge badge-rounded badge-success">Selesai</span></td>
-                                                <td>
-                                                    <div class="dropdown custom-dropdown mb-0">
-                                                        <div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewbox="0 0 24 24" version="1.1">
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="12" cy="5" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="19" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </div>
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item" href="javascript:void();;">Details</a>
-                                                            <a class="dropdown-item text-danger" href="javascript:void();;">Cancel</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>10-11-2024</td>
-                                                <td>Melakukan plagiasi</td>
-                                                <td class="text-center">I/II</td>
-                                                <td><span class="badge badge-rounded badge-warning">Pending</span></td>
-                                                <td>
-                                                    <div class="dropdown custom-dropdown mb-0">
-                                                        <div class="btn sharp btn-primary tp-btn" data-bs-toggle="dropdown">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewbox="0 0 24 24" version="1.1">
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="12" cy="5" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="19" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </div>
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item" href="javascript:void();;">Details</a>
-                                                            <a class="dropdown-item text-danger" href="javascript:void();;">Cancel</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="d-flex justify-content-end mt-3">
-                                    <a href="riwayat.php">
-                                        <button class="btn btn-primary btn-sm">Selengkapnya</button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- End Dashboard Stats -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+    }
+    .table th, .table td {
+        vertical-align: middle;
+    }
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+    }
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+    .badge-warning {
+        background-color: #ffc107;
+        color: black;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+    }
+    .dropdown-toggle::after {
+        display: none;
+    }
+    .btn-outline-primary {
+        border-color: #4e73df;
+        color: #4e73df;
+    }
+    .btn-outline-primary:hover {
+        background-color: #4e73df;
+        color: white;
+    }
+</style>
 
     <!--**********************************
     Content body end
@@ -216,3 +200,4 @@ Main wrapper end
 </body>
 
 </html>
+dashboard mahasiswa
