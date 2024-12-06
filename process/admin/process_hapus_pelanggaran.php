@@ -1,27 +1,27 @@
 <?php
 include "../../config/database.php";
 
-// Mengecek apakah ID sanksi ada di URL
+// Mengecek apakah ID pelanggaran ada di URL
 if (isset($_GET['id'])) {
-    $sanksiID = $_GET['id'];
+    $pelanggaranID = $_GET['id'];
 
-    // Query untuk menghapus data sanksi berdasarkan ID
-    $sql = "DELETE FROM Sanksi WHERE SanksiID = ?";
-    $params = array($sanksiID);
+    // Query untuk menghapus data pelanggaran berdasarkan ID
+    $sql = "DELETE FROM Pelanggaran WHERE PelanggaranID = ?";
+    $params = array($pelanggaranID);
 
     // Menjalankan query
     $stmt = sqlsrv_query($conn, $sql, $params);
 
     // Cek apakah penghapusan berhasil
     if ($stmt) {
-        // Redirect kembali ke halaman kelola sanksi dengan status berhasil
-        header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php?status=deleted");
+        // Redirect kembali ke halaman kelola pelanggaran dengan status berhasil
+        header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=deleted");
     } else {
         // Jika gagal, redirect dengan status error
-        header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php?status=error");
+        header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=error");
     }
 } else {
-    // Jika ID tidak ditemukan, redirect ke halaman kelola sanksi
-    header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php");
+    // Jika ID tidak ditemukan, redirect ke halaman kelola pelanggaran
+    header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php");
 }
 ?>
