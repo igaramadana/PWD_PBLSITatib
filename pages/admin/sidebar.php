@@ -58,7 +58,7 @@
 
             <!-- Profile Menu -->
             <li>
-                <a class="" href="profile_admin.php" aria-expanded="false">
+                <a class="" href="profile.php" aria-expanded="false">
                     <i class="bi bi-person-circle"></i>
                     <span class="nav-text">Profile</span>
                 </a>
