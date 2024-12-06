@@ -155,4 +155,8 @@ include("footer.php");
     }
 </script>
 
+<<<<<<< HEAD
 </body>
+=======
+</body>
+>>>>>>> a88a3e9 (fixing input_pelanggaran dosen)
