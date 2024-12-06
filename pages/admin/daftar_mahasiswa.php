@@ -98,7 +98,7 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                             <div class="card-body">
                                 <form action="daftar_mahasiswa.php" method="get" class="d-flex justify-content-between align-items-center mb-3">
                                     <!-- Search Area -->
-                                    <div class="search-area w-75">
+                                    <div class="search-area w-50">
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari disini...">
                                             <button type="submit" class="btn btn-primary">
