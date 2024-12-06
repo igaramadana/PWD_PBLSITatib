@@ -51,14 +51,40 @@ Main wrapper start
                         </div>
                         <div class="card-body">
                             <form action="simpan_pelanggaran.php" method="post" enctype="multipart/form-data">
+                                
                                 <div class="mb-3">
                                     <label for="nim" class="form-label">NIM</label>
                                     <input type="text" class="form-control" id="nim" name="nim" placeholder="Masukkan NIM" required>
                                 </div>
+                                
                                 <div class="mb-3">
                                     <label for="nama" class="form-label">Nama</label>
                                     <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" required>
                                 </div>
+
+                                <!-- Dropdown Kelas -->
+                                <div class="mb-3">
+                                    <label for="kelas" class="form-label">Kelas</label>
+                                    <select class="form-control" id="kelas" name="kelas" required>
+                                        <option value="">-- Pilih Kelas --</option>
+                                        <option value="A">Kelas A</option>
+                                        <option value="B">Kelas B</option>
+                                        <option value="C">Kelas C</option>
+                                        <option value="D">Kelas D</option>
+                                    </select>
+                                </div>
+
+                                <!-- Dropdown Program Studi -->
+                                <div class="mb-3">
+                                    <label for="prodi" class="form-label">Program Studi</label>
+                                    <select class="form-control" id="prodi" name="prodi" required>
+                                        <option value="">-- Pilih Program Studi --</option>
+                                        <option value="D4 Teknik Informatika">D4 Teknik Informatika</option>
+                                        <option value="D4 Sistem Informasi Bisnis">D4 Sistem Informasi Bisnis</option>
+                                        <option value="D2 Pengembangan Piranti Lunak Situs">D2 Pengembangan Piranti Lunak Situs</option>
+                                    </select>
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="jenis_pelanggaran" class="form-label">Jenis Pelanggaran</label>
                                     <select class="form-control" id="jenis_pelanggaran" name="jenis_pelanggaran" required onchange="toggleLainnya(this.value)">
@@ -69,24 +95,29 @@ Main wrapper start
                                         <option value="Lainnya">Lainnya</option>
                                     </select>
                                 </div>
+                                
                                 <div class="mb-3" id="lainnya-container" style="display: none;">
                                     <label for="lainnya" class="form-label">Jenis Pelanggaran (Lainnya)</label>
                                     <input type="text" class="form-control" id="lainnya" name="lainnya" placeholder="Masukkan Jenis Pelanggaran Lainnya">
                                 </div>
+                                
                                 <div class="mb-3">
                                     <label for="deskripsi" class="form-label">Deskripsi Pelanggaran</label>
                                     <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4" placeholder="Masukkan deskripsi pelanggaran" required></textarea>
                                 </div>
+                                
                                 <div class="mb-3">
                                     <label for="tanggal" class="form-label">Tanggal Kejadian</label>
                                     <div class="input-group">
                                         <input type="date" class="form-control" id="tanggal" name="tanggal" required>
                                     </div>
                                 </div>
+                                
                                 <div class="mb-3">
                                     <label for="bukti" class="form-label">Upload Bukti Foto</label>
                                     <input type="file" class="form-control" id="bukti" name="bukti" accept="image/*" required>
                                 </div>
+                                
                                 <div class="d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary">Simpan Pelanggaran</button>
                                 </div>
@@ -125,5 +156,3 @@ include("footer.php");
 </script>
 
 </body>
-
-</html>
