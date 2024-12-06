@@ -33,8 +33,6 @@
 		<script src="../../assets/template/js/custom.min.js"></script>
 		<script src="../../assets/template/js/dlabnav-init.js"></script>
 		<script src="https://kit.fontawesome.com/3b26e74800.js" crossorigin="anonymous"></script>
-		<!-- jQuery -->
-		 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<!-- <script src="../template/Fillow/js/demo.js"></script>
 		<script src="../template/Fillow/js/styleSwitcher.js"></script> -->
 		<script>
