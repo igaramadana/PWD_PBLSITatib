@@ -6,7 +6,7 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Halaman yang diminta
 $startFrom = ($page - 1) * $perPage; // Menentukan data yang akan diambil
 
 // Menangani pencarian (jika ada)
-$search = isset($_GET['search']) ? $_GET['search']:'';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Query untuk mengambil data pelanggaran dengan pencarian dan pagination
 $sql = "SELECT Pelanggaran.PelanggaranID, Pelanggaran.NamaPelanggaran, TingkatPelanggaran.Tingkat 
@@ -48,98 +48,112 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                                 <h4 class="card-title">Kelola Pelanggaran</h4>
                             </div>
                             <div class="card-body">
-                                <!-- Form Pencarian -->
-                                <form action="kelola_pelanggaran.php" method="get" class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="search-area w-50">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari disini...">
-                                            <span class="input-group-text">
-                                                <button type="submit" class="btn btn-link"><i class="flaticon-381-search-2"></i></button>
-                                            </span>
+                                <!-- Form Pencarian dan Tombol Tambah Data -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <!-- Form Pencarian -->
+                                    <form action="kelola_pelanggaran.php" method="get" class="d-flex align-items-center">
+                                        <div class="input-group" style="width: 300px;">
+                                            <input type="text" class="form-control rounded-start" name="search"
+                                                value="<?php echo htmlspecialchars($search); ?>"
+                                                placeholder="Cari nama pelanggaran..."
+                                                aria-label="Cari nama pelanggaran">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="flaticon-381-search-2"></i>
+                                            </button>
                                         </div>
-                                    </div>
-                                </form>
-                                <!-- Tombol Tambah Data Tata Tertib -->
-                                <div>
-                                    <!-- Tombol untuk membuka modal tambah data -->
-                                    <button class="btn btn-md btn-success mb-3" data-bs-toggle="modal" data-bs-target="#tambahModal">+ Tambah Data</button>
+                                    </form>
+
+                                    <!-- Tombol Tambah Data -->
+                                    <button class="btn btn-md btn-success" data-bs-toggle="modal" data-bs-target="#tambahModal">
+                                        + Tambah Data
+                                    </button>
                                 </div>
 
                                 <!-- Tabel Pelanggaran -->
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-responsive-md">
+                                    <table class="table table-bordered text-center">
                                         <thead class="bg-primary text-white">
                                             <tr>
-                                                <th class="text-center">No.</th>
-                                                <th class="text-center">Nama Pelanggaran</th>
-                                                <th class="text-center">Tingkat</th>
-                                                <th class="text-center">Aksi</th>
+                                                <th>No.</th>
+                                                <th>Nama Pelanggaran</th>
+                                                <th>Tingkat</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            // Menampilkan data pelanggaran
                                             $no = $startFrom + 1;
                                             while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) : ?>
                                                 <tr>
-                                                    <td class="text-center"><?php echo $no++; ?></td>
-                                                    <td class="text-center"><?php echo htmlspecialchars($row['NamaPelanggaran']); ?></td>
-                                                    <td class="text-center"><?php echo htmlspecialchars($row['Tingkat']); ?></td>
-                                                    <td class="text-center">
-                                                        <!-- Tombol Edit (akan membuka modal) -->
-                                                        <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal"
-                                                            data-id="<?php echo $row['PelanggaranID']; ?>"
-                                                            data-nama="<?php echo htmlspecialchars($row['NamaPelanggaran']); ?>"
-                                                            data-tingkat="<?php echo htmlspecialchars($row['Tingkat']); ?>">
-                                                            Edit
-                                                        </button>
-                                                        <!-- Tombol Hapus (akan membuka modal konfirmasi) -->
-                                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal"
-                                                            data-id="<?php echo $row['PelanggaranID']; ?>"
-                                                            data-nama="<?php echo htmlspecialchars($row['NamaPelanggaran']); ?>">
-                                                            Hapus
-                                                        </button>
+                                                    <td><?php echo $no++; ?></td>
+                                                    <td><?php echo htmlspecialchars($row['NamaPelanggaran']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['Tingkat']); ?></td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-center">
+                                                            <!-- Tombol Edit -->
+                                                            <a href="#editModal"
+                                                                class="btn btn-warning btn-sm me-2 rounded-pill d-flex align-items-center justify-content-center"
+                                                                data-toggle="modal"
+                                                                data-id="<?php echo urlencode($row['PelanggaranID']); ?>"
+                                                                data-nama="<?php echo htmlspecialchars($row['NamaPelanggaran']); ?>"
+                                                                data-tingkat="<?php echo htmlspecialchars($row['Tingkat']); ?>"
+                                                                aria-label="Edit Pelanggaran <?php echo htmlspecialchars($row['NamaPelanggaran']); ?>">
+                                                                <i class="fa fa-pencil-alt me-2"></i> Edit
+                                                            </a>
+
+                                                            <!-- Tombol Hapus -->
+                                                            <a href="#deleteModal"
+                                                                class="btn btn-danger btn-sm rounded-pill d-flex align-items-center justify-content-center"
+                                                                data-toggle="modal"
+                                                                data-id="<?php echo urlencode($row['PelanggaranID']); ?>"
+                                                                data-nama="<?php echo htmlspecialchars($row['NamaPelanggaran']); ?>"
+                                                                onclick="return confirm('Apakah Anda yakin ingin menghapus pelanggaran ini?')"
+                                                                aria-label="Hapus Pelanggaran <?php echo htmlspecialchars($row['NamaPelanggaran']); ?>">
+                                                                <i class="fa fa-trash me-2"></i> Hapus
+                                                            </a>
+                                                        </div>
                                                     </td>
+
                                                 </tr>
                                             <?php endwhile; ?>
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
 
-                            <!-- Pagination Section -->
-                            <nav class="pb-2">
-                                <ul class="pagination pagination-gutter justify-content-center">
-                                    <?php
-                                    // Query untuk menghitung total data pelanggaran
-                                    $sqlCount = "SELECT COUNT(*) AS total FROM Pelanggaran WHERE NamaPelanggaran LIKE ?";
-                                    $stmtCount = sqlsrv_query($conn, $sqlCount, array($searchParam));
-                                    $rowCount = sqlsrv_fetch_array($stmtCount, SQLSRV_FETCH_ASSOC);
-                                    $totalPages = ceil($rowCount['total'] / $perPage);
-                                    ?>
+                                <!-- Pagination Section -->
+                                <nav class="pb-2">
+                                    <ul class="pagination pagination-gutter justify-content-center">
+                                        <?php
+                                        // Query untuk menghitung total data pelanggaran
+                                        $sqlCount = "SELECT COUNT(*) AS total FROM Pelanggaran WHERE NamaPelanggaran LIKE ?";
+                                        $stmtCount = sqlsrv_query($conn, $sqlCount, array($searchParam));
+                                        $rowCount = sqlsrv_fetch_array($stmtCount, SQLSRV_FETCH_ASSOC);
+                                        $totalPages = ceil($rowCount['total'] / $perPage);
+                                        ?>
 
-                                    <!-- Halaman Sebelumnya -->
-                                    <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
-                                            <i class="la la-angle-left"></i>
-                                        </a>
-                                    </li>
-
-                                    <!-- Halaman 1 sampai Total Halaman -->
-                                    <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                                        <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
+                                        <!-- Halaman Sebelumnya -->
+                                        <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
+                                                <i class="la la-angle-left"></i>
+                                            </a>
                                         </li>
-                                    <?php endfor; ?>
 
-                                    <!-- Halaman Berikutnya -->
-                                    <li class="page-item <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
-                                            <i class="la la-angle-right"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                                        <!-- Halaman 1 sampai Total Halaman -->
+                                        <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                                            <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+
+                                        <!-- Halaman Berikutnya -->
+                                        <li class="page-item <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
+                                                <i class="la la-angle-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,8 +168,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-center fs-3">Edit Pelanggaran</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                    </button>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="../../process/admin/process_edit_pelanggaran.php" method="POST">
@@ -192,8 +205,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-center fs-3">Tambah Data Pelanggaran</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                    </button>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="../../process/admin/process_tambah_pelanggaran.php" method="POST">
@@ -203,20 +215,10 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                         </div>
                         <div class="form-group text-center fs-4">
                             <label for="Tingkat">Tingkat</label>
-                            <select name="TingkatID" id="Tingkat" class="default-select form-control wide mb-3 fs-4" required>
-                                <option value="">Pilih Tingkat</option>
-                                <?php
-                                // Query untuk mendapatkan data tingkat pelanggaran
-                                $sqlTingkat = "SELECT * FROM TingkatPelanggaran";
-                                $stmtTingkat = sqlsrv_query($conn, $sqlTingkat);
-                                while ($tingkat = sqlsrv_fetch_array($stmtTingkat, SQLSRV_FETCH_ASSOC)) {
-                                    echo "<option value='" . $tingkat['TingkatID'] . "'>" . $tingkat['Tingkat'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
+                            <select name="TingkatID" id="Tingkat" class="default-select form-control wide mb-
+
                         <!-- Tombol Simpan Data -->
-                        <button type="submit" class="btn btn-success">Simpan Data</button>
+                        <button type=" submit" class="btn btn-success">Simpan Data</button>
                     </form>
                 </div>
             </div>
@@ -245,8 +247,6 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             </div>
         </div>
     </div>
-
-
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
