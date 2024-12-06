@@ -173,12 +173,12 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                 <div class="modal-body">
                     <form action="../../process/admin/process_edit_pelanggaran.php" method="POST">
                         <input type="hidden" name="PelanggaranID" id="editPelanggaranID">
-                        <div class="form-group text-center fs-4 mb-3">
-                            <label for="editNamaPelanggaran">Nama Pelanggaran</label>
+                        <div class="form-group text-start fs-4 mb-3">
+                            <label for="editNamaPelanggaran" class="text-start">Nama Pelanggaran</label>
                             <textarea name="NamaPelanggaran" id="editNamaPelanggaran" class="form-control fs-4"></textarea>
                         </div>
-                        <div class="form-group text-center fs-4">
-                            <label for="editTingkat">Tingkat</label>
+                        <div class="form-group text-start fs-4">
+                            <label for="editTingkat" class="text-start">Tingkat</label>
                             <select name="TingkatID" id="editTingkat" class="default-select form-control wide mb-3 fs-4" required>
                                 <option value="">Pilih Tingkat</option>
                                 <?php
@@ -191,13 +191,14 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                                 ?>
                             </select>
                             <!-- Tombol Simpan Perubahan -->
-                            <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                            <button type="submit" class="btn btn-success fs-5">Simpan Perubahan</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Modal Tambah Pelanggaran -->
     <div class="modal fade" id="tambahModal" role="dialog">
@@ -205,25 +206,38 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-center fs-3">Tambah Data Pelanggaran</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="../../process/admin/process_tambah_pelanggaran.php" method="POST">
-                        <div class="form-group text-center fs-4 mb-3">
-                            <label for="NamaPelanggaran">Nama Pelanggaran</label>
-                            <textarea name="NamaPelanggaran" id="NamaPelanggaran" class="form-control fs-4" required></textarea>
+                        <!-- Nama Pelanggaran -->
+                        <div class="form-group fs-4 mb-4">
+                            <label for="NamaPelanggaran" class="mb-2 d-block text-start">Nama Pelanggaran</label>
+                            <textarea name="NamaPelanggaran" id="NamaPelanggaran" class="form-control fs-4" rows="3" placeholder="Masukkan nama pelanggaran" required></textarea>
                         </div>
-                        <div class="form-group text-center fs-4">
-                            <label for="Tingkat">Tingkat</label>
-                            <select name="TingkatID" id="Tingkat" class="default-select form-control wide mb-
 
-                        <!-- Tombol Simpan Data -->
-                        <button type=" submit" class="btn btn-success">Simpan Data</button>
+                        <!-- Tingkat -->
+                        <div class="form-group fs-4 mb-4">
+                            <label for="Tingkat" class="mb-2 d-block text-start">Tingkat</label>
+                            <select name="TingkatID" id="Tingkat" class="form-select fs-4" required>
+                                <option value="" disabled selected>Pilih Tingkat</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+
+                        <!-- Tombol Simpan -->
+                        <div class="text-left">
+                            <button type="submit" class="btn btn-success fs-5">Simpan Data</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Modal Konfirmasi Hapus Pelanggaran -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
