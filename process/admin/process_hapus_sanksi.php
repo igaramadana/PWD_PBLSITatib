@@ -1,9 +1,9 @@
 <?php
 include "../../config/database.php";
 
-// Mengecek apakah ID sanksi ada di URL
-if (isset($_GET['id'])) {
-    $sanksiID = $_GET['id'];
+// Mengecek apakah ID sanksi ada di form
+if (isset($_POST['SanksiID'])) {
+    $sanksiID = $_POST['SanksiID'];
 
     // Query untuk menghapus data sanksi berdasarkan ID
     $sql = "DELETE FROM Sanksi WHERE SanksiID = ?";
@@ -24,4 +24,3 @@ if (isset($_GET['id'])) {
     // Jika ID tidak ditemukan, redirect ke halaman kelola sanksi
     header("Location: ../../pages/admin/kelola_sanksi.php");
 }
-?>

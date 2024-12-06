@@ -107,7 +107,6 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                                                                 data-toggle="modal"
                                                                 data-id="<?php echo urlencode($row['PelanggaranID']); ?>"
                                                                 data-nama="<?php echo htmlspecialchars($row['NamaPelanggaran']); ?>"
-                                                                onclick="return confirm('Apakah Anda yakin ingin menghapus pelanggaran ini?')"
                                                                 aria-label="Hapus Pelanggaran <?php echo htmlspecialchars($row['NamaPelanggaran']); ?>">
                                                                 <i class="fa fa-trash me-2"></i> Hapus
                                                             </a>

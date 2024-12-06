@@ -4,6 +4,25 @@ $perPage = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $startFrom = ($page - 1) * $perPage;
 
+// Menangani pencarian (jika ada)
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Query untuk mengambil data sanksi
+$query = "SELECT Sanksi.SanksiID, Sanksi.NamaSanksi, TingkatPelanggaran.Tingkat
+          FROM Sanksi
+          JOIN TingkatPelanggaran ON Sanksi.TingkatID = TingkatPelanggaran.TingkatID
+          WHERE Sanksi.NamaSanksi LIKE ?
+          ORDER BY Sanksi.SanksiID
+          OFFSET $startFrom ROWS FETCH NEXT $perPage ROWS ONLY";
+
+$searchParam = "%" . $search . "%";
+$params = array($searchParam);
+$result = sqlsrv_query($conn, $query, $params);
+
+if ($result === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
 ?>
 
 <body>
@@ -30,6 +49,49 @@ $startFrom = ($page - 1) * $perPage;
                         <li class="breadcrumb-item active"><a href="javascript:void(0)">Kelola Sanksi</a></li>
                     </ol>
                 </div>
+
+                <!-- Status Message -->
+                <?php if (isset($_GET['status'])): ?>
+                    <div class="alert alert-<?php echo ($_GET['status'] == 'success' ? 'success' : 'danger'); ?> alert-dismissible fade show" role="alert">
+                        <?php
+                        if (isset($_GET['msg'])) {
+                            echo htmlspecialchars($_GET['msg']);
+                        } else {
+                            echo ($_GET['status'] == 'success' ? 'Sanksi berhasil diperbarui.' : 'Terjadi kesalahan.');
+                        }
+                        ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Status Message Delete -->
+                <?php if (isset($_GET['status'])): ?>
+                    <div class="alert alert-<?php echo ($_GET['status'] == 'deleted' ? 'success' : 'danger'); ?> alert-dismissible fade show" role="alert">
+                        <?php
+                        // Menampilkan pesan yang lebih spesifik berdasarkan status
+                        if (isset($_GET['msg'])) {
+                            echo htmlspecialchars($_GET['msg']);
+                        } else {
+                            echo ($_GET['status'] == 'deleted' ? 'Sanksi berhasil dihapus.' : 'Terjadi kesalahan saat menghapus sanksi.');
+                        }
+                        ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Status Message Tambah -->
+                <?php if (isset($_GET['status'])): ?>
+                    <div class="alert alert-<?php echo ($_GET['status'] == 'success' ? 'success' : 'danger'); ?> alert-dismissible fade show" role="alert">
+                        <?php
+                        if (isset($_GET['msg'])) {
+                            echo htmlspecialchars($_GET['msg']);
+                        } else {
+                            echo ($_GET['status'] == 'success' ? 'Sanksi berhasil ditambahkan.' : 'Terjadi kesalahan.');
+                        }
+                        ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Kelola Sanksi Section -->
                 <div class="row">
@@ -67,20 +129,6 @@ $startFrom = ($page - 1) * $perPage;
                                         </thead>
                                         <tbody>
                                             <?php
-                                            // Ambil data sanksi dari database
-                                            $query = "SELECT Sanksi.SanksiID, Sanksi.NamaSanksi, TingkatPelanggaran.Tingkat
-                                                      FROM Sanksi
-                                                      JOIN TingkatPelanggaran ON Sanksi.TingkatID = TingkatPelanggaran.TingkatID
-                                                      ORDER BY Sanksi.SanksiID
-                                                      OFFSET $startFrom ROWS
-                                                      FETCH NEXT $perPage ROWS ONLY";
-
-                                            $result = sqlsrv_query($conn, $query);
-
-                                            if ($result === false) {
-                                                die(print_r(sqlsrv_errors(), true));
-                                            }
-
                                             $no = $startFrom + 1; // Nomor urut
                                             while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
                                                 echo "<tr>";
@@ -88,9 +136,13 @@ $startFrom = ($page - 1) * $perPage;
                                                 echo "<td>" . htmlspecialchars($row['NamaSanksi']) . "</td>";
                                                 echo "<td class='text-center'>" . $row['Tingkat'] . "</td>";
                                                 echo "<td class='text-center'>
-                        <a href='../../process/admin/process_edit_sanksi.php?id=" . $row['SanksiID'] . "' class='btn btn-primary btn-sm'>Edit</a>
-                        <a href='../../process/admin/process_hapus_sanksi.php?id=" . $row['SanksiID'] . "' class='btn btn-danger btn-sm' onclick='return confirm(\"Yakin ingin menghapus?\")'>Hapus</a>
-                      </td>";
+                                                        <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editModal'
+                                                            data-id='" . $row['SanksiID'] . "'
+                                                            data-nama='" . htmlspecialchars($row['NamaSanksi']) . "'
+                                                            data-tingkat='" . htmlspecialchars($row['Tingkat']) . "'>Edit</button>
+                                                        <button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal'
+                                                            data-id='" . $row['SanksiID'] . "'>Hapus</button>
+                                                      </td>";
                                                 echo "</tr>";
                                             }
                                             ?>
@@ -102,21 +154,16 @@ $startFrom = ($page - 1) * $perPage;
                             <!-- Pagination Section -->
                             <nav class="pb-2">
                                 <ul class="pagination pagination-gutter justify-content-center">
-                                    <!-- Halaman Sebelumnya -->
                                     <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
                                         <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
                                             <i class="la la-angle-left"></i>
                                         </a>
                                     </li>
-
-                                    <!-- Halaman 1 sampai Total Halaman -->
                                     <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
                                         <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
                                             <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
                                         </li>
                                     <?php endfor; ?>
-
-                                    <!-- Halaman Berikutnya -->
                                     <li class="page-item <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
                                         <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
                                             <i class="la la-angle-right"></i>
@@ -133,48 +180,6 @@ $startFrom = ($page - 1) * $perPage;
         <?php include("footer.php"); ?>
     </div>
 
-    <!-- Modal tambah sanksi -->
-    <div class="modal fade" id="tambahModal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="Modal-title text-center fs-3">Tambah Sanksi</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="../../process/admin/process_tambah_sanksi.php" method="POST">
-                        <div class="form-group text-center fs-4 mb-3">
-                            <label for="tambahNamaSanksi">Sanksi</label>
-                            <textarea name="NamaSanksi" id="tambahNamaSanksi" class="form-control fs-4" required></textarea>
-                        </div>
-                        <div class="form-group text-center fs-4">
-                            <label for="Tingkat">Tingkat</label>
-                            <select name="TingkatID" id="Tingkat" class="default-select form-control wide mb-3 fs-4" required>
-                                <option value="">Pilih Tingkat</option>
-                                <?php
-                                // Ambil data tingkat pelanggaran dari database
-                                $query = "SELECT * FROM TingkatPelanggaran";
-                                $result = sqlsrv_query($conn, $query);
-
-                                if ($result === false) {
-                                    die(print_r(sqlsrv_errors(), true));
-                                }
-
-                                while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-                                    echo "<option value='" . $row['TingkatID'] . "'>" . $row['Tingkat'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success fs-4">Tambah Sanksi</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal Edit Sanksi -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -184,20 +189,29 @@ $startFrom = ($page - 1) * $perPage;
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="../../process/admin/process_edit_sanksi.php?id=<?php echo $sanksiID; ?>" method="POST">
+                    <form action="../../process/admin/process_edit_sanksi.php" method="POST">
+                        <input type="hidden" name="SanksiID" id="editSanksiID">
                         <div class="form-group mb-3">
-                            <label for="NamaSanksi">Nama Sanksi</label>
-                            <textarea name="NamaSanksi" id="NamaSanksi" class="form-control" rows="3" required><?php echo htmlspecialchars($sanksi['NamaSanksi']); ?></textarea>
+                            <label for="editNamaSanksi">Nama Sanksi</label>
+                            <textarea name="NamaSanksi" id="editNamaSanksi" class="form-control" rows="3" required></textarea>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="Tingkat">Tingkat</label>
-                            <select name="TingkatID" id="Tingkat" class="form-control" required>
+                            <label for="editTingkat">Tingkat</label>
+                            <select name="TingkatID" id="editTingkat" class="form-control" required>
                                 <option value="">Pilih Tingkat</option>
-                                <?php while ($row = sqlsrv_fetch_array($resultTingkat, SQLSRV_FETCH_ASSOC)) { ?>
-                                    <option value="<?php echo $row['TingkatID']; ?>" <?php echo $sanksi['TingkatID'] == $row['TingkatID'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($row['Tingkat']); ?>
-                                    </option>
-                                <?php } ?>
+                                <?php
+                                // Ambil data tingkat pelanggaran
+                                $queryTingkat = "SELECT * FROM TingkatPelanggaran";
+                                $resultTingkat = sqlsrv_query($conn, $queryTingkat);
+
+                                if ($resultTingkat === false) {
+                                    die(print_r(sqlsrv_errors(), true));
+                                }
+
+                                while ($tingkat = sqlsrv_fetch_array($resultTingkat, SQLSRV_FETCH_ASSOC)) {
+                                    echo "<option value='" . $tingkat['TingkatID'] . "'>" . $tingkat['Tingkat'] . "</option>";
+                                }
+                                ?>
                             </select>
                         </div>
                         <div class="text-center">
@@ -209,6 +223,91 @@ $startFrom = ($page - 1) * $perPage;
         </div>
     </div>
 
+    <!-- Modal Hapus Sanksi -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Hapus Sanksi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">Apakah Anda yakin ingin menghapus sanksi ini?</p>
+                    <form action="../../process/admin/process_hapus_sanksi.php" method="POST">
+                        <input type="hidden" name="SanksiID" id="deleteSanksiID">
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-danger">Hapus Sanksi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Sanksi -->
+    <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tambahModalLabel">Tambah Sanksi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="../../process/admin/process_tambah_sanksi.php" method="POST">
+                        <div class="form-group mb-3">
+                            <label for="NamaSanksi">Nama Sanksi</label>
+                            <input type="text" name="NamaSanksi" id="NamaSanksi" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="TingkatID">Tingkat</label>
+                            <select name="TingkatID" id="TingkatID" class="form-control" required>
+                                <option value="">Pilih Tingkat</option>
+                                <?php
+                                // Ambil data tingkat pelanggaran
+                                $queryTingkat = "SELECT * FROM TingkatPelanggaran";
+                                $resultTingkat = sqlsrv_query($conn, $queryTingkat);
+
+                                if ($resultTingkat === false) {
+                                    die(print_r(sqlsrv_errors(), true));
+                                }
+
+                                while ($tingkat = sqlsrv_fetch_array($resultTingkat, SQLSRV_FETCH_ASSOC)) {
+                                    echo "<option value='" . $tingkat['TingkatID'] . "'>" . $tingkat['Tingkat'] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Tambah Sanksi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        // Memasukkan data ke dalam modal saat edit
+        $('#editModal').on('show.bs.modal', function(e) {
+            var button = $(e.relatedTarget);
+            var id = button.data('id');
+            var nama = button.data('nama');
+            var tingkat = button.data('tingkat');
+
+            $('#editSanksiID').val(id);
+            $('#editNamaSanksi').val(nama);
+            $('#editTingkat').val(tingkat);
+        });
+
+        // Memasukkan data ke dalam modal saat hapus
+        $('#deleteModal').on('show.bs.modal', function(e) {
+            var button = $(e.relatedTarget);
+            var id = button.data('id');
+            $('#deleteSanksiID').val(id);
+        });
+    </script>
 </body>
 
 </html>

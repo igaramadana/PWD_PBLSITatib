@@ -56,18 +56,6 @@
                 </a>
             </li>
 
-            <!-- Pengaturan Sistem Menu -->
-            <li>
-                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">
-                    <i class="bi bi-gear-fill"></i>
-                    <span class="nav-text">Pengaturan Sistem</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="pengaturan_role.php">Pengaturan Role</a></li>
-                    <li><a href="backup_restore.php">Backup & Restore</a></li>
-                </ul>
-            </li>
-
             <!-- Profile Menu -->
             <li>
                 <a class="" href="profile_admin.php" aria-expanded="false">

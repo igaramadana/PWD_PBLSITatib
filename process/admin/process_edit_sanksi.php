@@ -1,34 +1,37 @@
 <?php
-include "../../config/database.php";
+include "../../config/database.php"; // Menghubungkan ke database
 
-// Mengecek apakah ID sanksi ada di URL
-if (isset($_GET['id'])) {
-    $sanksiID = $_GET['id'];
+// Mengecek apakah data yang dibutuhkan sudah ada
+if (isset($_POST['SanksiID']) && isset($_POST['NamaSanksi']) && isset($_POST['TingkatID'])) {
+    // Mengambil data dari form
+    $sanksiID = $_POST['SanksiID'];
+    $namaSanksi = $_POST['NamaSanksi'];
+    $tingkatID = $_POST['TingkatID'];
 
-    // Mengecek apakah data form telah disubmit
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Ambil data dari form
-        $namaSanksi = $_POST['NamaSanksi'];
-        $tingkatID = $_POST['TingkatID'];
+    // Menyusun query SQL untuk memperbarui data sanksi
+    $sql = "UPDATE Sanksi 
+            SET NamaSanksi = ?, TingkatID = ? 
+            WHERE SanksiID = ?";
 
-        // Query untuk mengupdate data sanksi berdasarkan ID
-        $sql = "UPDATE Sanksi SET NamaSanksi = ?, TingkatID = ? WHERE SanksiID = ?";
-        $params = array($namaSanksi, $tingkatID, $sanksiID);
+    // Menyiapkan parameter untuk query
+    $params = array($namaSanksi, $tingkatID, $sanksiID);
 
-        // Menjalankan query
-        $stmt = sqlsrv_query($conn, $sql, $params);
+    // Menyiapkan statement dan eksekusi query
+    $stmt = sqlsrv_query($conn, $sql, $params);
 
-        // Cek apakah pengeditan berhasil
-        if ($stmt) {
-            // Redirect kembali ke halaman kelola sanksi dengan status berhasil
-            header("Location: ../../pages/admin/kelola_sanksi.php?status=updated");
-        } else {
-            // Jika gagal, redirect dengan status error
-            header("Location: ../../pages/admin/kelola_sanksi.php?status=error");
-        }
+    if ($stmt === false) {
+        // Jika terjadi kesalahan
+        die(print_r(sqlsrv_errors(), true));
+    } else {
+        // Redirect kembali ke halaman kelola_sanksi.php setelah berhasil
+        header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php?status=success&msg=Sanksi berhasil diperbarui");
+        exit();
     }
 } else {
-    // Jika ID tidak ditemukan, redirect ke halaman kelola sanksi
-    header("Location: ../../pages/admin/kelola_sanksi.php");
+    // Jika data tidak ditemukan, redirect dengan status error
+    header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php?status=error&msg=Data tidak lengkap atau tidak ditemukan");
+    exit();
 }
-?>
+
+// Menutup koneksi
+sqlsrv_close($conn);
