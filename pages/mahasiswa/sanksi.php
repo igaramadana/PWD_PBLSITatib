@@ -61,7 +61,7 @@ if ($result === false) {
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
                                     <!-- Search Form -->
-                                    <form action="kelola_sanksi.php" method="get" class="d-flex align-items-center w-50">
+                                    <form action="sanksi.php" method="get" class="d-flex align-items-center w-50">
                                         <div class="input-group">
                                             <input
                                                 type="text"
@@ -93,7 +93,7 @@ if ($result === false) {
                                             while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) : ?>
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
-                                                    <td><?php echo htmlspecialchars($row['NamaSanksi']); ?></td>
+                                                    <td class="text-start"><?php echo htmlspecialchars($row['NamaSanksi']); ?></td>
                                                     <td><?php echo htmlspecialchars($row['Tingkat']); ?></td>
                                                 </tr>
                                             <?php endwhile; ?>
