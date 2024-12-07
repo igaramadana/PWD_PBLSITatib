@@ -49,6 +49,18 @@ sqlsrv_close($conn);
 </head>
 
 <body>
+    <!--*******************
+Preloader start
+********************-->
+    <div id="preloader">
+        <div class="lds-ripple">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <!--*******************
+Preloader end
+********************-->
     <div id="main-wrapper">
         <?php include("header.php"); ?>
         <?php include("sidebar.php"); ?>
