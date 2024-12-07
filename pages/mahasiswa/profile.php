@@ -1,112 +1,127 @@
-<?php
-// Simulasi data mahasiswa (biasanya data ini diambil dari database)
-$mahasiswa = [
-    'nama' => 'John Doe',
-    'nim' => '1234567890',
-    'program_studi' => 'Teknik Informatika',
-    'jurusan' => 'Fakultas Teknik',
-    'email' => 'john.doe@mail.com',
-    'no_telepon' => '+62 812 3456 7890',
-    'alamat' => 'Jl. Contoh Alamat No. 123, Kota X',
-    'foto' => 'https://via.placeholder.com/150', // Ganti dengan link foto mahasiswa
-];
-?>
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Mahasiswa</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .profile-header img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-        }
-        .profile-header h2 {
-            color: #6f42c1;
-        }
-        .profile-info {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .profile-info table {
-            width: 100%;
-        }
-        .profile-info th {
-            text-align: left;
-            width: 30%;
-        }
-        .profile-info td {
-            width: 70%;
-        }
-        .btn-back {
-            background-color: #6f42c1;
-            color: white;
-            border-radius: 5px;
-        }
-        .btn-back:hover {
-            background-color: #5a30a1;
-        }
-    </style>
-</head>
 <body>
-
-<div class="container">
-    <div class="profile-header">
-        <img src="<?php echo $mahasiswa['foto']; ?>" alt="Foto Mahasiswa">
-        <h2><?php echo $mahasiswa['nama']; ?></h2>
-        <p><?php echo $mahasiswa['program_studi'] . ' - ' . $mahasiswa['jurusan']; ?></p>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="lds-ripple">
+            <div></div>
+            <div></div>
+        </div>
     </div>
 
-    <div class="profile-info">
-        <h4>Informasi Profil</h4>
-        <table class="table">
-            <tr>
-                <th>NIM</th>
-                <td><?php echo $mahasiswa['nim']; ?></td>
-            </tr>
-            <tr>
-                <th>Program Studi</th>
-                <td><?php echo $mahasiswa['program_studi']; ?></td>
-            </tr>
-            <tr>
-                <th>Jurusan</th>
-                <td><?php echo $mahasiswa['jurusan']; ?></td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td><?php echo $mahasiswa['email']; ?></td>
-            </tr>
-            <tr>
-                <th>No. Telepon</th>
-                <td><?php echo $mahasiswa['no_telepon']; ?></td>
-            </tr>
-            <tr>
-                <th>Alamat</th>
-                <td><?php echo $mahasiswa['alamat']; ?></td>
-            </tr>
-        </table>
+    <!-- Main wrapper -->
+    <div id="main-wrapper">
+        <?php include("header.php"); ?>
+        <?php include("sidebar.php"); ?>
+
+        <!-- Content body -->
+        <div class="content-body">
+            <div class="container-fluid">
+                <!-- Breadcrumb -->
+                <div class="row page-titles">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Profile</a></li>
+                    </ol>
+                </div>
+
+                <!-- Profile Content -->
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4 class="card-title">Foto Profil</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <img src="../../assets/template/images/avatar/1.jpg" alt="avatar"
+                                    class="rounded-circle img-fluid" style="width: 150px;">
+                                <h5 class="my-3">Username</h5>
+                                <p class="text-muted mb-1">Mahasiswa</p>
+                                <div class="d-flex justify-content-center mb-2">
+                                    <button type="button" class="btn btn-warning btn-sm mt-4">Change Profile Picture</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                        <div class="card-header">
+                                <h4 class="card-title">Informasi Mahasiswa</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Nomor Induk Mahasiswa</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">2341760083</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Nama Lengkap</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">Iga Ramadana Sahputra</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Jurusan</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">Teknologi Informasi</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Program Studi</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">DIV-Sistem Informasi Bisnis</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Kelas</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">SIB-2C</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Angkatan</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">2023</p>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php include("footer.php"); ?>
     </div>
 
-    <div class="text-center mt-4">
-        <a href="dashboard.php" class="btn btn-back">Kembali ke Dashboard</a>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fungsi untuk melihat preview foto profil
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('profilePreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </body>
+
 </html>
