@@ -1,111 +1,138 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanksi Pelanggaran Mahasiswa</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin-top: 20px;
-        }
-        h2 {
-            color: #6f42c1;
-        }
-        .sanksi {
-            margin-top: 20px;
-        }
-        .list-group-item {
-            font-size: 16px;
-        }
-        .badge {
-            background-color: #6f42c1;
-            color: white;
-        }
-    </style>
-</head>
+<?php
+include "../../config/database.php";
+include "../../process/mahasiswa/fungsi_tampil_profile.php";
+$perPage = 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$startFrom = ($page - 1) * $perPage;
+
+// Menangani pencarian (jika ada)
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Query untuk mengambil data sanksi
+$query = "SELECT Sanksi.SanksiID, Sanksi.NamaSanksi, TingkatPelanggaran.Tingkat
+          FROM Sanksi
+          JOIN TingkatPelanggaran ON Sanksi.TingkatID = TingkatPelanggaran.TingkatID
+          WHERE Sanksi.NamaSanksi LIKE ?
+          ORDER BY Sanksi.SanksiID
+          OFFSET $startFrom ROWS FETCH NEXT $perPage ROWS ONLY";
+
+$searchParam = "%" . $search . "%";
+$params = array($searchParam);
+$result = sqlsrv_query($conn, $query, $params);
+
+if ($result === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
+?>
+
 <body>
-
-<div class="container">
-    <h2 class="text-center">Sanksi Pelanggaran Mahasiswa</h2>
-
-    <div class="sanksi">
-        <h4>Tingkat Pelanggaran V</h4>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <span class="badge">Teguran Lisan</span>
-                Disertai dengan surat pernyataan tidak mengulangi perbuatan tersebut, dibubuhi materai, dan ditandatangani oleh mahasiswa yang bersangkutan dan DPA.
-            </li>
-        </ul>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="lds-ripple">
+            <div></div>
+            <div></div>
+        </div>
     </div>
 
-    <div class="sanksi">
-        <h4>Tingkat Pelanggaran IV</h4>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <span class="badge">Teguran Tertulis</span>
-                Disertai dengan pemanggilan orang tua/wali dan membuat surat pernyataan tidak mengulangi perbuatan tersebut, dibubuhi materai, serta ditandatangani oleh mahasiswa, orang tua/wali, dan DPA.
-            </li>
-        </ul>
-    </div>
+    <!-- Main wrapper -->
+    <div id="main-wrapper">
+        <?php include("header.php"); ?>
+        <?php include("sidebar.php"); ?>
 
-    <div class="sanksi">
-        <h4>Tingkat Pelanggaran III</h4>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <span class="badge">Surat Pernyataan</span>
-                Mahasiswa membuat surat pernyataan tidak mengulangi perbuatan tersebut, dibubuhi materai, dan ditandatangani oleh mahasiswa, orang tua/wali, dan DPA.
-            </li>
-            <li class="list-group-item">
-                <span class="badge">Tugas Khusus</span>
-                Melakukan tugas khusus seperti bertanggung jawab untuk memperbaiki atau membersihkan kembali dan tugas lainnya.
-            </li>
-        </ul>
-    </div>
+        <!-- Content body -->
+        <div class="content-body">
+            <div class="container-fluid">
+                <!-- Breadcrumb -->
+                <div class="row page-titles">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Peraturan</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Sanksi</a></li>
+                    </ol>
+                </div>
 
-    <div class="sanksi">
-        <h4>Tingkat Pelanggaran II</h4>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <span class="badge">Penggantian Kerugian</span>
-                Dikenakan penggantian kerugian atau penggantian benda/barang semacamnya dan/atau.
-            </li>
-            <li class="list-group-item">
-                <span class="badge">Tugas Layanan Sosial</span>
-                Melakukan tugas layanan sosial dalam jangka waktu tertentu dan/atau.
-            </li>
-            <li class="list-group-item">
-                <span class="badge">Nilai D</span>
-                Diberikan nilai D pada mata kuliah terkait saat melakukan pelanggaran.
-            </li>
-        </ul>
-    </div>
+                <!-- Kelola Sanksi Section -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h4 class="card-title">Daftar Sanksi Mahasiswa</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <!-- Search Form -->
+                                    <form action="kelola_sanksi.php" method="get" class="d-flex align-items-center w-50">
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control rounded-start"
+                                                name="search"
+                                                value="<?php echo htmlspecialchars($search); ?>"
+                                                placeholder="Cari sanksi..."
+                                                aria-label="Cari sanksi" />
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
 
-    <div class="sanksi">
-        <h4>Tingkat Pelanggaran I</h4>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <span class="badge">Cuti Akademik</span>
-                Dinonaktifkan (Cuti Akademik/ Terminal) selama dua semester dan/atau.
-            </li>
-            <li class="list-group-item">
-                <span class="badge">Diberhentikan</span>
-                Diberhentikan sebagai mahasiswa.
-            </li>
-        </ul>
-    </div>
+                                <!-- Tabel Sanksi -->
+                                <div class="table-responsive">
+                                    <table class="table table-bordered text-center">
+                                        <thead class="bg-primary text-white">
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Nama Sanksi</th>
+                                                <th>Tingkat</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $no = $startFrom + 1;
+                                            while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) : ?>
+                                                <tr>
+                                                    <td><?php echo $no++; ?></td>
+                                                    <td><?php echo htmlspecialchars($row['NamaSanksi']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['Tingkat']); ?></td>
+                                                </tr>
+                                            <?php endwhile; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-    <div class="alert alert-info mt-4">
-        <strong>Catatan:</strong> Pemberian sanksi dan mekanisme ditetapkan dalam peraturan tersendiri sesuai dengan ketentuan yang berlaku di Polinema.
-    </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                                <!-- Pagination Section -->
+                                <nav class="pb-2">
+                                    <ul class="pagination pagination-gutter justify-content-center">
+                                        <!-- Previous Page Button (disabled if on the first page) -->
+                                        <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>">
+                                                <i class="la la-angle-left"></i>
+                                            </a>
+                                        </li>
+
+                                        <!-- Current Page Number -->
+                                        <li class="page-item active">
+                                            <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+                                        </li>
+
+                                        <!-- Next Page Button (disabled if on the last page) -->
+                                        <li class="page-item <?php echo ($page >= $totalPages) ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>">
+                                                <i class="la la-angle-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php include("footer.php"); ?>
+    </div>
 </body>
+
 </html>

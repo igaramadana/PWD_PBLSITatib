@@ -29,6 +29,7 @@ if ($stmt === false) {
 if (sqlsrv_has_rows($stmt)) {
     // Ambil data mahasiswa
     $mahasiswa = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+    $_SESSION['fotoProfil'] = $mahasiswa['FotoProfil'];
 } else {
     echo "Data mahasiswa tidak ditemukan.";
     exit();

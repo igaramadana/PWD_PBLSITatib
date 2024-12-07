@@ -165,7 +165,7 @@ $currentDate = date('l, d F Y');
                             if (empty($fotoProfil) || $fotoProfil == NULL) {
                                 $fotoProfil = 'profile.svg';
                             } ?>
-                            <img src="../../assets/uploads/<?php echo $fotoProfil; ?>" width="56" alt="">
+                            <img src="../../assets/uploads/<?php echo $fotoProfil; ?>" width="56" style="object-fit: cover;" alt="">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
                             <a href="app-profile.html" class="dropdown-item ai-icon">
