@@ -1,25 +1,32 @@
 <?php
 include "../../config/database.php";
 
-// Cek apakah data dikirimkan dengan metode POST
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $namaPelanggaran = $_POST['NamaPelanggaran'];
-    $tingkatID = $_POST['TingkatID'];
+// Cek apakah data POST ada
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Ambil data dari form
+    $namaPelanggaran = isset($_POST['NamaPelanggaran']) ? $_POST['NamaPelanggaran'] : '';
+    $tingkatID = isset($_POST['TingkatID']) ? $_POST['TingkatID'] : '';
 
-    // Query untuk menyimpan data pelanggaran baru
-    $sql = "INSERT INTO Pelanggaran (NamaPelanggaran, TingkatID) VALUES (?, ?)";
+    // Validasi input
+    if (empty($namaPelanggaran) || empty($tingkatID)) {
+        // Redirect jika data tidak lengkap
+        header("Location: ../admin/kelola_tatatertib.php?status=error&msg=Data tidak lengkap");
+        exit;
+    }
+
+    // Query untuk memasukkan data pelanggaran
+    $query = "INSERT INTO Pelanggaran (NamaPelanggaran, TingkatID) VALUES (?, ?)";
+
+    // Persiapkan query
     $params = array($namaPelanggaran, $tingkatID);
+    $result = sqlsrv_query($conn, $query, $params);
 
-    // Menjalankan query
-    $stmt = sqlsrv_query($conn, $sql, $params);
-
-    // Cek apakah data berhasil disimpan
-    if ($stmt) {
-        // Redirect kembali ke halaman kelola tata tertib dengan status berhasil
-        header ("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=success");
+    // Cek apakah query berhasil
+    if ($result) {
+        // Redirect ke halaman kelola pelanggaran dengan status sukses
+        header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=success");
     } else {
-        // Jika gagal, redirect dengan status error
-        header ("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=error");
+        // Jika gagal, tampilkan error
+        header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=error");
     }
 }
-?>

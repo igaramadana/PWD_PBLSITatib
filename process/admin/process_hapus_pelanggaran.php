@@ -1,30 +1,31 @@
 <?php
 include "../../config/database.php";
 
-// Mengecek apakah ID pelanggaran ada di URL
-if (isset($_GET['id'])) {
-    $pelanggaranID = $_GET['id'];
+// Cek apakah data POST ada
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Ambil data dari form
+    $pelanggaranID = isset($_POST['PelanggaranID']) ? $_POST['PelanggaranID'] : '';
 
-    // Query untuk menghapus data pelanggaran berdasarkan ID
-    $sql = "DELETE FROM Pelanggaran WHERE PelanggaranID = ?";
-    $params = array($pelanggaranID);
-
-    // Menjalankan query
-    $stmt = sqlsrv_query($conn, $sql, $params);
-
-    // Cek apakah penghapusan berhasil
-    if ($stmt) {
-        // Redirect kembali ke halaman kelola tata tertib dengan status berhasil
-        header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=deleted");
-        exit;
-    } else {
-        // Jika gagal, redirect dengan status error
-        header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=error");
+    // Validasi input
+    if (empty($pelanggaranID)) {
+        // Redirect jika tidak ada ID pelanggaran
+        header("Location: ../admin/kelola_tatatertib.php?status=error&msg=ID pelanggaran tidak ditemukan");
         exit;
     }
-} else {
-    // Jika ID tidak ditemukan, redirect ke halaman kelola pelanggaran
-    header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php");
-    exit;
+
+    // Query untuk menghapus data pelanggaran
+    $query = "DELETE FROM Pelanggaran WHERE PelanggaranID = ?";
+
+    // Persiapkan query
+    $params = array($pelanggaranID);
+    $result = sqlsrv_query($conn, $query, $params);
+
+    // Cek apakah query berhasil
+    if ($result) {
+        // Redirect ke halaman kelola pelanggaran dengan status sukses
+        header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=success");
+    } else {
+        // Jika gagal, tampilkan error
+        header("Location: /PWD_PBLSITatib/pages/admin/kelola_tatatertib.php?status=error");
+    }
 }
-?>
