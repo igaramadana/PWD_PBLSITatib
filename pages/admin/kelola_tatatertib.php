@@ -1,5 +1,6 @@
 <?php
 include "../../config/database.php";
+
 $perPage = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $startFrom = ($page - 1) * $perPage;
@@ -7,7 +8,18 @@ $startFrom = ($page - 1) * $perPage;
 // Menangani pencarian (jika ada)
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Query untuk mengambil data pelanggaran
+// Query untuk menghitung jumlah total pelanggaran
+$countQuery = "SELECT COUNT(*) AS total FROM Pelanggaran WHERE Pelanggaran.NamaPelanggaran LIKE ?";
+$searchParam = "%" . $search . "%";
+$countParams = array($searchParam);
+$countResult = sqlsrv_query($conn, $countQuery, $countParams);
+$countRow = sqlsrv_fetch_array($countResult, SQLSRV_FETCH_ASSOC);
+$totalData = $countRow['total'];
+
+// Menghitung jumlah total halaman
+$totalPages = ceil($totalData / $perPage);
+
+// Query untuk mengambil data pelanggaran dengan pagination
 $query = "SELECT Pelanggaran.PelanggaranID, Pelanggaran.NamaPelanggaran, TingkatPelanggaran.Tingkat
           FROM Pelanggaran
           JOIN TingkatPelanggaran ON Pelanggaran.TingkatID = TingkatPelanggaran.TingkatID
@@ -15,7 +27,6 @@ $query = "SELECT Pelanggaran.PelanggaranID, Pelanggaran.NamaPelanggaran, Tingkat
           ORDER BY Pelanggaran.PelanggaranID
           OFFSET $startFrom ROWS FETCH NEXT $perPage ROWS ONLY";
 
-$searchParam = "%" . $search . "%";
 $params = array($searchParam);
 $result = sqlsrv_query($conn, $query, $params);
 
@@ -64,7 +75,7 @@ if ($result === false) {
                                 <path d="M12 9v2M12 15v.01M5.22 5.22l1.42 1.42M17.36 17.36l1.42 1.42M5.22 17.36l1.42-1.42M17.36 5.22l1.42 1.42M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"></path>
                             </svg>
                         <?php endif; ?>
-                        
+
                         <?php
                         if (isset($_GET['msg'])) {
                             echo htmlspecialchars($_GET['msg']);
@@ -158,19 +169,23 @@ if ($result === false) {
                                     <ul class="pagination pagination-gutter justify-content-center">
                                         <!-- Previous Page Button (disabled if on the first page) -->
                                         <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
                                                 <i class="la la-angle-left"></i>
                                             </a>
                                         </li>
 
-                                        <!-- Current Page Number -->
-                                        <li class="page-item active">
-                                            <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
-                                        </li>
+                                        <!-- Pages Button -->
+                                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                            <li class="page-item <?php echo ($page == $i) ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>">
+                                                    <?php echo $i; ?>
+                                                </a>
+                                            </li>
+                                        <?php endfor; ?>
 
                                         <!-- Next Page Button (disabled if on the last page) -->
                                         <li class="page-item <?php echo ($page >= $totalPages) ? 'disabled' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
                                                 <i class="la la-angle-right"></i>
                                             </a>
                                         </li>
