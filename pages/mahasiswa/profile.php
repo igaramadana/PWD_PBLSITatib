@@ -82,7 +82,7 @@ sqlsrv_close($conn);
                                 ?>
                                 <!-- Menampilkan foto profil -->
                                 <img src="../../assets/uploads/<?php echo $fotoProfil; ?>" alt="avatar"
-                                    class="rounded-circle img-fluid" style="width: 150px;">
+                                    class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
                                 <h5 class="my-3"><?php echo $mahasiswa['Nama']; ?></h5>
                                 <p class="text-muted mb-1">Mahasiswa</p>
                                 <div class="d-flex justify-content-center mb-2">
@@ -165,21 +165,21 @@ sqlsrv_close($conn);
 
     <!-- Modal untuk upload foto profil -->
     <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="uploadModalLabel">Upload Foto Profil</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="upload_foto_profil.php" method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="fotoProfil">Pilih Foto Profil</label>
-                            <input type="file" class="form-control" id="fotoProfil" name="fotoProfil" accept="image/*" required>
+                    <form action="../../process/process_upload_profile.php" method="POST" enctype="multipart/form-data">
+                        <label for="fotoProfil">Pilih Foto Profil</label>
+                        <div class="form-file">
+                            <input type="file" class="form-file-input form-control" id="fotoProfil" name="fotoProfil" accept="image/*" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary mt-3">Upload</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -198,6 +198,12 @@ sqlsrv_close($conn);
             reader.readAsDataURL(event.target.files[0]);
         }
     </script>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
