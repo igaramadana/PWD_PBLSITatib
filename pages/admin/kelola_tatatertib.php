@@ -123,7 +123,7 @@ if ($result === false) {
                                             while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) : ?>
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
-                                                    <td><?php echo htmlspecialchars($row['NamaPelanggaran']); ?></td>
+                                                    <td class="text-start"><?php echo htmlspecialchars($row['NamaPelanggaran']); ?></td>
                                                     <td><?php echo htmlspecialchars($row['Tingkat']); ?></td>
                                                     <td>
                                                         <div class="d-flex justify-content-center">
