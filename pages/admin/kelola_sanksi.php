@@ -50,45 +50,31 @@ if ($result === false) {
                     </ol>
                 </div>
 
-                <!-- Status Message -->
+                <!-- Status message -->
                 <?php if (isset($_GET['status'])): ?>
-                    <div class="alert alert-<?php echo ($_GET['status'] == 'success' ? 'success' : 'danger'); ?> alert-dismissible fade show" role="alert">
-                        <?php
-                        if (isset($_GET['msg'])) {
-                            echo htmlspecialchars($_GET['msg']);
-                        } else {
-                            echo ($_GET['status'] == 'success' ? 'Sanksi berhasil diperbarui.' : 'Terjadi kesalahan.');
-                        }
-                        ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
+                    <div class="alert alert-<?php echo ($_GET['status'] == 'success' ? 'success' : 'danger'); ?> solid alert-dismissible fade show" role="alert">
 
-                <!-- Status Message Delete -->
-                <?php if (isset($_GET['status'])): ?>
-                    <div class="alert alert-<?php echo ($_GET['status'] == 'deleted' ? 'success' : 'danger'); ?> alert-dismissible fade show" role="alert">
+                        <!-- Ikon untuk Success -->
+                        <?php if ($_GET['status'] == 'success'): ?>
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                                <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                            </svg>
+                        <?php else: ?>
+                            <!-- Ikon untuk Error -->
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                                <path d="M12 9v2M12 15v.01M5.22 5.22l1.42 1.42M17.36 17.36l1.42 1.42M5.22 17.36l1.42-1.42M17.36 5.22l1.42 1.42M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"></path>
+                            </svg>
+                        <?php endif; ?>
+                        
                         <?php
-                        // Menampilkan pesan yang lebih spesifik berdasarkan status
                         if (isset($_GET['msg'])) {
                             echo htmlspecialchars($_GET['msg']);
                         } else {
-                            echo ($_GET['status'] == 'deleted' ? 'Sanksi berhasil dihapus.' : 'Terjadi kesalahan saat menghapus sanksi.');
+                            echo ($_GET['status'] == 'success' ? 'Pelanggaran berhasil diperbarui.' : 'Terjadi kesalahan.');
                         }
                         ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
 
-                <!-- Status Message Tambah -->
-                <?php if (isset($_GET['status'])): ?>
-                    <div class="alert alert-<?php echo ($_GET['status'] == 'success' ? 'success' : 'danger'); ?> alert-dismissible fade show" role="alert">
-                        <?php
-                        if (isset($_GET['msg'])) {
-                            echo htmlspecialchars($_GET['msg']);
-                        } else {
-                            echo ($_GET['status'] == 'success' ? 'Sanksi berhasil ditambahkan.' : 'Terjadi kesalahan.');
-                        }
-                        ?>
+                        <!-- Tombol tutup alert -->
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
@@ -121,7 +107,6 @@ if ($result === false) {
                                     <button class="btn btn-md btn-success ms-3" data-bs-toggle="modal" data-bs-target="#tambahModal">+ Tambah Sanksi</button>
                                 </div>
 
-                                <!-- Table for Sanksi -->
                                 <!-- Tabel Sanksi -->
                                 <div class="table-responsive">
                                     <table class="table table-bordered text-center">
@@ -139,7 +124,7 @@ if ($result === false) {
                                             while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) : ?>
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
-                                                    <td><?php echo htmlspecialchars($row['NamaSanksi']); ?></td>
+                                                    <td class="text-start"><?php echo htmlspecialchars($row['NamaSanksi']); ?></td>
                                                     <td><?php echo htmlspecialchars($row['Tingkat']); ?></td>
                                                     <td>
                                                         <div class="d-flex justify-content-center">

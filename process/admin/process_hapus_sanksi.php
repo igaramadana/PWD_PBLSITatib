@@ -1,26 +1,24 @@
 <?php
 include "../../config/database.php";
 
-// Mengecek apakah ID sanksi ada di form
-if (isset($_POST['SanksiID'])) {
-    $sanksiID = $_POST['SanksiID'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $sanksiID = isset($_POST['SanksiID']) ? $_POST['SanksiID'] : '';
 
-    // Query untuk menghapus data sanksi berdasarkan ID
-    $sql = "DELETE FROM Sanksi WHERE SanksiID = ?";
-    $params = array($sanksiID);
-
-    // Menjalankan query
-    $stmt = sqlsrv_query($conn, $sql, $params);
-
-    // Cek apakah penghapusan berhasil
-    if ($stmt) {
-        // Redirect kembali ke halaman kelola sanksi dengan status berhasil
-        header("Location: ../../pages/admin/kelola_sanksi.php?status=deleted");
-    } else {
-        // Jika gagal, redirect dengan status error
-        header("Location: ../../pages/admin/kelola_sanksi.php?status=error");
+    if (empty($sanksiID)) {
+        header("Location: ../admin/kelola_sanksi.php?status=error&msg=ID sanksi tidak ditemukan");
+        exit;
     }
-} else {
-    // Jika ID tidak ditemukan, redirect ke halaman kelola sanksi
-    header("Location: ../../pages/admin/kelola_sanksi.php");
+
+    $query = "DELETE FROM Sanksi WHERE SanksiID = ?";
+
+    $params = array($sanksiID);
+    $result = sqlsrv_query($conn, $query, $params);
+
+    if ($result) {
+        // Redirect ke halaman kelola pelanggaran dengan status sukses
+        header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php?status=success");
+    } else {
+        // Jika gagal, tampilkan error
+        header("Location: /PWD_PBLSITatib/pages/admin/kelola_sanksi.php?status=error");
+    }
 }
