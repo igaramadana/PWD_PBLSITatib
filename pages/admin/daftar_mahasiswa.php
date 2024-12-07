@@ -15,7 +15,7 @@ $startFrom = ($page - 1) * $perPage;
 
 // Query untuk mengambil data mahasiswa beserta username dan password dari tabel Users
 $query = "
-    SELECT m.MhsID, m.NIM, m.Nama, m.Jurusan, m.Prodi, m.Kelas, m.Angkatan, u.Username, u.Password
+    SELECT m.MhsID, m.NIM, m.Nama, m.Jurusan, m.Prodi, m.Kelas, m.Angkatan, u.Username, u.Password, m.FotoProfil
     FROM Mahasiswa m
     INNER JOIN Users u ON m.UserID = u.UserID
     WHERE m.NIM LIKE ? OR m.Nama LIKE ? OR u.Username LIKE ?
@@ -62,6 +62,7 @@ $totalMahasiswa = $totalRow['total'];
 // Menghitung total halaman
 $totalPages = ceil($totalMahasiswa / $perPage);
 ?>
+
 <body>
     <!-- Preloader -->
     <div id="preloader">
@@ -135,7 +136,12 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                                             foreach ($mahasiswaList as $mahasiswa) {
                                                 echo "<tr>";
                                                 echo "<td class='text-center'>" . $no++ . "</td>";
-                                                echo "<td class='text-center'><img src='../../assets/template/images/avatar/1.jpg' alt='Foto Profil' class='img-fluid rounded-circle' width='50' height='50'></td>";
+
+                                                // Menampilkan foto profil
+                                                $fotoProfil = $mahasiswa['FotoProfil'] ? '../../assets/uploads/' . $mahasiswa['FotoProfil'] : '../../assets/uploads/profile.svg'; // Default jika tidak ada foto
+                                                echo "<td class='text-center'><img src='" . htmlspecialchars($fotoProfil) . "' alt='Foto Profil' class='rounded-circle' width='50' height='50' style='object-fit: cover;'></td>";
+
+                                                // Menampilkan data lainnya
                                                 echo "<td class='text-center'>{$mahasiswa['NIM']}</td>";
                                                 echo "<td class='text-center'>{$mahasiswa['Nama']}</td>";
                                                 echo "<td class='text-center'>{$mahasiswa['Jurusan']}</td>";
