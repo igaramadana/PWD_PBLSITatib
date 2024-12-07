@@ -101,213 +101,235 @@ if ($result === false) {
                                 <h4 class="card-title">Kelola Sanksi</h4>
                             </div>
                             <div class="card-body">
-                                <!-- Search Form -->
-                                <form action="kelola_sanksi.php" method="get" class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="search-area w-50">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <!-- Search Form -->
+                                    <form action="kelola_sanksi.php" method="get" class="d-flex align-items-center w-50">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari disini...">
-                                            <span class="input-group-text">
-                                                <button type="submit" class="btn btn-link"><i class="flaticon-381-search-2"></i></button>
-                                            </span>
+                                            <input
+                                                type="text"
+                                                class="form-control rounded-start"
+                                                name="search"
+                                                value="<?php echo htmlspecialchars($search); ?>"
+                                                placeholder="Cari sanksi..."
+                                                aria-label="Cari sanksi" />
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-search"></i>
+                                            </button>
                                         </div>
-                                    </div>
-                                </form>
-                                <div>
-                                    <button class="btn btn-md btn-success mb-3" data-bs-toggle="modal" data-bs-target="#tambahModal">+ Tambah Sanksi</button>
+                                    </form>
+                                    <!-- Tambah Sanksi Button -->
+                                    <button class="btn btn-md btn-success ms-3" data-bs-toggle="modal" data-bs-target="#tambahModal">+ Tambah Sanksi</button>
                                 </div>
 
                                 <!-- Table for Sanksi -->
+                                <!-- Tabel Sanksi -->
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-responsive-md">
+                                    <table class="table table-bordered text-center">
                                         <thead class="bg-primary text-white">
                                             <tr>
-                                                <th class="text-center">No.</th>
-                                                <th class="text-center">Nama Sanksi</th>
-                                                <th class="text-center">Tingkat</th>
-                                                <th class="text-center">Aksi</th>
+                                                <th>No.</th>
+                                                <th>Nama Sanksi</th>
+                                                <th>Tingkat</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $no = $startFrom + 1; // Nomor urut
-                                            while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-                                                echo "<tr>";
-                                                echo "<td class='text-center'>" . $no++ . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['NamaSanksi']) . "</td>";
-                                                echo "<td class='text-center'>" . $row['Tingkat'] . "</td>";
-                                                echo "<td class='text-center'>
-                                                        <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editModal'
-                                                            data-id='" . $row['SanksiID'] . "'
-                                                            data-nama='" . htmlspecialchars($row['NamaSanksi']) . "'
-                                                            data-tingkat='" . htmlspecialchars($row['Tingkat']) . "'>Edit</button>
-                                                        <button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal'
-                                                            data-id='" . $row['SanksiID'] . "'>Hapus</button>
-                                                      </td>";
-                                                echo "</tr>";
-                                            }
-                                            ?>
+                                            $no = $startFrom + 1;
+                                            while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) : ?>
+                                                <tr>
+                                                    <td><?php echo $no++; ?></td>
+                                                    <td><?php echo htmlspecialchars($row['NamaSanksi']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['Tingkat']); ?></td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-center">
+                                                            <!-- Tombol Edit -->
+                                                            <button class="btn btn-warning btn-sm me-2 rounded-pill"
+                                                                data-bs-toggle="modal" data-bs-target="#editModal"
+                                                                data-id="<?php echo urlencode($row['SanksiID']); ?>"
+                                                                data-nama="<?php echo htmlspecialchars($row['NamaSanksi']); ?>"
+                                                                data-tingkat="<?php echo htmlspecialchars($row['Tingkat']); ?>"
+                                                                aria-label="Edit Sanksi <?php echo htmlspecialchars($row['NamaSanksi']); ?>">
+                                                                <i class="fa fa-pencil-alt me-2"></i> Edit
+                                                            </button>
+
+                                                            <!-- Tombol Hapus -->
+                                                            <button class="btn btn-danger btn-sm rounded-pill"
+                                                                data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                                                data-id="<?php echo urlencode($row['SanksiID']); ?>"
+                                                                data-nama="<?php echo htmlspecialchars($row['NamaSanksi']); ?>"
+                                                                aria-label="Hapus Sanksi <?php echo htmlspecialchars($row['NamaSanksi']); ?>">
+                                                                <i class="fa fa-trash me-2"></i> Hapus
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <?php endwhile; ?>
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
 
-                            <!-- Pagination Section -->
-                            <nav class="pb-2">
-                                <ul class="pagination pagination-gutter justify-content-center">
-                                    <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
-                                            <i class="la la-angle-left"></i>
-                                        </a>
-                                    </li>
-                                    <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                                        <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
+
+                                <!-- Pagination Section -->
+                                <nav class="pb-2">
+                                    <ul class="pagination pagination-gutter justify-content-center">
+                                        <!-- Previous Page Button (disabled if on the first page) -->
+                                        <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>">
+                                                <i class="la la-angle-left"></i>
+                                            </a>
                                         </li>
-                                    <?php endfor; ?>
-                                    <li class="page-item <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
-                                            <i class="la la-angle-right"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+
+                                        <!-- Current Page Number -->
+                                        <li class="page-item active">
+                                            <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+                                        </li>
+
+                                        <!-- Next Page Button (disabled if on the last page) -->
+                                        <li class="page-item <?php echo ($page >= $totalPages) ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>">
+                                                <i class="la la-angle-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <?php include("footer.php"); ?>
+        </div>
+
+        <!-- Modal Edit Sanksi -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Sanksi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="../../process/admin/process_edit_sanksi.php" method="POST">
+                            <input type="hidden" name="SanksiID" id="editSanksiID">
+                            <div class="form-group mb-3">
+                                <label for="editNamaSanksi">Nama Sanksi</label>
+                                <textarea name="NamaSanksi" id="editNamaSanksi" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="editTingkat">Tingkat</label>
+                                <select name="TingkatID" id="editTingkat" class="form-control" required>
+                                    <option value="">Pilih Tingkat</option>
+                                    <?php
+                                    // Ambil data tingkat pelanggaran
+                                    $queryTingkat = "SELECT * FROM TingkatPelanggaran";
+                                    $resultTingkat = sqlsrv_query($conn, $queryTingkat);
+
+                                    if ($resultTingkat === false) {
+                                        die(print_r(sqlsrv_errors(), true));
+                                    }
+
+                                    while ($tingkat = sqlsrv_fetch_array($resultTingkat, SQLSRV_FETCH_ASSOC)) {
+                                        echo "<option value='" . $tingkat['TingkatID'] . "'>" . $tingkat['Tingkat'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Update Sanksi</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <?php include("footer.php"); ?>
-    </div>
-
-    <!-- Modal Edit Sanksi -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Sanksi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="../../process/admin/process_edit_sanksi.php" method="POST">
-                        <input type="hidden" name="SanksiID" id="editSanksiID">
-                        <div class="form-group mb-3">
-                            <label for="editNamaSanksi">Nama Sanksi</label>
-                            <textarea name="NamaSanksi" id="editNamaSanksi" class="form-control" rows="3" required></textarea>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="editTingkat">Tingkat</label>
-                            <select name="TingkatID" id="editTingkat" class="form-control" required>
-                                <option value="">Pilih Tingkat</option>
-                                <?php
-                                // Ambil data tingkat pelanggaran
-                                $queryTingkat = "SELECT * FROM TingkatPelanggaran";
-                                $resultTingkat = sqlsrv_query($conn, $queryTingkat);
-
-                                if ($resultTingkat === false) {
-                                    die(print_r(sqlsrv_errors(), true));
-                                }
-
-                                while ($tingkat = sqlsrv_fetch_array($resultTingkat, SQLSRV_FETCH_ASSOC)) {
-                                    echo "<option value='" . $tingkat['TingkatID'] . "'>" . $tingkat['Tingkat'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success">Update Sanksi</button>
-                        </div>
-                    </form>
+        <!-- Modal Hapus Sanksi -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Hapus Sanksi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-center">Apakah Anda yakin ingin menghapus sanksi ini?</p>
+                        <form action="../../process/admin/process_hapus_sanksi.php" method="POST">
+                            <input type="hidden" name="SanksiID" id="deleteSanksiID">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-danger">Hapus Sanksi</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal Hapus Sanksi -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Hapus Sanksi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-center">Apakah Anda yakin ingin menghapus sanksi ini?</p>
-                    <form action="../../process/admin/process_hapus_sanksi.php" method="POST">
-                        <input type="hidden" name="SanksiID" id="deleteSanksiID">
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-danger">Hapus Sanksi</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!-- Modal Tambah Sanksi -->
+        <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahModalLabel">Tambah Sanksi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="../../process/admin/process_tambah_sanksi.php" method="POST">
+                            <div class="form-group mb-3">
+                                <label for="NamaSanksi">Nama Sanksi</label>
+                                <input type="text" name="NamaSanksi" id="NamaSanksi" class="form-control" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="TingkatID">Tingkat</label>
+                                <select name="TingkatID" id="TingkatID" class="form-control" required>
+                                    <option value="">Pilih Tingkat</option>
+                                    <?php
+                                    // Ambil data tingkat pelanggaran
+                                    $queryTingkat = "SELECT * FROM TingkatPelanggaran";
+                                    $resultTingkat = sqlsrv_query($conn, $queryTingkat);
 
-    <!-- Modal Tambah Sanksi -->
-    <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="tambahModalLabel">Tambah Sanksi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="../../process/admin/process_tambah_sanksi.php" method="POST">
-                        <div class="form-group mb-3">
-                            <label for="NamaSanksi">Nama Sanksi</label>
-                            <input type="text" name="NamaSanksi" id="NamaSanksi" class="form-control" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="TingkatID">Tingkat</label>
-                            <select name="TingkatID" id="TingkatID" class="form-control" required>
-                                <option value="">Pilih Tingkat</option>
-                                <?php
-                                // Ambil data tingkat pelanggaran
-                                $queryTingkat = "SELECT * FROM TingkatPelanggaran";
-                                $resultTingkat = sqlsrv_query($conn, $queryTingkat);
+                                    if ($resultTingkat === false) {
+                                        die(print_r(sqlsrv_errors(), true));
+                                    }
 
-                                if ($resultTingkat === false) {
-                                    die(print_r(sqlsrv_errors(), true));
-                                }
-
-                                while ($tingkat = sqlsrv_fetch_array($resultTingkat, SQLSRV_FETCH_ASSOC)) {
-                                    echo "<option value='" . $tingkat['TingkatID'] . "'>" . $tingkat['Tingkat'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success">Tambah Sanksi</button>
-                        </div>
-                    </form>
+                                    while ($tingkat = sqlsrv_fetch_array($resultTingkat, SQLSRV_FETCH_ASSOC)) {
+                                        echo "<option value='" . $tingkat['TingkatID'] . "'>" . $tingkat['Tingkat'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Tambah Sanksi</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
 
-    <script>
-        // Memasukkan data ke dalam modal saat edit
-        $('#editModal').on('show.bs.modal', function(e) {
-            var button = $(e.relatedTarget);
-            var id = button.data('id');
-            var nama = button.data('nama');
-            var tingkat = button.data('tingkat');
+        <script>
+            // Memasukkan data ke dalam modal saat edit
+            $('#editModal').on('show.bs.modal', function(e) {
+                var button = $(e.relatedTarget);
+                var id = button.data('id');
+                var nama = button.data('nama');
+                var tingkat = button.data('tingkat');
 
-            $('#editSanksiID').val(id);
-            $('#editNamaSanksi').val(nama);
-            $('#editTingkat').val(tingkat);
-        });
+                $('#editSanksiID').val(id);
+                $('#editNamaSanksi').val(nama);
+                $('#editTingkat').val(tingkat);
+            });
 
-        // Memasukkan data ke dalam modal saat hapus
-        $('#deleteModal').on('show.bs.modal', function(e) {
-            var button = $(e.relatedTarget);
-            var id = button.data('id');
-            $('#deleteSanksiID').val(id);
-        });
-    </script>
+            // Memasukkan data ke dalam modal saat hapus
+            $('#deleteModal').on('show.bs.modal', function(e) {
+                var button = $(e.relatedTarget);
+                var id = button.data('id');
+                $('#deleteSanksiID').val(id);
+            });
+        </script>
 </body>
 
 </html>
