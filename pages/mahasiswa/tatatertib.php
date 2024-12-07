@@ -1,134 +1,152 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tata Tertib Mahasiswa</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            margin: 20px;
-        }
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        }
-        .table {
-            width: 100%;
-            margin-bottom: 1rem;
-            background-color: transparent;
-        }
-        .table th, .table td {
-            vertical-align: middle;
-        }
-       
-        .text-primary {
-            color: #6c757d; 
-        }
-        .badge {
-            font-size: 0.875rem;
-            padding: 0.375rem 0.75rem;
-            border-radius: 0.375rem;
-        }
-        .badge-success {
-            background-color: #28a745;
-            color: white;
-        }
-        .badge-warning {
-            background-color: #ffc107;
-            color: black;
-        }
-    </style>
-</head>
+<?php
+include "../../config/database.php";
+include "../../process/mahasiswa/fungsi_tampil_profile.php";
+$perPage = 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$startFrom = ($page - 1) * $perPage;
+
+$countQuery = "SELECT COUNT(*) AS total FROM Pelanggaran WHERE Pelanggaran.NamaPelanggaran LIKE ?";
+$searchParam = "%" . $search . "%";
+$countParams = array($searchParam);
+$countResult = sqlsrv_query($conn, $countQuery, $countParams);
+$countRow = sqlsrv_fetch_array($countResult, SQLSRV_FETCH_ASSOC);
+$totalData = $countRow['total'];
+
+// Menghitung jumlah total halaman
+$totalPages = ceil($totalData / $perPage);
+
+// Menangani pencarian (jika ada)
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Query untuk mengambil data sanksi
+$query = "SELECT Pelanggaran.PelanggaranID, Pelanggaran.NamaPelanggaran, TingkatPelanggaran.Tingkat
+          FROM Pelanggaran
+          JOIN TingkatPelanggaran ON Pelanggaran.TingkatID = TingkatPelanggaran.TingkatID
+          WHERE Pelanggaran.NamaPelanggaran LIKE ?
+          ORDER BY Pelanggaran.PelanggaranID
+          OFFSET $startFrom ROWS FETCH NEXT $perPage ROWS ONLY";
+
+$searchParam = "%" . $search . "%";
+$params = array($searchParam);
+$result = sqlsrv_query($conn, $query, $params);
+
+if ($result === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
+?>
+
 <body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="lds-ripple">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
 
-<div class="container-fluid mt-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-0 shadow-lg bg-white text-dark rounded-4 hover-shadow-lg">
-                <div class="card-body p-5">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                            <!-- Ubah warna teks menjadi Wingi -->
-                            <h2 class="fw-bold mb-2 text-primary">Tata Tertib Mahasiswa</h2>
-                            <p class="mb-0 text-muted fs-5">
-                                Daftar tata tertib yang harus dipatuhi oleh seluruh mahasiswa di lingkungan kampus.
-                            </p>
-                        </div>
-                        <div class="text-end">
-                            <i class="flaticon-381-dashboard fs-3 text-primary"></i>
+    <!-- Main wrapper -->
+    <div id="main-wrapper">
+        <?php include("header.php"); ?>
+        <?php include("sidebar.php"); ?>
+
+        <!-- Content body -->
+        <div class="content-body">
+            <div class="container-fluid">
+                <!-- Breadcrumb -->
+                <div class="row page-titles">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Peraturan</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Sanksi</a></li>
+                    </ol>
+                </div>
+
+                <!-- Kelola Sanksi Section -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h4 class="card-title">Daftar Tata Terib Mahasiswa</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <!-- Search Form -->
+                                    <form action="tatatertib.php" method="get" class="d-flex align-items-center w-50">
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control rounded-start"
+                                                name="search"
+                                                value="<?php echo htmlspecialchars($search); ?>"
+                                                placeholder="Cari pelanggaran..."
+                                                aria-label="Cari pelanggaran" />
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Tabel Sanksi -->
+                                <div class="table-responsive">
+                                    <table class="table table-bordered text-center">
+                                        <thead class="bg-primary text-white">
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Nama Pelanggaran</th>
+                                                <th>Tingkat</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $no = $startFrom + 1;
+                                            while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) : ?>
+                                                <tr>
+                                                <td><?php echo $no++; ?></td>
+                                                    <td class="text-start"><?php echo htmlspecialchars($row['NamaPelanggaran']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['Tingkat']); ?></td>
+                                                </tr>
+                                            <?php endwhile; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                                <!-- Pagination Section -->
+                                <nav class="pb-2">
+                                    <ul class="pagination pagination-gutter justify-content-center">
+                                        <!-- Previous Page Button (disabled if on the first page) -->
+                                        <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
+                                                <i class="la la-angle-left"></i>
+                                            </a>
+                                        </li>
+
+                                        <!-- Pages Button -->
+                                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                            <li class="page-item <?php echo ($page == $i) ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>">
+                                                    <?php echo $i; ?>
+                                                </a>
+                                            </li>
+                                        <?php endfor; ?>
+
+                                        <!-- Next Page Button (disabled if on the last page) -->
+                                        <li class="page-item <?php echo ($page >= $totalPages) ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
+                                                <i class="la la-angle-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Tabel Tata Tertib Mahasiswa -->
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Pelanggaran</th>
-                                    <th>Tingkat Pelanggaran</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $rules = [
-                                    ["Berkomunikasi dengan tidak sopan, baik tertulis atau tidak tertulis kepada mahasiswa, dosen, karyawan, atau orang lain", "V"],
-                                    ["Berbusana tidak sopan dan tidak rapi, seperti pakaian ketat, transparan, memakai t-shirt, dll.", "IV"],
-                                    ["Mahasiswa laki-laki berambut tidak rapi, gondrong", "IV"],
-                                    ["Mahasiswa berambut dengan model punk, dicat selain hitam dan/atau skinned", "IV"],
-                                    ["Makan atau minum di dalam ruang kuliah/laboratorium/bengkel", "IV"],
-                                    ["Melanggar peraturan/ketentuan yang berlaku di Polinema", "III"],
-                                    ["Tidak menjaga kebersihan di seluruh area Polinema", "III"],
-                                    ["Membuat kegaduhan yang mengganggu perkuliahan atau praktikum", "III"],
-                                    ["Merokok di luar area kawasan merokok", "III"],
-                                    ["Bermain kartu, game online di area kampus", "III"],
-                                    ["Mengotori atau mencoret-coret fasilitas kampus", "III"],
-                                    ["Bertingkah laku kasar atau tidak sopan", "III"],
-                                    ["Merusak sarana dan prasarana kampus", "II"],
-                                    ["Tidak menjaga ketertiban dan keamanan", "II"],
-                                    ["Mengakses materi pornografi di kelas atau area kampus", "II"],
-                                    ["Membawa/menggunakan senjata tajam/senjata api untuk hal kriminal", "II"],
-                                    ["Melakukan perkelahian, membentuk geng, atau kegiatan negatif", "II"],
-                                    ["Melakukan kegiatan politik praktis di kampus", "II"],
-                                    ["Mengancam secara tertulis atau tidak tertulis", "II"],
-                                    ["Mencuri dalam bentuk apapun", "I/II"],
-                                    ["Melakukan kecurangan akademik, administratif, atau keuangan", "I/II"],
-                                    ["Melakukan pelecehan atau tindakan asusila", "I/II"],
-                                    ["Berjudi, minum-minuman keras, atau mabuk", "I/II"],
-                                    ["Mengikuti organisasi atau menyebarkan faham terlarang", "I/II"],
-                                    ["Melakukan pemalsuan dokumen", "I/II"],
-                                    ["Melakukan plagiasi", "I/II"],
-                                    ["Tidak menjaga nama baik Polinema", "I"],
-                                    ["Melakukan tindakan yang merendahkan martabat negara atau Polinema", "I"],
-                                    ["Menggunakan barang psikotropika atau zat adiktif lainnya", "I"],
-                                    ["Mengedarkan barang psikotropika", "I"],
-                                    ["Terlibat dalam tindakan kriminal", "I"]
-                                ];
-
-                                foreach ($rules as $index => $rule) {
-                                    echo "<tr>
-                                        <td>" . ($index + 1) . "</td>
-                                        <td>" . $rule[0] . "</td>
-                                        <td class='text-center'>" . $rule[1] . "</td>
-                                    </tr>";
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- End Tabel Tata Tertib Mahasiswa -->
                 </div>
             </div>
         </div>
+        <?php include("footer.php"); ?>
     </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
