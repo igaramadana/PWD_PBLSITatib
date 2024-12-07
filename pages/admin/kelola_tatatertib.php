@@ -51,7 +51,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                                 <!-- Form Pencarian dan Tombol Tambah Data -->
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <!-- Form Pencarian -->
-                                    <form action="kelola_pelanggaran.php" method="get" class="d-flex align-items-center">
+                                    <form action="kelola_tatatertib.php" method="get" class="d-flex align-items-center">
                                         <div class="input-group" style="width: 300px;">
                                             <input type="text" class="form-control rounded-start" name="search"
                                                 value="<?php echo htmlspecialchars($search); ?>"
@@ -161,106 +161,6 @@ $stmt = sqlsrv_query($conn, $sql, $params);
         <?php include("footer.php"); ?>
     </div>
 
-    <!-- Modal Edit Pelanggaran -->
-    <div class="modal fade" id="editModal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-center fs-3">Edit Pelanggaran</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="../../process/admin/process_edit_pelanggaran.php" method="POST">
-                        <input type="hidden" name="PelanggaranID" id="editPelanggaranID">
-                        <div class="form-group text-start fs-4 mb-3">
-                            <label for="editNamaPelanggaran" class="text-start">Nama Pelanggaran</label>
-                            <textarea name="NamaPelanggaran" id="editNamaPelanggaran" class="form-control fs-4"></textarea>
-                        </div>
-                        <div class="form-group text-start fs-4">
-                            <label for="editTingkat" class="text-start">Tingkat</label>
-                            <select name="TingkatID" id="editTingkat" class="default-select form-control wide mb-3 fs-4" required>
-                                <option value="">Pilih Tingkat</option>
-                                <?php
-                                // Mengambil daftar tingkat pelanggaran
-                                $sqlTingkat = "SELECT * FROM TingkatPelanggaran";
-                                $stmtTingkat = sqlsrv_query($conn, $sqlTingkat);
-                                while ($tingkat = sqlsrv_fetch_array($stmtTingkat, SQLSRV_FETCH_ASSOC)) {
-                                    echo "<option value='" . $tingkat['TingkatID'] . "'>" . $tingkat['Tingkat'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                            <!-- Tombol Simpan Perubahan -->
-                            <button type="submit" class="btn btn-success fs-5">Simpan Perubahan</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Modal Tambah Pelanggaran -->
-    <div class="modal fade" id="tambahModal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-center fs-3">Tambah Data Pelanggaran</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="../../process/admin/process_tambah_pelanggaran.php" method="POST">
-                        <!-- Nama Pelanggaran -->
-                        <div class="form-group fs-4 mb-4">
-                            <label for="NamaPelanggaran" class="mb-2 d-block text-start">Nama Pelanggaran</label>
-                            <textarea name="NamaPelanggaran" id="NamaPelanggaran" class="form-control fs-4" rows="3" placeholder="Masukkan nama pelanggaran" required></textarea>
-                        </div>
-
-                        <!-- Tingkat -->
-                        <div class="form-group fs-4 mb-4">
-                            <label for="Tingkat" class="mb-2 d-block text-start">Tingkat</label>
-                            <select name="TingkatID" id="Tingkat" class="form-select fs-4" required>
-                                <option value="" disabled selected>Pilih Tingkat</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                            </select>
-                        </div>
-
-                        <!-- Tombol Simpan -->
-                        <div class="text-left">
-                            <button type="submit" class="btn btn-success fs-5">Simpan Data</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Modal Konfirmasi Hapus Pelanggaran -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus data pelanggaran "<strong id="deleteNamaPelanggaran"></strong>"?
-                </div>
-                <div class="modal-footer">
-                    <!-- Tombol Batal -->
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <!-- Tombol Hapus -->
-                    <a href="../../process/admin/process_hapus_pelanggaran.php?id=<?php echo $row['PelanggaranID']; ?>" id="deleteLink" class="btn btn-danger">Hapus</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -282,11 +182,6 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             modal.find('#editTingkat').val(tingkat);
         });
 
-        // Jika modal ditutup dengan cara lain (misalnya klik di luar modal atau tekan Esc)
-        $('#editModal').on('hidden.bs.modal', function() {
-            // Tidak perlu ada aksi tambahan karena modal sudah tertutup
-        });
-
         // Menangani pengambilan data ID pelanggaran untuk modal hapus
         $('#deleteModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Tombol yang memicu modal
@@ -295,18 +190,8 @@ $stmt = sqlsrv_query($conn, $sql, $params);
 
             // Memasukkan data ke dalam modal
             var modal = $(this);
+            modal.find('#deletePelanggaranID').val(pelanggaranID);
             modal.find('#deleteNamaPelanggaran').text(namaPelanggaran);
-
-            // Mengarahkan link Hapus ke URL yang benar dengan ID yang sesuai
-            modal.find('#deleteLink').attr('href', '../../process/admin/process_hapus_pelanggaran.php?id=' + pelanggaranID);
         });
     </script>
-
 </body>
-
-</html>
-
-<?php
-// Menutup koneksi
-sqlsrv_close($conn);
-?>
