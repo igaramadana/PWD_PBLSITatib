@@ -28,7 +28,7 @@ Main wrapper start
 
     <!--**********************************
     Content body start
-***********************************-->
+    ***********************************-->
     <div class="content-body">
         <!-- row -->
         <div class="container-fluid">
@@ -50,7 +50,7 @@ Main wrapper start
                             <h4 class="card-title">Input Pelanggaran Mahasiswa</h4>
                         </div>
                         <div class="card-body">
-                            <form action="simpan_pelanggaran.php" method="post" enctype="multipart/form-data">
+                            <form action="../../process/fungsi/simpan_pelanggaran.php" method="post" enctype="multipart/form-data">
                                 
                                 <div class="mb-3">
                                     <label for="nim" class="form-label">NIM</label>
@@ -59,51 +59,38 @@ Main wrapper start
                                 
                                 <div class="mb-3">
                                     <label for="nama" class="form-label">Nama</label>
-                                    <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" required>
+                                    <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" readonly required>
                                 </div>
 
                                 <!-- Dropdown Kelas -->
                                 <div class="mb-3">
                                     <label for="kelas" class="form-label">Kelas</label>
-                                    <select class="form-control" id="kelas" name="kelas" required>
-                                        <option value="">-- Pilih Kelas --</option>
-                                        <option value="A">Kelas A</option>
-                                        <option value="B">Kelas B</option>
-                                        <option value="C">Kelas C</option>
-                                        <option value="D">Kelas D</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="kelas" name="kelas" placeholder="Masukkan Kelas" readonly required>
                                 </div>
 
                                 <!-- Dropdown Program Studi -->
                                 <div class="mb-3">
                                     <label for="prodi" class="form-label">Program Studi</label>
-                                    <select class="form-control" id="prodi" name="prodi" required>
-                                        <option value="">-- Pilih Program Studi --</option>
-                                        <option value="D4 Teknik Informatika">D4 Teknik Informatika</option>
-                                        <option value="D4 Sistem Informasi Bisnis">D4 Sistem Informasi Bisnis</option>
-                                        <option value="D2 Pengembangan Piranti Lunak Situs">D2 Pengembangan Piranti Lunak Situs</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="prodi" name="prodi" placeholder="Masukkan Program Studi" readonly required>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="jenis_pelanggaran" class="form-label">Jenis Pelanggaran</label>
-                                    <select class="form-control" id="jenis_pelanggaran" name="jenis_pelanggaran" required onchange="toggleLainnya(this.value)">
+                                    <select class="form-control" id="jenis_pelanggaran" name="jenis_pelanggaran" required onchange="loadSanksiOptions(this.value)">
                                         <option value="">-- Pilih Jenis Pelanggaran --</option>
-                                        <option value="Plagiasi">Plagiasi</option>
-                                        <option value="Tidak Masuk Kuliah">Telat Masuk Kelas</option>
-                                        <option value="Perilaku Tidak Sopan">Merokok di Area Gedung</option>
-                                        <option value="Lainnya">Lainnya</option>
                                     </select>
                                 </div>
                                 
-                                <div class="mb-3" id="lainnya-container" style="display: none;">
-                                    <label for="lainnya" class="form-label">Jenis Pelanggaran (Lainnya)</label>
-                                    <input type="text" class="form-control" id="lainnya" name="lainnya" placeholder="Masukkan Jenis Pelanggaran Lainnya">
+                                <div class="mb-3">
+                                    <label for="sanksi" class="form-label">Sanksi</label>
+                                    <select class="form-control" id="sanksi" name="sanksi" required>
+                                        <option value="">-- Pilih Sanksi --</option>
+                                    </select>
                                 </div>
                                 
                                 <div class="mb-3">
-                                    <label for="deskripsi" class="form-label">Deskripsi Pelanggaran</label>
-                                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4" placeholder="Masukkan deskripsi pelanggaran" required></textarea>
+                                    <label for="catatan" class="form-label">Deskripsi Pelanggaran</label>
+                                    <textarea class="form-control" id="catatan" name="catatan" rows="4" placeholder="Masukkan deskripsi pelanggaran" required></textarea>
                                 </div>
                                 
                                 <div class="mb-3">
@@ -143,15 +130,54 @@ include("footer.php");
 
 <!-- Script untuk mengatur opsi "Lainnya" -->
 <script>
-    function toggleLainnya(value) {
-        const lainnyaContainer = document.getElementById('lainnya-container');
-        if (value === 'Lainnya') {
-            lainnyaContainer.style.display = 'block';
-            document.getElementById('lainnya').setAttribute('required', 'required');
-        } else {
-            lainnyaContainer.style.display = 'none';
-            document.getElementById('lainnya').removeAttribute('required');
+    // Function untuk autofill data mahasiswa berdasarkan NIM
+    document.getElementById('nim').addEventListener('change', function() {
+        var nim = this.value;
+
+        // Ambil data mahasiswa berdasarkan NIM
+        if (nim) {
+            fetch('../../process/fungsi/get_mahasiswa.php?nim=' + nim)
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        document.getElementById('nama').value = data.Nama || 'Nama tidak ditemukan';
+                        document.getElementById('kelas').value = data.Kelas || 'Kelas tidak ditemukan';
+                        document.getElementById('prodi').value = data.Prodi || 'Prodi tidak ditemukan';
+                    } else {
+                        alert('NIM tidak ditemukan!');
+                    }
+                });
         }
+    });
+
+    // Function untuk mengambil data jenis pelanggaran dari database
+    fetch('../../process/fungsi/get_pelanggaran.php')
+        .then(response => response.json())
+        .then(data => {
+            const pelanggaranSelect = document.getElementById('jenis_pelanggaran');
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.pelanggaran_id;
+                option.textContent = item.nama_pelanggaran;
+                pelanggaranSelect.appendChild(option);
+            });
+        });
+
+    // Function untuk mengambil sanksi berdasarkan jenis pelanggaran
+    function loadSanksiOptions(pelanggaranId) {
+        fetch('../../process/fungsi/get_sanksi.php?pelanggaran_id=' + pelanggaranId)
+            .then(response => response.json())
+            .then(data => {
+                const sanksiSelect = document.getElementById('sanksi');
+                sanksiSelect.innerHTML = '<option value="">-- Pilih Sanksi --</option>'; // Clear previous options
+
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.sanksi_id;
+                    option.textContent = item.nama_sanksi;
+                    sanksiSelect.appendChild(option);
+                });
+            });
     }
 </script>
 
