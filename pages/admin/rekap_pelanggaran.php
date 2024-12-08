@@ -7,7 +7,7 @@ $statusFilter = isset($_GET['status']) ? $_GET['status'] : '';
 
 // Query dasar
 $query = "SELECT p.PelanggaranID, m.NIM, m.Nama, pp.Catatan, pp.StatusPelanggaran, m.FotoProfil,
-          pp.BuktiPelanggaran
+          pp.BuktiPelanggaran, p.NamaPelanggaran
           FROM PengaduanPelanggaran pp
           JOIN Mahasiswa m ON pp.MhsID = m.MhsID
           JOIN Pelanggaran p ON pp.PelanggaranID = p.PelanggaranID
@@ -132,6 +132,7 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                             <th class="text-center">Foto Profil</th>
                                             <th class="text-center">NIM</th>
                                             <th class="text-center">Nama Mahasiswa</th>
+                                            <th class="text-center">Nama Pelanggaran</th>
                                             <th class="text-center">Deskripsi Pelanggaran</th>
                                             <th class="text-center">Bukti Pelanggaran</th>
                                             <th class="text-center">Status</th>
@@ -157,6 +158,7 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                                     <td class="text-center"><?php echo htmlspecialchars($pelanggaran['NIM']); ?></td>
                                                     <!-- Nama mahasiswa -->
                                                     <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Nama']); ?></td>
+                                                    <td class="text-start"><?php echo htmlspecialchars($pelanggaran['NamaPelanggaran']); ?></td>
                                                     <!-- Deskripsi pelanggaran -->
                                                     <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Catatan']); ?></td>
                                                     <!-- Bukti pelanggaran -->
