@@ -21,6 +21,7 @@
                 <ul aria-expanded="false">
                     <li><a href="tatatertib.php">Tata Tertib Mahasiswa</a></li>
                     <li><a href="sanksi.php">Sanksi</a></li>
+                    <li><a href="form_pernyataan.php">Form Pernyataan</a></li>
                 </ul>
             </li>
 
