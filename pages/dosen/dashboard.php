@@ -1,3 +1,7 @@
+<?php 
+include "../../process/dosen/fungsi_tampil_profile.php";
+?>
+
 <body>
 
 <!--*******************
