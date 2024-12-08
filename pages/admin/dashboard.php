@@ -43,6 +43,12 @@ include "../../config/database.php";
                 </div>
                 <div class="row gy-4">
                     <!-- Total Pelanggaran -->
+                     <?php
+                     $queryTotalPelanggaran = "SELECT COUNT(*) AS total_pelanggaran FROM PengaduanPelanggaran";
+                     $resultTotalPelanggaran = sqlsrv_query($conn, $queryTotalPelanggaran);
+                     $rowTotalPelanggaran = sqlsrv_fetch_array($resultTotalPelanggaran, SQLSRV_FETCH_ASSOC);
+                     $totalPelanggaran = $rowTotalPelanggaran['total_pelanggaran'];
+                     ?>
                     <div class="col-xl-3 col-lg-6 col-sm-6">
                         <div class="widget-stat card bg-danger">
                             <div class="card-body p-4">
@@ -52,7 +58,7 @@ include "../../config/database.php";
                                     </span>
                                     <div class="media-body text-white text-end">
                                         <p class="mb-1 fw-bold">Total Pelanggaran</p>
-                                        <h3 class="text-white mb-0">76</h3>
+                                        <h3 class="text-white mb-0"><?= $totalPelanggaran; ?></h3>
                                     </div>
                                 </div>
                             </div>
