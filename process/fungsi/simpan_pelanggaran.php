@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             INSERT INTO PengaduanPelanggaran 
             (MhsID, PelanggaranID, TanggalPengaduan, SanksiID, Catatan, BuktiPelanggaran, StatusPelanggaran) 
             VALUES 
-            ((SELECT MhsID FROM Mahasiswa WHERE NIM = ?), ?, ?, ?, ?, ?, 'Diproses')
+            ((SELECT MhsID FROM Mahasiswa WHERE NIM = ?), ?, ?, ?, ?, ?, 'Diajukan')
         ";
 
         // Menyusun parameter untuk query

@@ -1,4 +1,4 @@
-<?php 
+<?php
 include "../../config/database.php";
 ?>
 
@@ -43,12 +43,12 @@ include "../../config/database.php";
                 </div>
                 <div class="row gy-4">
                     <!-- Total Pelanggaran -->
-                     <?php
-                     $queryTotalPelanggaran = "SELECT COUNT(*) AS total_pelanggaran FROM PengaduanPelanggaran";
-                     $resultTotalPelanggaran = sqlsrv_query($conn, $queryTotalPelanggaran);
-                     $rowTotalPelanggaran = sqlsrv_fetch_array($resultTotalPelanggaran, SQLSRV_FETCH_ASSOC);
-                     $totalPelanggaran = $rowTotalPelanggaran['total_pelanggaran'];
-                     ?>
+                    <?php
+                    $queryTotalPelanggaran = "SELECT COUNT(*) AS total_pelanggaran FROM PengaduanPelanggaran";
+                    $resultTotalPelanggaran = sqlsrv_query($conn, $queryTotalPelanggaran);
+                    $rowTotalPelanggaran = sqlsrv_fetch_array($resultTotalPelanggaran, SQLSRV_FETCH_ASSOC);
+                    $totalPelanggaran = $rowTotalPelanggaran['total_pelanggaran'];
+                    ?>
                     <div class="col-xl-3 col-lg-6 col-sm-6">
                         <div class="widget-stat card bg-danger">
                             <div class="card-body p-4">
@@ -114,6 +114,12 @@ include "../../config/database.php";
                     </div>
 
                     <!-- Sanksi Saat Ini -->
+                    <?php
+                    $queryRequestPelanggaran = "SELECT COUNT(*) AS total_request FROM PengaduanPelanggaran WHERE StatusPelanggaran = 'Diajukan'";
+                    $resultRequestPelanggaran = sqlsrv_query($conn, $queryRequestPelanggaran);
+                    $requestRow = sqlsrv_fetch_array($resultRequestPelanggaran, SQLSRV_FETCH_ASSOC);
+                    $totalRequest = $requestRow['total_request'];
+                    ?>
                     <div class="col-xl-3 col-lg-6 col-sm-6">
                         <div class="widget-stat card bg-primary">
                             <div class="card-body p-4">
@@ -123,7 +129,7 @@ include "../../config/database.php";
                                     </span>
                                     <div class="media-body text-white text-end">
                                         <p class="mb-1 fw-bold">Request Pelanggaran</p>
-                                        <h3 class="text-white mb-0">Tidak ada</h3>
+                                        <h3 class="text-white mb-0"><?= $totalRequest ?></h3>
                                     </div>
                                 </div>
                             </div>
