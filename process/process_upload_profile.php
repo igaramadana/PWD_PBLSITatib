@@ -1,4 +1,3 @@
-
 <?php
 // Pastikan koneksi ke database sudah dibuat
 include '../config/database.php'; // Sesuaikan dengan koneksi database Anda
@@ -12,8 +11,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Ambil UserID dari sesi
+// Ambil UserID dan Role dari sesi
 $UserID = $_SESSION['user_id'];
+$role = $_SESSION['role']; // Pastikan session role ada yang menandakan apakah itu dosen atau mahasiswa
 
 // Cek apakah file telah di-upload
 if (isset($_FILES['fotoProfil'])) {
@@ -31,7 +31,6 @@ if (isset($_FILES['fotoProfil'])) {
     // Cek apakah ekstensi file valid
     if (in_array($fileExt, $allowedExts)) {
         // Cek apakah ada error saat upload
-        // Cek apakah ada error saat upload
         if ($fileError === 0) {
             // Tentukan lokasi penyimpanan file
             $newFileName = uniqid('', true) . '.' . $fileExt;
@@ -39,9 +38,18 @@ if (isset($_FILES['fotoProfil'])) {
 
             // Pindahkan file ke folder yang ditentukan
             if (move_uploaded_file($fileTmpName, $fileDestination)) {
-                // Update database dengan nama file baru
-                $sql = "UPDATE Mahasiswa SET FotoProfil = ? WHERE UserID = ?";
-                $params = array($newFileName, $UserID);
+                // Update database dengan nama file baru berdasarkan role
+                if ($role == 'dosen') {
+                    // Jika user adalah dosen, update tabel Dosen
+                    $sql = "UPDATE Dosen SET ProfilDosen = ? WHERE UserID = ?";
+                    $params = array($newFileName, $UserID);
+                } else if ($role == 'mahasiswa') {
+                    // Jika user adalah mahasiswa, update tabel Mahasiswa
+                    $sql = "UPDATE Mahasiswa SET FotoProfil = ? WHERE UserID = ?";
+                    $params = array($newFileName, $UserID);
+                }
+
+                // Eksekusi query untuk update
                 $stmt = sqlsrv_query($conn, $sql, $params);
 
                 if ($stmt === false) {
@@ -49,7 +57,11 @@ if (isset($_FILES['fotoProfil'])) {
                 }
 
                 // Redirect kembali ke halaman profil setelah berhasil upload
-                header("Location: ../pages/mahasiswa/profile.php");
+                if ($role == 'dosen') {
+                    header("Location: ../pages/dosen/profile_dosen.php"); // Redirect ke profil dosen
+                } else {
+                    header("Location: ../pages/mahasiswa/profile.php"); // Redirect ke profil mahasiswa
+                }
                 exit();
             } else {
                 echo "Terjadi kesalahan saat memindahkan file ke server.";
