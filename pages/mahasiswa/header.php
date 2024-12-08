@@ -161,10 +161,10 @@ $currentDate = date('l, d F Y');
                     </li>
                     <li class="nav-item dropdown  header-profile">
                         <a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
-                            <?php $fotoProfil = $mahasiswa['FotoProfil'];
+                            <!-- <?php $fotoProfil = $mahasiswa['FotoProfil'];
                             if (empty($fotoProfil) || $fotoProfil == NULL) {
                                 $fotoProfil = 'profile.svg';
-                            } ?>
+                            } ?> -->
                             <img src="../../assets/uploads/<?php echo $fotoProfil; ?>" width="56" style="object-fit: cover;" alt="">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
