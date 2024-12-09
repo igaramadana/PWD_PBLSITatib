@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 require_once '../../config/database.php';
 session_start();  // Pastikan session sudah dimulai
@@ -62,6 +63,10 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
 }
 
 sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
+=======
+<?php 
+include "../../process/mahasiswa/fungsi_tampil_profile.php"; 
+>>>>>>> b490799673c0dc9617df25030657daf62cff068d
 ?>
 
 <!-- Preloader -->
@@ -87,16 +92,25 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
             <!-- Breadcrumb -->
             <div class="row page-titles">
                 <ol class="breadcrumb">
+<<<<<<< HEAD
                     <li class="breadcrumb-item"><a href="javascript:void(0)">Pelanggaran</a></li>
                     <li class="breadcrumb-item active"><a href="javascript:void(0)">Rekap Pelanggaran</a></li>
                 </ol>
             </div>
 
             <!-- Rekap Pelanggaran Section -->
+=======
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Riwayat Pelanggaran</a></li>
+                </ol>
+            </div>
+
+            <!-- Riwayat Pelanggaran Section -->
+>>>>>>> b490799673c0dc9617df25030657daf62cff068d
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
+<<<<<<< HEAD
                             <h4 class="card-title">Riwayat Pelanggaran Saya</h4>
                         </div>
                         <div class="card-body">
@@ -110,6 +124,22 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                             <input type="text" class="form-control" name="search"
                                                 value="<?php echo htmlspecialchars($search ?? ''); ?>"
                                                 placeholder="Cari disini...">
+=======
+                            <h4 class="card-title">Riwayat Pelanggaran Anda</h4>
+                        </div>
+                        <div class="card-body">
+
+                            <!-- Search Form -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <form action="riwayat_pelanggaran.php" method="get" class="d-flex">
+                                        <div class="input-group">
+                                            <!-- Input pencarian berdasarkan keyword -->
+                                            <input type="text" class="form-control" name="search"
+                                                value="<?php echo htmlspecialchars($search ?? ''); ?>"
+                                                placeholder="Cari berdasarkan deskripsi...">
+                                            <!-- Tombol submit pencarian -->
+>>>>>>> b490799673c0dc9617df25030657daf62cff068d
                                             <button type="submit" class="btn btn-primary">
                                                 <i class="fa fa-search"></i>
                                             </button>
@@ -117,6 +147,7 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                     </form>
                                 </div>
 
+<<<<<<< HEAD
                                 <!-- Sort by Status -->
                                 <div class="col-md-6 text-end">
                                     <form action="rekap_pelanggaran.php" method="get">
@@ -127,6 +158,18 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                                     <option value="Diajukan" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Diajukan') ? 'selected' : ''; ?>>Diajukan</option>
                                                     <option value="Diproses" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Diproses') ? 'selected' : ''; ?>>Diproses</option>
                                                     <option value="Selesai" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Selesai') ? 'selected' : ''; ?>>Selesai</option>
+=======
+                                <!-- Sort by Date -->
+                                <div class="col-md-6 text-end">
+                                    <form action="riwayat_pelanggaran.php" method="get">
+                                        <div class="d-flex justify-content-end">
+                                            <div class="input-group w-50">
+                                                <!-- Dropdown untuk sort -->
+                                                <select name="sort" class="form-control" onchange="this.form.submit()">
+                                                    <option value="">Sort by</option>
+                                                    <option value="tanggal_asc" <?php echo (isset($_GET['sort']) && $_GET['sort'] == 'tanggal_asc') ? 'selected' : ''; ?>>Tanggal: Terlama</option>
+                                                    <option value="tanggal_desc" <?php echo (isset($_GET['sort']) && $_GET['sort'] == 'tanggal_desc') ? 'selected' : ''; ?>>Tanggal: Terbaru</option>
+>>>>>>> b490799673c0dc9617df25030657daf62cff068d
                                                 </select>
                                             </div>
                                         </div>
@@ -140,6 +183,7 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                     <thead class="bg-primary text-white">
                                         <tr>
                                             <th class="text-center">No.</th>
+<<<<<<< HEAD
                                             <th class="text-center">Foto Profil</th>
                                             <th class="text-center">NIM</th>
                                             <th class="text-center">Nama Mahasiswa</th>
@@ -147,15 +191,24 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                             <th class="text-center">Deskripsi Pelanggaran</th>
                                             <th class="text-center">Tanggal Pelanggaran</th>
                                             <th class="text-center">Bukti Pelanggaran</th>
+=======
+                                            <th class="text-center">Tanggal</th>
+                                            <th class="text-center">Deskripsi Pelanggaran</th>
+>>>>>>> b490799673c0dc9617df25030657daf62cff068d
                                             <th class="text-center">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+<<<<<<< HEAD
+=======
+                                        <!-- Loop untuk menampilkan data pelanggaran -->
+>>>>>>> b490799673c0dc9617df25030657daf62cff068d
                                         <?php if (!empty($pelanggaranList)) : ?>
                                             <?php
                                             $no = 1;
                                             foreach ($pelanggaranList as $pelanggaran) : ?>
                                                 <tr>
+<<<<<<< HEAD
                                                     <td class="text-center"><?php echo $no++; ?></td>
                                                     <?php
                                                     $fotoProfil = $pelanggaran['FotoProfil'] ? '../../assets/uploads/' . $pelanggaran['FotoProfil'] : '../../assets/uploads/profile.svg';
@@ -190,18 +243,45 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                         <?php else: ?>
                                             <tr>
                                                 <td colspan="9" class="text-center">Tidak ada riwayat pelanggaran</td>
+=======
+                                                    <!-- Nomor urut -->
+                                                    <td><?php echo $no++; ?></td>
+                                                    <!-- Tanggal -->
+                                                    <td><?php echo htmlspecialchars($pelanggaran['Tanggal']); ?></td>
+                                                    <!-- Deskripsi pelanggaran -->
+                                                    <td><?php echo htmlspecialchars($pelanggaran['Deskripsi']); ?></td>
+                                                    <!-- Status -->
+                                                    <td><?php echo htmlspecialchars($pelanggaran['Status']); ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <!-- Jika data kosong -->
+                                            <tr>
+                                                <td colspan="4" class="text-center">Tidak ada data pelanggaran yang ditemukan.</td>
+>>>>>>> b490799673c0dc9617df25030657daf62cff068d
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> b490799673c0dc9617df25030657daf62cff068d
                         </div>
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
 
         </div>
     </div>
 
+=======
+        </div>
+
+        <!-- Footer -->
+        <?php include("footer.php"); ?>
+    </div>
+>>>>>>> b490799673c0dc9617df25030657daf62cff068d
 </div>
