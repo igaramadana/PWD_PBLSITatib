@@ -15,7 +15,7 @@ $startFrom = ($page - 1) * $perPage;
 
 // Query untuk mengambil data dosen beserta username dan password dari tabel Users
 $query = "
-    SELECT d.DosenID, d.NIP, d.Nama, u.Username, u.Password
+    SELECT d.DosenID, d.NIP, d.Nama, u.Username, u.Password, d.JKDosen, d.PhoneDosen, d.EmailDosen
     FROM Dosen d
     INNER JOIN Users u ON d.UserID = u.UserID
     WHERE d.NIP LIKE ? OR d.Nama LIKE ? OR u.Username LIKE ?
@@ -142,7 +142,10 @@ $totalPages = ceil($totalDosen / $perPage);
                                         <th class="text-center">Foto Profil</th>
                                         <th class="text-center">NIP</th>
                                         <th class="text-center">Nama Dosen</th>
+                                        <th class="text-center">Jenis Kelamin</th>
                                         <th class="text-center">Username</th>
+                                        <th class="text-center">Phone Dosen</th>
+                                        <th class="text-center">Email Dosen</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -160,7 +163,10 @@ $totalPages = ceil($totalDosen / $perPage);
                                                 </td>
                                                 <td class="text-center"><?php echo htmlspecialchars($dosen['NIP']); ?></td>
                                                 <td class="text-center"><?php echo htmlspecialchars($dosen['Nama']); ?></td>
+                                                <td class="text-center"><?php echo htmlspecialchars($dosen['JKDosen']); ?></td>
                                                 <td class="text-center"><?php echo htmlspecialchars($dosen['Username']); ?></td>
+                                                <td class="text-center"><?php echo htmlspecialchars($dosen['PhoneDosen']); ?></td>
+                                                <td class="text-center"><?php echo htmlspecialchars($dosen['EmailDosen']); ?></td>
                                                 <td class="text-center">
                                                     <a href="edit_dosen.php?id=<?php echo urlencode($dosen['DosenID']); ?>" 
                                                        class="btn btn-warning btn-sm" 
