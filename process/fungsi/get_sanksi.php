@@ -1,5 +1,5 @@
 <?php
-include('../../config/database.php');  // Pastikan koneksi DB sudah benar
+require_once '../../config/database.php';  // Pastikan koneksi DB sudah benar
 
 if (isset($_GET['pelanggaran_id'])) {
     $pelanggaran_id = $_GET['pelanggaran_id'];

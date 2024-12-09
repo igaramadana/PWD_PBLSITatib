@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('../config/database.php'); // Koneksi ke database
+require_once '../config/database.php'; // Koneksi ke database
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Query tambahan untuk mengambil data sesuai role
             $additionalInfo = null;
+            $MhsID = null; // Inisialisasi MhsID
             switch ($user['Role']) {
                 case 'admin':
                     $infoQuery = "SELECT Nama FROM Admin WHERE UserID = ?";
@@ -40,7 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     break;
 
                 case 'mahasiswa':
-                    $infoQuery = "SELECT Nama FROM Mahasiswa WHERE UserID = ?";
+                    // Ambil MhsID juga jika role adalah mahasiswa
+                    $infoQuery = "SELECT Nama, MhsID FROM Mahasiswa WHERE UserID = ?";
                     break;
 
                 default:
@@ -56,6 +58,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $additionalInfo = sqlsrv_fetch_array($infoStmt, SQLSRV_FETCH_ASSOC);
             $_SESSION['name'] = $additionalInfo['Nama'];
+
+            // Simpan MhsID ke session jika role adalah mahasiswa
+            if ($user['Role'] == 'mahasiswa') {
+                $_SESSION['MhsID'] = $additionalInfo['MhsID'];
+            }
 
             // Redirect berdasarkan role
             switch ($user['Role']) {

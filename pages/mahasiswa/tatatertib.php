@@ -1,5 +1,5 @@
 <?php
-include "../../config/database.php";
+require_once '../../config/database.php';
 include "../../process/mahasiswa/fungsi_tampil_profile.php";
 $perPage = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;

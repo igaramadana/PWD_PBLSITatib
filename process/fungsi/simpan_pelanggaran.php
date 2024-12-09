@@ -1,5 +1,5 @@
 <?php
-include('../../config/database.php');  // Pastikan koneksi DB sudah benar
+require_once '../../config/database.php';  // Pastikan koneksi DB sudah benar
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Mengambil data dari form

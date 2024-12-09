@@ -13,21 +13,12 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 // Menghitung posisi awal (offset) untuk query
 $startFrom = ($page - 1) * $perPage;
 
-// Query untuk mengambil data mahasiswa beserta username dan password dari tabel Users
-$query = "
-    SELECT m.MhsID, m.NIM, m.Nama, m.Jurusan, m.Prodi, m.Kelas, m.Angkatan, u.Username, u.Password, m.FotoProfil
-    FROM Mahasiswa m
-    INNER JOIN Users u ON m.UserID = u.UserID
-    WHERE m.NIM LIKE ? OR m.Nama LIKE ? OR u.Username LIKE ?
-    ORDER BY m.MhsID
-    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
-";
-
 // Persiapkan parameter pencarian
 $searchTerm = '%' . $search . '%';  // Menambahkan wildcard (%) untuk pencarian partial
 
-// Eksekusi query untuk mengambil data mahasiswa berdasarkan halaman dan pencarian
-$stmt = sqlsrv_query($conn, $query, array($searchTerm, $searchTerm, $searchTerm, $startFrom, $perPage));
+// Eksekusi stored procedure untuk mengambil data mahasiswa berdasarkan halaman dan pencarian
+$query = "EXEC sp_GetMahasiswa ?, ?, ?";
+$stmt = sqlsrv_query($conn, $query, array($searchTerm, $startFrom, $perPage));
 
 // Cek apakah query berhasil
 if ($stmt === false) {
@@ -46,14 +37,9 @@ if (empty($mahasiswaList)) {
     exit; // Menghentikan eksekusi script jika tidak ada data
 }
 
-// Query untuk menghitung total data mahasiswa sesuai dengan pencarian
-$totalQuery = "
-    SELECT COUNT(*) AS total
-    FROM Mahasiswa m
-    INNER JOIN Users u ON m.UserID = u.UserID
-    WHERE m.NIM LIKE ? OR m.Nama LIKE ? OR u.Username LIKE ?
-";
-$totalStmt = sqlsrv_query($conn, $totalQuery, array($searchTerm, $searchTerm, $searchTerm));
+// Eksekusi stored procedure untuk menghitung total data mahasiswa sesuai dengan pencarian
+$totalQuery = "EXEC sp_CountMahasiswa ?";
+$totalStmt = sqlsrv_query($conn, $totalQuery, array($searchTerm));
 
 // Mengambil total jumlah mahasiswa
 $totalRow = sqlsrv_fetch_array($totalStmt, SQLSRV_FETCH_ASSOC);
