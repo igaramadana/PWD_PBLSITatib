@@ -20,7 +20,7 @@ $currentDate = date('l, d F Y');
 	<meta name="format-detection" content="telephone=no">
 
 	<!-- PAGE TITLE HERE -->
-	<title>Dashboard - Dosen</title>
+	<title>Dashboard - Admin</title>
 
 	<!-- FAVICONS ICON -->
 	<link rel="shortcut icon" type="image/png" href="../../assets/template/images/favicon.png">
