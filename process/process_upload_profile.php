@@ -1,6 +1,6 @@
 <?php
 // Pastikan koneksi ke database sudah dibuat
-include '../config/database.php'; // Sesuaikan dengan koneksi database Anda
+require_once '../../config/database.php'; // Sesuaikan dengan koneksi database Anda
 
 // Mulai sesi
 session_start();

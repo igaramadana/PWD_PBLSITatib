@@ -1,3 +1,6 @@
+<?php 
+include "../../process/mahasiswa/fungsi_tampil_profile.php";
+?>
 <body>
 
 <!--*******************

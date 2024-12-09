@@ -1,13 +1,14 @@
 <?php
 include('../../config/database.php');  // Pastikan koneksi DB sudah benar
 
+
 // Variabel untuk pencarian dan status
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $statusFilter = isset($_GET['status']) ? $_GET['status'] : '';
 
 // Query dasar
 $query = "SELECT p.PelanggaranID, m.NIM, m.Nama, pp.Catatan, pp.StatusPelanggaran, m.FotoProfil,
-          pp.BuktiPelanggaran, p.NamaPelanggaran
+          pp.BuktiPelanggaran, p.NamaPelanggaran, pp.TanggalPengaduan
           FROM PengaduanPelanggaran pp
           JOIN Mahasiswa m ON pp.MhsID = m.MhsID
           JOIN Pelanggaran p ON pp.PelanggaranID = p.PelanggaranID
@@ -134,6 +135,7 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                             <th class="text-center">Nama Mahasiswa</th>
                                             <th class="text-center">Nama Pelanggaran</th>
                                             <th class="text-center">Deskripsi Pelanggaran</th>
+                                            <th class="text-center">Tanggal Pelanggaran</th>
                                             <th class="text-center">Bukti Pelanggaran</th>
                                             <th class="text-center">Status</th>
                                         </tr>
@@ -161,11 +163,23 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                                     <td class="text-start"><?php echo htmlspecialchars($pelanggaran['NamaPelanggaran']); ?></td>
                                                     <!-- Deskripsi pelanggaran -->
                                                     <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Catatan']); ?></td>
+                                                    <!-- Tanggal Pelanggaran -->
+                                                    <td class="text-center">
+                                                        <?php
+                                                        var_dump($pelanggaran['TanggalPengaduan']);  // Debugging
+                                                        if ($pelanggaran['TanggalPengaduan'] != NULL) {
+                                                            echo date('d F Y', strtotime($pelanggaran['TanggalPengaduan']));
+                                                        } else {
+                                                            echo 'Tidak ada tanggal';
+                                                        }
+                                                        ?>
+                                                    </td>
+
                                                     <!-- Bukti pelanggaran -->
-                                                     <?php
-                                                     $buktiPelanggaran = $pelanggaran['BuktiPelanggaran'] ? "../../assets/uploads/" . $pelanggaran['BuktiPelanggaran'] : '../../assets/uploads/no-image.png';
-                                                     ?>
-                                                     <td class='text-center'>
+                                                    <?php
+                                                    $buktiPelanggaran = $pelanggaran['BuktiPelanggaran'] ? "../../assets/uploads/" . $pelanggaran['BuktiPelanggaran'] : '../../assets/uploads/no-image.png';
+                                                    ?>
+                                                    <td class='text-center'>
                                                         <img src='<?php echo htmlspecialchars($buktiPelanggaran); ?>' alt='Bukti Pelanggaran' class='rounded-circle' width='50' height='50' style='object-fit: cover;'>
                                                     </td>
                                                     <!-- Status pelanggaran -->

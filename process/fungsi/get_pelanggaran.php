@@ -1,5 +1,5 @@
 <?php
-include('../../config/database.php');  // Pastikan koneksi DB sudah benar
+require_once '../../config/database.php';  // Pastikan koneksi DB sudah benar
 
 // Query untuk mengambil daftar jenis pelanggaran
 $query = "SELECT PelanggaranID AS pelanggaran_id, NamaPelanggaran AS nama_pelanggaran FROM Pelanggaran";
