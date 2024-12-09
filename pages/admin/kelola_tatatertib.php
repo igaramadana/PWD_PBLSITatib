@@ -1,38 +1,28 @@
 <?php
-include "../../config/database.php";
+// Pastikan untuk memuat file koneksi database dan kelas Pelanggaran
+include '../../config/database.php';
+include '../../models/Pelanggaran.php';
 
+// Ambil koneksi database
+$dbConnection = new DatabaseConnection();
+$pelanggaran = new Pelanggaran($dbConnection);
+
+// Pengaturan Pagination
 $perPage = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $startFrom = ($page - 1) * $perPage;
 
-// Menangani pencarian (jika ada)
+// Pencarian
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Query untuk menghitung jumlah total pelanggaran
-$countQuery = "SELECT COUNT(*) AS total FROM Pelanggaran WHERE Pelanggaran.NamaPelanggaran LIKE ?";
-$searchParam = "%" . $search . "%";
-$countParams = array($searchParam);
-$countResult = sqlsrv_query($conn, $countQuery, $countParams);
-$countRow = sqlsrv_fetch_array($countResult, SQLSRV_FETCH_ASSOC);
-$totalData = $countRow['total'];
+// Hitung total data pelanggaran
+$totalData = $pelanggaran->getTotalPelanggaran($search);
 
-// Menghitung jumlah total halaman
+// Menghitung jumlah halaman
 $totalPages = ceil($totalData / $perPage);
 
-// Query untuk mengambil data pelanggaran dengan pagination
-$query = "SELECT Pelanggaran.PelanggaranID, Pelanggaran.NamaPelanggaran, TingkatPelanggaran.Tingkat
-          FROM Pelanggaran
-          JOIN TingkatPelanggaran ON Pelanggaran.TingkatID = TingkatPelanggaran.TingkatID
-          WHERE Pelanggaran.NamaPelanggaran LIKE ?
-          ORDER BY Pelanggaran.PelanggaranID
-          OFFSET $startFrom ROWS FETCH NEXT $perPage ROWS ONLY";
-
-$params = array($searchParam);
-$result = sqlsrv_query($conn, $query, $params);
-
-if ($result === false) {
-    die(print_r(sqlsrv_errors(), true));
-}
+// Ambil data pelanggaran untuk halaman yang dipilih
+$results = $pelanggaran->getAllPelanggaran($search, $perPage, $page);
 ?>
 
 <body>
@@ -63,28 +53,16 @@ if ($result === false) {
                 <!-- Status Message -->
                 <?php if (isset($_GET['status'])): ?>
                     <div class="alert alert-<?php echo ($_GET['status'] == 'success' ? 'success' : 'danger'); ?> solid alert-dismissible fade show" role="alert">
-
-                        <!-- Ikon untuk Success -->
                         <?php if ($_GET['status'] == 'success'): ?>
                             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
                                 <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
                             </svg>
                         <?php else: ?>
-                            <!-- Ikon untuk Error -->
                             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
                                 <path d="M12 9v2M12 15v.01M5.22 5.22l1.42 1.42M17.36 17.36l1.42 1.42M5.22 17.36l1.42-1.42M17.36 5.22l1.42 1.42M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"></path>
                             </svg>
                         <?php endif; ?>
-
-                        <?php
-                        if (isset($_GET['msg'])) {
-                            echo htmlspecialchars($_GET['msg']);
-                        } else {
-                            echo ($_GET['status'] == 'success' ? 'Pelanggaran berhasil diperbarui.' : 'Terjadi kesalahan.');
-                        }
-                        ?>
-
-                        <!-- Tombol tutup alert -->
+                        <?php echo isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : ($_GET['status'] == 'success' ? 'Pelanggaran berhasil diperbarui.' : 'Terjadi kesalahan.'); ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
@@ -131,7 +109,7 @@ if ($result === false) {
                                         <tbody>
                                             <?php
                                             $no = $startFrom + 1;
-                                            while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) : ?>
+                                            while ($row = sqlsrv_fetch_array($results, SQLSRV_FETCH_ASSOC)) : ?>
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
                                                     <td class="text-start"><?php echo htmlspecialchars($row['NamaPelanggaran']); ?></td>
@@ -147,6 +125,7 @@ if ($result === false) {
                                                                 aria-label="Edit Pelanggaran <?php echo htmlspecialchars($row['NamaPelanggaran']); ?>">
                                                                 <i class="fa fa-pencil-alt me-2"></i> Edit
                                                             </button>
+
 
                                                             <!-- Tombol Hapus -->
                                                             <button class="btn btn-danger btn-sm rounded-pill"
@@ -200,23 +179,22 @@ if ($result === false) {
             <?php include("footer.php"); ?>
         </div>
 
-        <!-- Modal Edit Pelanggaran -->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal Tambah Pelanggaran -->
+        <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Edit Pelanggaran</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="../../process/admin/process_edit_pelanggaran.php" method="POST">
-                            <input type="hidden" name="PelanggaranID" id="editPelanggaranID">
-                            <div class="form-group mb-3">
-                                <label for="editNamaPelanggaran">Nama Pelanggaran</label>
-                                <textarea name="NamaPelanggaran" id="editNamaPelanggaran" class="form-control" rows="3" required></textarea>
+                    <form action="../../process/admin/process_tambah_pelanggaran.php" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="tambahModalLabel">Tambah Pelanggaran</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="namaPelanggaran" class="form-label">Nama Pelanggaran</label>
+                                <input type="text" class="form-control" name="namaPelanggaran" id="namaPelanggaran" required>
                             </div>
-                            <div class="form-group mb-3">
-                                <label for="editTingkat">Tingkat</label>
+                            <div class="mb-3">
+                                <label for="tingkat" class="form-label">Tingkat</label>
                                 <select name="TingkatID" id="editTingkat" class="form-control" required>
                                     <option value="">Pilih Tingkat</option>
                                     <?php
@@ -234,53 +212,34 @@ if ($result === false) {
                                     ?>
                                 </select>
                             </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-success">Update Pelanggaran</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Tambah Pelanggaran</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <!-- Modal Hapus Pelanggaran -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Hapus Pelanggaran</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-center">Apakah Anda yakin ingin menghapus pelanggaran ini?</p>
-                        <form action="../../process/admin/process_hapus_pelanggaran.php" method="POST">
-                            <input type="hidden" name="PelanggaranID" id="deletePelanggaranID">
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-danger">Hapus Pelanggaran</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Modal Tambah Pelanggaran -->
-        <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal Edit Pelanggaran -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="tambahModalLabel">Tambah Pelanggaran</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="../../process/admin/process_tambah_pelanggaran.php" method="POST">
-                            <div class="form-group mb-3">
-                                <label for="NamaPelanggaran">Nama Pelanggaran</label>
-                                <input type="text" name="NamaPelanggaran" id="NamaPelanggaran" class="form-control" required>
+                    <form action="../../process/admin/process_edit_pelanggaran.php" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel">Edit Pelanggaran</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editNamaPelanggaran" class="form-label">Nama Pelanggaran</label>
+                                <input type="text" class="form-control" name="editNamaPelanggaran" id="editNamaPelanggaran" required>
                             </div>
-                            <div class="form-group mb-3">
-                                <label for="TingkatID">Tingkat</label>
-                                <select name="TingkatID" id="TingkatID" class="form-control" required>
+                            <div class="mb-3">
+                                <label for="editTingkat" class="form-label">Tingkat</label>
+                                <select name="editTingkatID" id="editTingkatID" class="form-control" required>
                                     <option value="">Pilih Tingkat</option>
                                     <?php
                                     // Ambil data tingkat pelanggaran
@@ -297,35 +256,63 @@ if ($result === false) {
                                     ?>
                                 </select>
                             </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-success">Tambah Pelanggaran</button>
-                            </div>
-                        </form>
-                    </div>
+                            <input type="hidden" name="editPelanggaranID" id="editPelanggaranID">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <script>
-            // Memasukkan data ke dalam modal saat edit
-            $('#editModal').on('show.bs.modal', function(e) {
-                var button = $(e.relatedTarget);
-                var id = button.data('id');
-                var nama = button.data('nama');
-                var tingkat = button.data('tingkat');
+        <!-- Modal Hapus Pelanggaran -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="../../process/admin/process_hapus_pelanggaran.php" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Hapus Pelanggaran</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Apakah Anda yakin ingin menghapus pelanggaran <strong id="deleteNamaPelanggaran"></strong>?</p>
+                            <input type="hidden" name="deletePelanggaranID" id="deletePelanggaranID">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-                $('#editPelanggaranID').val(id);
-                $('#editNamaPelanggaran').val(nama);
-                $('#editTingkat').val(tingkat);
-            });
+    </div>
 
-            // Memasukkan data ke dalam modal saat hapus
-            $('#deleteModal').on('show.bs.modal', function(e) {
-                var button = $(e.relatedTarget);
-                var id = button.data('id');
-                $('#deletePelanggaranID').val(id);
-            });
-        </script>
+    <!-- Script untuk Modal -->
+    <script>
+        // Modal Edit
+        $('#editModal').on('show.bs.modal', function(e) {
+            var button = $(e.relatedTarget);
+            var id = button.data('id');
+            var nama = button.data('nama');
+            var tingkat = button.data('tingkat');
+
+            $('#editPelanggaranID').val(id);
+            $('#editNamaPelanggaran').val(nama);
+            $('#editTingkat').val(tingkat);
+        });
+
+
+        // Modal Hapus
+        $('#deleteModal').on('show.bs.modal', function(e) {
+            var button = $(e.relatedTarget);
+            var id = button.data('id');
+            var nama = button.data('nama');
+            $('#deletePelanggaranID').val(id);
+            $('#deleteNamaPelanggaran').text(nama);
+        });
+    </script>
 </body>
-
-</html>
