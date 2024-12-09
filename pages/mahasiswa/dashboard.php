@@ -66,29 +66,33 @@ Main wrapper start
                                     <!-- Content Pelanggaran Terkini -->
                                     <div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
                                         <div class="card border-0 shadow-sm rounded-4">
-                                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                                <h4 class="card-title mb-0 text-primary">Pelanggaran Terkini</h4>
-                                                <a href="riwayat.php" class="btn btn-sm btn-outline-primary">Selengkapnya</a>
+                                            <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #6f42c1;">
+                                                <h4 class="card-title mb-0" style="color: white">Pelanggaran Terkini</h4>
+                                                <a href="riwayat.php" class="btn btn-sm" style="color: white; border: 1px solid white; background-color: transparent; transition: background-color 0.3s ease, color 0.3s ease;"
+                                                    onmouseover="this.style.backgroundColor='white'; this.style.color='#007bff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';">
+                                                    Selengkapnya
+                                                </a>
+
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
                                                     <table class="table table-striped table-bordered">
                                                         <thead>
                                                             <tr>
-                                                                <th>No.</th>
-                                                                <th>Tanggal Pelanggaran</th>
-                                                                <th>Nama Pelanggaran</th>
-                                                                <th>Tingkat Pelanggaran</th>
-                                                                <th>Status</th>
+                                                                <th class="text-center">No.</th>
+                                                                <th class="text-center">Tanggal Pelanggaran</th>
+                                                                <th class="text-center">Nama Pelanggaran</th>
+                                                                <th class="text-center">Tingkat Pelanggaran</th>
+                                                                <th class="text-center">Status</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td>1</td>
-                                                                <td>10-11-2024</td>
-                                                                <td>Melakukan plagiasi</td>
+                                                                <td class="text-center" >1</td>
+                                                                <td class="text-center">10-11-2024</td>
+                                                                <td class="text-center">Melakukan plagiasi</td>
                                                                 <td class="text-center">I/II</td>
-                                                                <td>
+                                                                <td class="text-center">
                                                                     <span class="badge badge-success">Selesai</span>
                                                                     <div class="dropdown d-inline-block ms-2">
                                                                         <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -102,11 +106,11 @@ Main wrapper start
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>2</td>
-                                                                <td>10-11-2024</td>
-                                                                <td>Melakukan plagiasi</td>
+                                                                <td class="text-center">2</td>
+                                                                <td class="text-center">10-11-2024</td>
+                                                                <td class="text-center">Melakukan plagiasi</td>
                                                                 <td class="text-center">I/II</td>
-                                                                <td>
+                                                                <td class="text-center">
                                                                     <span class="badge badge-warning">Pending</span>
                                                                     <div class="dropdown d-inline-block ms-2">
                                                                         <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -162,13 +166,15 @@ Main wrapper start
             }
 
             .badge-success {
+                border-radius: 1.5rem;
                 background-color: #28a745;
                 color: white;
             }
 
             .badge-warning {
+                border-radius: 1.5rem;
                 background-color: #ffc107;
-                color: black;
+                color: white;
             }
 
             .table-striped tbody tr:nth-of-type(odd) {
