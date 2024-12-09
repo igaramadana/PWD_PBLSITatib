@@ -166,12 +166,12 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                                     <!-- Tanggal Pelanggaran -->
                                                     <td class="text-center">
                                                         <?php
-                                                        var_dump($pelanggaran['TanggalPengaduan']);  // Debugging
-                                                        if ($pelanggaran['TanggalPengaduan'] != NULL) {
-                                                            echo date('d F Y', strtotime($pelanggaran['TanggalPengaduan']));
-                                                        } else {
-                                                            echo 'Tidak ada tanggal';
-                                                        }
+                                                        // var_dump($pelanggaran['TanggalPengaduan']);  // Debugging
+                                                        // if ($pelanggaran['TanggalPengaduan'] != NULL) {
+                                                        //     echo date('d F Y', strtotime($pelanggaran['TanggalPengaduan']));
+                                                        // } else {
+                                                        //     echo 'Tidak ada tanggal';
+                                                        // }
                                                         ?>
                                                     </td>
 
