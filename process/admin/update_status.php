@@ -2,6 +2,7 @@
 include('../../config/database.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ambil data dari POST
     $status = $_POST['status'];
     $pelanggaran_id = $_POST['pelanggaran_id'];
 
@@ -16,5 +17,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Redirect kembali ke halaman rekap pelanggaran
     header("Location: ../../pages/admin/rekap_pelanggaran.php");
+    exit(); // Pastikan script berhenti setelah redirect
 }
-?>
