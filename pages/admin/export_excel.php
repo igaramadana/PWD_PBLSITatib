@@ -71,7 +71,7 @@ $sheet->setCellValue('B1', 'NIM');
 $sheet->setCellValue('C1', 'Nama Mahasiswa');
 $sheet->setCellValue('D1', 'Nama Pelanggaran');
 $sheet->setCellValue('E1', 'Deskripsi Pelanggaran');
-$sheet->setCellValue('F1', 'Tanggal Pelanggaran');
+$sheet->setCellValue('F1', 'Tanggal Pengaduan');
 $sheet->setCellValue('G1', 'Bukti Pelanggaran');
 $sheet->setCellValue('H1', 'Status');
 
@@ -107,8 +107,17 @@ foreach ($pelanggaranList as $pelanggaran) {
     // Menambahkan Bukti Pelanggaran (file path)
     $sheet->setCellValue('G' . $rowIndex, $pelanggaran['BuktiPelanggaran']);
 
-    // Status Pelanggaran
-    $sheet->setCellValue('H' . $rowIndex, $pelanggaran['StatusPelanggaran']);
+    // Status Pelanggaran dengan warna yang berbeda untuk memudahkan visualisasi
+    $status = $pelanggaran['StatusPelanggaran'];
+    $sheet->setCellValue('H' . $rowIndex, $status);
+    if ($status == 'Tuntas') {
+        $sheet->getStyle('H' . $rowIndex)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('A9D08E');  // Hijau
+    } elseif ($status == 'Proses') {
+        $sheet->getStyle('H' . $rowIndex)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('FFD966');  // Kuning
+    } else {
+        $sheet->getStyle('H' . $rowIndex)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('F4CCCC');  // Merah
+    }
+    
     $rowIndex++;
 }
 
