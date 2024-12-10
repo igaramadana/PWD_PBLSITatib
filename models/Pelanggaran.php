@@ -32,11 +32,11 @@ class Pelanggaran
         $searchParam = "%" . $search . "%";
 
         $query = "SELECT Pelanggaran.PelanggaranID, Pelanggaran.NamaPelanggaran, TingkatPelanggaran.Tingkat
-                  FROM Pelanggaran
-                  JOIN TingkatPelanggaran ON Pelanggaran.TingkatID = TingkatPelanggaran.TingkatID
-                  WHERE Pelanggaran.NamaPelanggaran LIKE ?
-                  ORDER BY Pelanggaran.PelanggaranID
-                  OFFSET $startFrom ROWS FETCH NEXT $perPage ROWS ONLY";
+                FROM Pelanggaran
+                JOIN TingkatPelanggaran ON Pelanggaran.TingkatID = TingkatPelanggaran.TingkatID
+                WHERE Pelanggaran.NamaPelanggaran LIKE ?
+                ORDER BY Pelanggaran.PelanggaranID
+                OFFSET $startFrom ROWS FETCH NEXT $perPage ROWS ONLY";
 
         $params = array($searchParam);
         $result = sqlsrv_query($this->conn, $query, $params);

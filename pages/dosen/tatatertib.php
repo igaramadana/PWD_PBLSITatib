@@ -1,12 +1,17 @@
 <?php
 include "../../config/database.php";
 include "../../process/dosen/fungsi_tampil_profile.php";
+
 $perPage = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $startFrom = ($page - 1) * $perPage;
 
+// Menangani pencarian (jika ada)
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Hitung total data
 $countQuery = "SELECT COUNT(*) AS total FROM Pelanggaran WHERE Pelanggaran.NamaPelanggaran LIKE ?";
-$searchParam = "%" . $search . "%";
+$searchParam = "%" . $search . "%"; // Sekarang $search sudah didefinisikan
 $countParams = array($searchParam);
 $countResult = sqlsrv_query($conn, $countQuery, $countParams);
 $countRow = sqlsrv_fetch_array($countResult, SQLSRV_FETCH_ASSOC);
@@ -14,9 +19,6 @@ $totalData = $countRow['total'];
 
 // Menghitung jumlah total halaman
 $totalPages = ceil($totalData / $perPage);
-
-// Menangani pencarian (jika ada)
-$search = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Query untuk mengambil data sanksi
 $query = "SELECT Pelanggaran.PelanggaranID, Pelanggaran.NamaPelanggaran, TingkatPelanggaran.Tingkat
@@ -33,7 +35,6 @@ $result = sqlsrv_query($conn, $query, $params);
 if ($result === false) {
     die(print_r(sqlsrv_errors(), true));
 }
-
 ?>
 
 <body>
@@ -102,7 +103,7 @@ if ($result === false) {
                                             $no = $startFrom + 1;
                                             while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) : ?>
                                                 <tr>
-                                                <td><?php echo $no++; ?></td>
+                                                    <td><?php echo $no++; ?></td>
                                                     <td class="text-start"><?php echo htmlspecialchars($row['NamaPelanggaran']); ?></td>
                                                     <td><?php echo htmlspecialchars($row['Tingkat']); ?></td>
                                                 </tr>
@@ -110,7 +111,6 @@ if ($result === false) {
                                         </tbody>
                                     </table>
                                 </div>
-
 
                                 <!-- Pagination Section -->
                                 <nav class="pb-2">
