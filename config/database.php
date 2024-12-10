@@ -35,4 +35,3 @@ class DatabaseConnection {
 $db = new DatabaseConnection();
 $conn = $db->getConnection();
 ?>
-s
