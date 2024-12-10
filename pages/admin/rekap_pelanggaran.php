@@ -79,6 +79,7 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                     <li class="breadcrumb-item active"><a href="javascript:void(0)">Rekap Pelanggaran</a></li>
                 </ol>
             </div>
+
             <!-- Tombol untuk Ekspor ke Excel -->
             <div class="row mb-3">
                 <div class="col-md-12 text-end">
@@ -197,10 +198,10 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                                     <td class="text-center">
                                                         <form action="../../process/admin/update_status.php" method="post">
                                                             <input type="hidden" name="pelanggaran_id" value="<?php echo $pelanggaran['PelanggaranID']; ?>">
-                                                            <select name="status" class="form-control" onchange="this.form.submit()">
-                                                                <option value="Diajukan" <?php echo ($pelanggaran['StatusPelanggaran'] == 'Diajukan') ? 'selected' : ''; ?>>Diajukan</option>
-                                                                <option value="Diproses" <?php echo ($pelanggaran['StatusPelanggaran'] == 'Diproses') ? 'selected' : ''; ?>>Diproses</option>
-                                                                <option value="Selesai" <?php echo ($pelanggaran['StatusPelanggaran'] == 'Selesai') ? 'selected' : ''; ?>>Selesai</option>
+                                                            <select name="status" class="form-control status-dropdown" onchange="updateStatusColor(this)">
+                                                                <option value="Diajukan" <?php echo ($pelanggaran['StatusPelanggaran'] == 'Diajukan') ? 'selected' : ''; ?> class="status-diajukan">Diajukan</option>
+                                                                <option value="Diproses" <?php echo ($pelanggaran['StatusPelanggaran'] == 'Diproses') ? 'selected' : ''; ?> class="status-diproses">Diproses</option>
+                                                                <option value="Selesai" <?php echo ($pelanggaran['StatusPelanggaran'] == 'Selesai') ? 'selected' : ''; ?> class="status-selesai">Selesai</option>
                                                             </select>
                                                         </form>
                                                     </td>
@@ -209,7 +210,7 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                         <?php else : ?>
                                             <!-- Jika data kosong -->
                                             <tr>
-                                                <td colspan="6" class="text-center">Tidak ada data pelanggaran yang ditemukan.</td>
+                                                <td colspan="9" class="text-center">Tidak ada data pelanggaran yang ditemukan.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -229,3 +230,84 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
     </body>
 
     </html>
+
+    <!-- Add CSS for the status dropdown -->
+    <style>
+        .status-diajukan {
+            border-radius: 1.5rem;
+            background-color: #ffc107;
+            /* Warna kuning untuk 'Diajukan' */
+            color: white;
+            text-align: center;
+            /* Center the text */
+            font-weight: bold;
+            /* Make text bold */
+        }
+
+        .status-diproses {
+            border-radius: 1.5rem;
+            background-color: #3498db;
+            /* Warna biru untuk 'Diproses' */
+            color: white;
+            text-align: center;
+            /* Center the text */
+            font-weight: bold;
+            /* Make text bold */
+        }
+
+        .status-selesai {
+            border-radius: 1.5rem;
+            background-color: #28a745;
+            /* Warna hijau untuk 'Selesai' */
+            color: white;
+            text-align: center;
+            /* Center the text */
+            font-weight: bold;
+            /* Make text bold */
+        }
+
+
+        /* CSS untuk mencegah kolom status terpotong */
+        .table td,
+        .table th {
+            white-space: nowrap;
+            /* Menghindari pembungkusan teks */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* Menambahkan elipsis jika teks panjang */
+        }
+
+        /* Lebar kolom status */
+        .table td:last-child,
+        .table th:last-child {
+            min-width: 50px;
+            /* Atur lebar minimal kolom status */
+            width: auto;
+            /* Biarkan lebar kolom status otomatis menyesuaikan */
+        }
+    </style>
+
+    <!-- JavaScript to dynamically change the dropdown color -->
+    <script>
+        function updateStatusColor(selectElement) {
+            const selectedValue = selectElement.value;
+            const classes = selectElement.classList;
+
+            // Reset any previous color classes
+            classes.remove('status-diajukan', 'status-diproses', 'status-selesai');
+
+            // Add the class corresponding to the selected value
+            if (selectedValue === 'Diajukan') {
+                classes.add('status-diajukan');
+            } else if (selectedValue === 'Diproses') {
+                classes.add('status-diproses');
+            } else if (selectedValue === 'Selesai') {
+                classes.add('status-selesai');
+            }
+        }
+
+        // Initialize dropdown color based on the current selected status
+        document.querySelectorAll('.status-dropdown').forEach(function(selectElement) {
+            updateStatusColor(selectElement);
+        });
+    </script>
