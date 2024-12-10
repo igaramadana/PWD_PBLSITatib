@@ -58,9 +58,9 @@
 
             <!-- Profile Menu -->
             <li>
-                <a class="" href="profile.php" aria-expanded="false">
-                    <i class="bi bi-person-circle"></i>
-                    <span class="nav-text">Profile</span>
+                <a class="" href="beritaacara.php" aria-expanded="false">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span class="nav-text">Form Berita Acara</span>
                 </a>
             </li>
 
@@ -78,7 +78,7 @@
 </div>
 
 <script>
-    document.getElementById('logoutBtn').addEventListener('click', function () {
+    document.getElementById('logoutBtn').addEventListener('click', function() {
         const confirmLogout = confirm('Apakah Anda yakin ingin keluar dari aplikasi?');
         if (confirmLogout) {
             window.location.href = '../logout.php'; // Pastikan URL logout benar

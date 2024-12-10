@@ -55,7 +55,7 @@ Main wrapper start
                         <div class="card-body">
                             <p>Untuk memastikan kelancaran proses administrasi, kami mengingatkan ada untuk segera mengurus Surat Pernyataan ini. Pastikan Anda mengunduh dan mengisi surat tersebut dengan benar.</p>
                             <hr>
-                            <h5>Download Berita Acara (PDF)</h5>
+                            <h5>Download Surat Pernyataan (PDF)</h5>
                             <p>Silakan klik tombol di bawah ini untuk mengunduh file PDF berita acara.</p>
                             <a href="surat pernyataan.pdf" download class="btn btn-success">Download PDF</a>
                             <hr>
