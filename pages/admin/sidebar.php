@@ -58,7 +58,7 @@
 
             <!-- Profile Menu -->
             <li>
-                <a class="" href="beritaacara.php" aria-expanded="false">
+                <a class="" href="form_beritaAcara.php" aria-expanded="false">
                     <i class="fa-solid fa-file-pdf"></i>
                     <span class="nav-text">Form Berita Acara</span>
                 </a>

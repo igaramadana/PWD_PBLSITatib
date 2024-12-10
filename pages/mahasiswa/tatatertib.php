@@ -1,42 +1,54 @@
 <?php
 require_once '../../config/database.php';
 include "../../process/mahasiswa/fungsi_tampil_profile.php";
+
+// Menangani pencarian (jika ada)
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 $perPage = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $startFrom = ($page - 1) * $perPage;
 
+// Query untuk menghitung total data
 $countQuery = "SELECT COUNT(*) AS total FROM Pelanggaran WHERE Pelanggaran.NamaPelanggaran LIKE ?";
 $search = isset($_GET['search']) ? $_GET['search'] : '';  // Inisialisasi dengan nilai default
 $searchParam = "%" . $search . "%";
 $countParams = array($searchParam);
 $countResult = sqlsrv_query($conn, $countQuery, $countParams);
+
+if ($countResult === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
 $countRow = sqlsrv_fetch_array($countResult, SQLSRV_FETCH_ASSOC);
 $totalData = $countRow['total'];
 
 // Menghitung jumlah total halaman
 $totalPages = ceil($totalData / $perPage);
 
-// Menangani pencarian (jika ada)
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-
 // Query untuk mengambil data sanksi
 $query = "SELECT Pelanggaran.PelanggaranID, Pelanggaran.NamaPelanggaran, TingkatPelanggaran.Tingkat
-          FROM Pelanggaran
-          JOIN TingkatPelanggaran ON Pelanggaran.TingkatID = TingkatPelanggaran.TingkatID
-          WHERE Pelanggaran.NamaPelanggaran LIKE ?
-          ORDER BY Pelanggaran.PelanggaranID
-          OFFSET $startFrom ROWS FETCH NEXT $perPage ROWS ONLY";
+        FROM Pelanggaran
+        JOIN TingkatPelanggaran ON Pelanggaran.TingkatID = TingkatPelanggaran.TingkatID
+        WHERE Pelanggaran.NamaPelanggaran LIKE ?
+        ORDER BY Pelanggaran.PelanggaranID
+        OFFSET $startFrom ROWS FETCH NEXT $perPage ROWS ONLY";
 
-$searchParam = "%" . $search . "%";
 $params = array($searchParam);
 $result = sqlsrv_query($conn, $query, $params);
 
 if ($result === false) {
     die(print_r(sqlsrv_errors(), true));
 }
-
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Tata Tertib Mahasiswa</title>
+    <!-- Tambahkan CSS dan JS yang diperlukan di sini -->
+</head>
 <body>
     <!-- Preloader -->
     <div id="preloader">
@@ -67,7 +79,7 @@ if ($result === false) {
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h4 class="card-title">Daftar Tata Terib Mahasiswa</h4>
+                                <h4 class="card-title">Daftar Tata Tertib Mahasiswa</h4>
                             </div>
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -112,7 +124,6 @@ if ($result === false) {
                                     </table>
                                 </div>
 
-
                                 <!-- Pagination Section -->
                                 <nav class="pb-2">
                                     <ul class="pagination pagination-gutter justify-content-center">
@@ -148,6 +159,9 @@ if ($result === false) {
         </div>
         <?php include("footer.php"); ?>
     </div>
-</body>
 
+    <!-- Tambahkan script JS yang diperlukan di sini -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
