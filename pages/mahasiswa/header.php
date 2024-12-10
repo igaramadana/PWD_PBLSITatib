@@ -1,6 +1,56 @@
 <?php
 date_default_timezone_set('Asia/Jakarta');
 $currentDate = date('l, d F Y');
+
+session_start();
+if (!isset($_SESSION['MhsID'])) {
+    header("Location: ../login.php");
+}
+
+$UserID = $_SESSION['MhsID'];
+
+// Filter dan query untuk mengambil pelanggaran terbaru
+$query = "SELECT TOP 5 p.PelanggaranID, m.NIM, m.Nama, pp.Catatan, pp.StatusPelanggaran,
+          p.NamaPelanggaran, pp.TanggalPengaduan, p.TingkatID, pp.BuktiPelanggaran
+          FROM PengaduanPelanggaran pp
+          JOIN Mahasiswa m ON pp.MhsID = m.MhsId
+          JOIN Pelanggaran p ON pp.PelanggaranID = p.PelanggaranID
+          WHERE pp.MhsID = ?";  // Filter berdasarkan MhsID yang login
+
+if (!empty($search)) {
+    $query .= " AND (m.NIM LIKE ? OR m.Nama LIKE ?)";
+}
+
+if (!empty($statusFilter)) {
+    $query .= " AND pp.StatusPelanggaran = ?";
+}
+
+$query .= " ORDER BY pp.TanggalPengaduan DESC";  // Urutkan berdasarkan tanggal pelanggaran terbaru
+
+$params = [$UserID];  // Menambahkan MhsID dari session untuk filter
+if (!empty($search)) {
+    $params[] = "%$search%";  // Pencarian berdasarkan NIM atau Nama
+    $params[] = "%$search%";  // Pencarian berdasarkan Nama
+}
+if (!empty($statusFilter)) {
+    $params[] = $statusFilter;  // Filter status pelanggaran
+}
+
+// Eksekusi query
+$stmt = sqlsrv_query($conn, $query, $params);
+
+if ($stmt === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
+// Ambil hasil query
+$pelanggaranList = [];
+while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    $row['TanggalPengaduan'] = $row['TanggalPengaduan'] ? $row['TanggalPengaduan']->format('d F Y') : 'N/A'; // Format tanggal
+    $pelanggaranList[] = $row;
+}
+
+sqlsrv_free_stmt($stmt);
 ?>
 
 <!DOCTYPE html>
@@ -83,88 +133,72 @@ $currentDate = date('l, d F Y');
                                 <path d="M23.3333 19.8333H23.1187C23.2568 19.4597 23.3295 19.065 23.3333 18.6666V12.8333C23.3294 10.7663 22.6402 8.75902 21.3735 7.12565C20.1068 5.49228 18.3343 4.32508 16.3333 3.80679V3.49996C16.3333 2.88112 16.0875 2.28763 15.6499 1.85004C15.2123 1.41246 14.6188 1.16663 14 1.16663C13.3812 1.16663 12.7877 1.41246 12.3501 1.85004C11.9125 2.28763 11.6667 2.88112 11.6667 3.49996V3.80679C9.66574 4.32508 7.89317 5.49228 6.6265 7.12565C5.35983 8.75902 4.67058 10.7663 4.66667 12.8333V18.6666C4.67053 19.065 4.74316 19.4597 4.88133 19.8333H4.66667C4.35725 19.8333 4.0605 19.9562 3.84171 20.175C3.62292 20.3938 3.5 20.6905 3.5 21C3.5 21.3094 3.62292 21.6061 3.84171 21.8249C4.0605 22.0437 4.35725 22.1666 4.66667 22.1666H23.3333C23.6428 22.1666 23.9395 22.0437 24.1583 21.8249C24.3771 21.6061 24.5 21.3094 24.5 21C24.5 20.6905 24.3771 20.3938 24.1583 20.175C23.9395 19.9562 23.6428 19.8333 23.3333 19.8333Z" fill="#717579"></path>
                                 <path d="M9.9819 24.5C10.3863 25.2088 10.971 25.7981 11.6766 26.2079C12.3823 26.6178 13.1838 26.8337 13.9999 26.8337C14.816 26.8337 15.6175 26.6178 16.3232 26.2079C17.0288 25.7981 17.6135 25.2088 18.0179 24.5H9.9819Z" fill="#717579"></path>
                             </svg>
-                            <span class="badge light text-white bg-warning rounded-circle">12</span>
+                            <span class="badge light text-white bg-warning rounded-circle">
+                                <?php echo count($pelanggaranList); ?>
+                            </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
                             <div id="DZ_W_Notification1" class="widget-media dlab-scroll p-3" style="height:380px;">
                                 <ul class="timeline">
-                                    <li>
-                                        <div class="timeline-panel">
-                                            <div class="media me-2">
-                                                <img alt="image" width="50" src="images/avatar/1.jpg">
+                                    <?php
+                                    // Sortir $pelanggaranList berdasarkan tanggal pengaduan (terbaru)
+                                    usort($pelanggaranList, function ($a, $b) {
+                                        $dateA = strtotime($a['TanggalPengaduan']);
+                                        $dateB = strtotime($b['TanggalPengaduan']);
+                                        return $dateB - $dateA; // Urutkan berdasarkan tanggal terbaru
+                                    });
+
+                                    // Batasi hanya 5 notifikasi yang ditampilkan
+                                    $limitedPelanggaranList = array_slice($pelanggaranList, 0, 5);
+
+                                    if (!empty($limitedPelanggaranList)) :
+                                        foreach ($limitedPelanggaranList as $pelanggaran) :
+                                    ?>
+                                            <li>
+                                                <div class="timeline-panel">
+                                                    <div class="media me-2">
+                                                        <!-- Menampilkan Ikon Status Pelanggaran -->
+                                                        <?php if ($pelanggaran['StatusPelanggaran'] == 'Selesai') : ?>
+                                                            <i class="fa fa-check-circle text-success"></i>
+                                                        <?php elseif ($pelanggaran['StatusPelanggaran'] == 'Diproses') : ?>
+                                                            <i class="fa fa-spinner text-warning"></i>
+                                                        <?php else : ?>
+                                                            <i class="fa fa-exclamation-triangle text-danger"></i> <!-- Ikon untuk Status 'Diajukan' atau 'Danger' -->
+                                                        <?php endif; ?>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <!-- Menampilkan Nama Pelanggaran dan Tanggal Pengaduan -->
+                                                        <h6 class="mb-1"><?php echo htmlspecialchars($pelanggaran['NamaPelanggaran']); ?></h6>
+                                                        <small class="d-block"><?php echo htmlspecialchars($pelanggaran['TanggalPengaduan']); ?></small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php else : ?>
+                                        <li>
+                                            <div class="timeline-panel">
+                                                <div class="media me-2">
+                                                    <i class="fa fa-info-circle"></i>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h6 class="mb-1">Tidak ada riwayat pelanggaran terbaru</h6>
+                                                    <small class="d-block">Tidak ada pengaduan baru yang ditemukan.</small>
+                                                </div>
                                             </div>
-                                            <div class="media-body">
-                                                <h6 class="mb-1">Dr sultads Send you Photo</h6>
-                                                <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="timeline-panel">
-                                            <div class="media me-2 media-info">
-                                                KG
-                                            </div>
-                                            <div class="media-body">
-                                                <h6 class="mb-1">Resport created successfully</h6>
-                                                <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="timeline-panel">
-                                            <div class="media me-2 media-success">
-                                                <i class="fa fa-home"></i>
-                                            </div>
-                                            <div class="media-body">
-                                                <h6 class="mb-1">Reminder : Treatment Time!</h6>
-                                                <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="timeline-panel">
-                                            <div class="media me-2">
-                                                <img alt="image" width="50" src="images/avatar/1.jpg">
-                                            </div>
-                                            <div class="media-body">
-                                                <h6 class="mb-1">Dr sultads Send you Photo</h6>
-                                                <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="timeline-panel">
-                                            <div class="media me-2 media-danger">
-                                                KG
-                                            </div>
-                                            <div class="media-body">
-                                                <h6 class="mb-1">Resport created successfully</h6>
-                                                <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="timeline-panel">
-                                            <div class="media me-2 media-primary">
-                                                <i class="fa fa-home"></i>
-                                            </div>
-                                            <div class="media-body">
-                                                <h6 class="mb-1">Reminder : Treatment Time!</h6>
-                                                <small class="d-block">29 July 2020 - 02:26 PM</small>
-                                            </div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    <?php endif; ?>
                                 </ul>
                             </div>
-                            <a class="all-notification" href="javascript:void(0);">See all notifications <i class="ti-arrow-end"></i></a>
+                            <a class="all-notification" href="riwayat_pelanggaran.php">See all notifications <i class="ti-arrow-end"></i></a>
                         </div>
+
                     </li>
                     <li class="nav-item dropdown  header-profile">
                         <a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
                             <!-- <?php $fotoProfil = $mahasiswa['FotoProfil'];
-                            if (empty($fotoProfil) || $fotoProfil == NULL) {
-                                $fotoProfil = 'profile.svg';
-                            } ?> -->
+                                    if (empty($fotoProfil) || $fotoProfil == NULL) {
+                                        $fotoProfil = 'profile.svg';
+                                    } ?> -->
                             <img src="../../assets/uploads/<?php echo $fotoProfil; ?>" width="56" style="object-fit: cover;" alt="">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">

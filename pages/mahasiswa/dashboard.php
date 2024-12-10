@@ -1,5 +1,56 @@
 <?php
-include "../../process/mahasiswa/fungsi_tampil_profile.php"
+include "../../config/database.php";
+include "../../process/mahasiswa/fungsi_tampil_profile.php";
+
+session_start();
+if (!isset($_SESSION['MhsID'])) {
+    header("Location: ../login.php");
+}
+
+$UserID = $_SESSION['MhsID'];
+
+// Filter dan query untuk mengambil pelanggaran terbaru
+$query = "SELECT TOP 5 p.PelanggaranID, m.NIM, m.Nama, pp.Catatan, pp.StatusPelanggaran,
+          p.NamaPelanggaran, pp.TanggalPengaduan, p.TingkatID
+          FROM PengaduanPelanggaran pp
+          JOIN Mahasiswa m ON pp.MhsID = m.MhsId
+          JOIN Pelanggaran p ON pp.PelanggaranID = p.PelanggaranID
+          WHERE pp.MhsID = ?";  // Filter berdasarkan MhsID yang login
+
+if (!empty($search)) {
+    $query .= " AND (m.NIM LIKE ? OR m.Nama LIKE ?)";
+}
+
+if (!empty($statusFilter)) {
+    $query .= " AND pp.StatusPelanggaran = ?";
+}
+
+$query .= " ORDER BY pp.TanggalPengaduan DESC";  // Urutkan berdasarkan tanggal pelanggaran terbaru
+
+$params = [$UserID];  // Menambahkan MhsID dari session untuk filter
+if (!empty($search)) {
+    $params[] = "%$search%";  // Pencarian berdasarkan NIM atau Nama
+    $params[] = "%$search%";  // Pencarian berdasarkan Nama
+}
+if (!empty($statusFilter)) {
+    $params[] = $statusFilter;  // Filter status pelanggaran
+}
+
+// Eksekusi query
+$stmt = sqlsrv_query($conn, $query, $params);
+
+if ($stmt === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
+// Ambil hasil query
+$pelanggaranList = [];
+while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    $row['TanggalPengaduan'] = $row['TanggalPengaduan'] ? $row['TanggalPengaduan']->format('d F Y') : 'N/A'; // Format tanggal
+    $pelanggaranList[] = $row;
+}
+
+sqlsrv_free_stmt($stmt);
 ?>
 
 <body>
@@ -72,7 +123,6 @@ Main wrapper start
                                                     onmouseover="this.style.backgroundColor='white'; this.style.color='#007bff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';">
                                                     Selengkapnya
                                                 </a>
-
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
@@ -83,46 +133,32 @@ Main wrapper start
                                                                 <th class="text-center">Tanggal Pelanggaran</th>
                                                                 <th class="text-center">Nama Pelanggaran</th>
                                                                 <th class="text-center">Tingkat Pelanggaran</th>
+                                                                <th class="text-center">Deskripsi Pelanggaran</th>
                                                                 <th class="text-center">Status</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <td class="text-center" >1</td>
-                                                                <td class="text-center">10-11-2024</td>
-                                                                <td class="text-center">Melakukan plagiasi</td>
-                                                                <td class="text-center">I/II</td>
-                                                                <td class="text-center">
-                                                                    <span class="badge badge-success">Selesai</span>
-                                                                    <div class="dropdown d-inline-block ms-2">
-                                                                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                            <i class="flaticon-381-settings-1 fs-5 text-muted"></i>
-                                                                        </button>
-                                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                            <li><a class="dropdown-item" href="javascript:void(0);">Details</a></li>
-                                                                            <li><a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a></li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-center">2</td>
-                                                                <td class="text-center">10-11-2024</td>
-                                                                <td class="text-center">Melakukan plagiasi</td>
-                                                                <td class="text-center">I/II</td>
-                                                                <td class="text-center">
-                                                                    <span class="badge badge-warning">Pending</span>
-                                                                    <div class="dropdown d-inline-block ms-2">
-                                                                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                            <i class="flaticon-381-settings-1 fs-5 text-muted"></i>
-                                                                        </button>
-                                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                            <li><a class="dropdown-item" href="javascript:void(0);">Details</a></li>
-                                                                            <li><a class="dropdown-item text-danger" href="javascript:void(0);">Cancel</a></li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
+                                                            <?php if (!empty($pelanggaranList)) : ?>
+                                                                <?php
+                                                                $no = 1;
+                                                                foreach ($pelanggaranList as $pelanggaran) :
+                                                                ?>
+                                                                <tr>
+                                                                    <td class="text-center"><?php echo $no++; ?></td>
+                                                                    <td class="text-center">
+                                                                        <?php echo htmlspecialchars($pelanggaran['TanggalPengaduan']); ?>
+                                                                    </td>
+                                                                    <td class="text-start"><?php echo htmlspecialchars($pelanggaran['NamaPelanggaran']) ?></td>
+                                                                    <td class="text-center"><?php echo htmlspecialchars($pelanggaran['TingkatID']); ?></td>
+                                                                    <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Catatan']); ?></td>
+                                                                    <td class="text-center"><?php echo htmlspecialchars($pelanggaran['StatusPelanggaran']); ?></td>
+                                                                </tr>
+                                                                <?php endforeach; ?>
+                                                            <?php else : ?>
+                                                                <tr>
+                                                                    <td colspan="6" class="text-center">Tidak ada data pelanggaran yang ditemukan.</td>
+                                                                </tr>
+                                                            <?php endif; ?>
                                                         </tbody>
                                                     </table>
                                                 </div>

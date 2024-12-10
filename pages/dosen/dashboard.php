@@ -243,30 +243,30 @@ Main wrapper start
                                             </tr>
                                         </thead>
                                         <tbody>
+                                                <tr>
+                                                    <?php if (!empty($pelanggaranList)) : ?>
+                                                        <?php
+                                                        $no = 1;
+                                                        foreach ($pelanggaranList as $pelanggaran) :
+                                                        ?>
+                                                <tr>
+                                                    <td class="text-center"><?php echo $no++; ?></td>
+                                                    <td class="text-center"><?php echo htmlspecialchars($pelanggaran['NIM']); ?></td>
+                                                    <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Nama']); ?></td>
+                                                    <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Prodi']); ?></td>
+                                                    <td class="text-start"><?php echo htmlspecialchars($pelanggaran['NamaPelanggaran']) ?></td>
+                                                    <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Catatan']); ?></td>
+                                                    <td class="text-center">
+                                                        <?php echo htmlspecialchars($pelanggaran['TanggalPengaduan']); ?>
+                                                    </td>
+                                                    <td class="text-center"><?php echo htmlspecialchars($pelanggaran['StatusPelanggaran']); ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
                                             <tr>
-                                                <?php if (!empty($pelanggaranList)) : ?>
-                                                    <?php
-                                                    $no = 1;
-                                                    foreach ($pelanggaranList as $pelanggaran) :
-                                                    ?>
-                                            <tr>
-                                                <td class="text-center"><?php echo $no++; ?></td>
-                                                <td class="text-center"><?php echo htmlspecialchars($pelanggaran['NIM']); ?></td>
-                                                <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Nama']); ?></td>
-                                                <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Prodi']); ?></td>
-                                                <td class="text-start"><?php echo htmlspecialchars($pelanggaran['NamaPelanggaran']) ?></td>
-                                                <td class="text-center"><?php echo htmlspecialchars($pelanggaran['Catatan']); ?></td>
-                                                <td class="text-center">
-                                                    <?php echo htmlspecialchars($pelanggaran['TanggalPengaduan']); ?>
-                                                </td>
-                                                <td class="text-center"><?php echo htmlspecialchars($pelanggaran['StatusPelanggaran']); ?></td>
+                                                <td colspan="8" class="text-center">Tidak ada data pelanggaran yang ditemukan.</td>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    <?php else : ?>
-                                        <tr>
-                                            <td colspan="8" class="text-center">Tidak ada data pelanggaran yang ditemukan.</td>
-                                        </tr>
-                                    <?php endif; ?>
+                                        <?php endif; ?>
                                         </tbody>
                                     </table>
                                 </div>

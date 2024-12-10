@@ -46,7 +46,7 @@ unset($_SESSION['error']);
                                 </div>
                             </form>
                             <div class="new-account mt-3">
-                                <p>Don't have an account? <a class="text-dark" href="page-register.html">Sign up</a></p>
+                                <p>Don't have an account? <a class="text-dark" href="register.php">Sign up</a></p>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,29 @@
 <?php
 include "../../config/database.php";
+
+// Query untuk mengambil data jumlah pelanggaran berdasarkan TingkatID
+$queryPelanggaran = "SELECT TingkatID, COUNT(*) AS Total
+                     FROM Pelanggaran
+                     WHERE TingkatID BETWEEN 1 AND 5
+                     GROUP BY TingkatID";
+
+$resultPelanggaran = sqlsrv_query($conn, $queryPelanggaran);
+
+if ($resultPelanggaran === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
+// Menyimpan data dalam array untuk digunakan di JavaScript
+$pelanggaranStats = [];
+while ($row = sqlsrv_fetch_array($resultPelanggaran, SQLSRV_FETCH_ASSOC)) {
+    $pelanggaranStats[] = $row;
+}
+
+sqlsrv_free_stmt($resultPelanggaran);
+
+// Mengonversi data PHP ke dalam format JSON untuk digunakan di JavaScript
+echo "<script>var pelanggaranStats = " . json_encode($pelanggaranStats) . ";</script>";
+
 ?>
 
 <body>
@@ -136,14 +160,17 @@ include "../../config/database.php";
                         </div>
                     </div>
 
-                    <!-- Grafik Analitik Pelanggaran Terkini -->
-                    <div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Grafik Analitik Pelanggaran Terkini</h4>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="pelanggaranChart" width="400" height="200"></canvas>
+                    <!-- Section Grafik Analitik -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Analitik Pelanggaran Berdasarkan Tingkat</h4>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Canvas untuk grafik -->
+                                    <canvas id="pelanggaranChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -176,48 +203,41 @@ include "../../config/database.php";
     <!-- Chart.js Script -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Data for the chart (Example: Pelanggaran by Category)
-        const data = {
-            labels: ['Plagiasi', 'Keterlambatan', 'Melanggar Peraturan', 'Perilaku Tidak Baik'], // Label untuk kategori pelanggaran
-            datasets: [{
-                label: 'Jumlah Pelanggaran',
-                data: [12, 8, 15, 6], // Data jumlah pelanggaran pada setiap kategori
-                backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56'], // Warna untuk setiap kategori
-                borderColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56'], // Warna border
-                borderWidth: 1
-            }]
-        };
+        // Data untuk grafik berdasarkan tingkat pelanggaran (1-5)
+        var tingkatLabels = pelanggaranStats.map(function(item) {
+            return 'Tingkat ' + item.TingkatID; // Mengambil TingkatID sebagai label (Tingkat 1, 2, 3, 4, 5)
+        });
 
-        // Konfigurasi chart
-        const config = {
-            type: 'bar', // Jenis grafik: Bar chart
-            data: data,
+        var tingkatData = pelanggaranStats.map(function(item) {
+            return item.Total; // Mengambil jumlah pelanggaran berdasarkan TingkatID
+        });
+
+        // Membuat grafik
+        var ctx = document.getElementById('pelanggaranChart').getContext('2d');
+        var pelanggaranChart = new Chart(ctx, {
+            type: 'bar', // Jenis grafik bar
+            data: {
+                labels: tingkatLabels, // Label sumbu X (Tingkat Pelanggaran 1-5)
+                datasets: [{
+                    label: 'Jumlah Pelanggaran',
+                    data: tingkatData, // Data jumlah pelanggaran berdasarkan tingkat
+                    backgroundColor: ['#FF5733', '#3498DB', '#2ECC71', '#F39C12', '#8E44AD'], // Warna latar belakang untuk setiap tingkat
+                    borderColor: ['#FF5733', '#3498DB', '#2ECC71', '#F39C12', '#8E44AD'], // Warna border untuk setiap tingkat
+                    borderWidth: 1
+                }]
+            },
             options: {
                 responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.raw + ' pelanggaran';
-                            }
-                        }
-                    }
-                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Pelanggaran'
+                        }
                     }
                 }
             }
-        };
-
-        // Menampilkan chart
-        const pelanggaranChart = new Chart(
-            document.getElementById('pelanggaranChart'),
-            config
-        );
+        });
     </script>
 </body>

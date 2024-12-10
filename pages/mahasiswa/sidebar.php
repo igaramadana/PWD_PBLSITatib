@@ -27,7 +27,7 @@
 
             <!-- Riwayat Pelanggaran Menu -->
             <li>
-                <a class="" href="riwayat.php" aria-expanded="false">
+                <a class="" href="riwayat_pelanggaran.php" aria-expanded="false">
                     <i class="bi bi-file-earmark-bar-graph-fill"></i>
                     <span class="nav-text">Riwayat Pelanggaran</span>
                 </a>

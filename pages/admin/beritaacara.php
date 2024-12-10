@@ -50,7 +50,7 @@ Main wrapper start
                             <h4 class="card-title">Surat Pernyataan Mahasiswa</h4>
                         </div>
                         <div class="card-body">
-                            <p>Untuk memastikan kelancaran proses administrasi, kami mengingatkan ada untuk segera mengurus Surat Pernyataan ini. Pastikan Anda mengunduh dan mengisi surat tersebut dengan benar.</p>
+                            <p>Untuk memastikan kelancaran proses administrasi, kami mengingatkan anda untuk segera mengurus Surat Pernyataan ini. Pastikan Anda mengunduh dan mengisi surat tersebut dengan benar.</p>
                             <hr>
                             <h5>Download Berita Acara (PDF)</h5>
                             <p>Silakan klik tombol di bawah ini untuk mengunduh file PDF berita acara.</p>
