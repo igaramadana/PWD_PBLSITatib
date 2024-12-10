@@ -1,6 +1,9 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Pastikan koneksi ke database sudah dibuat
-require_once '../../config/database.php'; // Sesuaikan dengan koneksi database Anda
+require_once '../config/database.php'; // Sesuaikan dengan koneksi database Anda
 
 // Mulai sesi
 session_start();
