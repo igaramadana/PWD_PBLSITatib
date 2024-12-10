@@ -65,6 +65,7 @@ CREATE TABLE Mahasiswa
     Prodi varchar(50),
     Kelas VARCHAR(10),
     Angkatan VARCHAR(5),
+    FotoProfil varchar(255)
     CONSTRAINT fk_user_id
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
@@ -91,6 +92,15 @@ CREATE TABLE Dosen
 
 SELECT *
 FROM Dosen;
+
+ALTER TABLE dosen
+ADD ProfilDosen VARCHAR(255);
+
+UPDATE Dosen 
+SET EmailDosen = 'jkw@example.com' 
+WHERE Nama = 'jkw';
+
+
 INSERT INTO Dosen
     (UserID, NIP, Nama)
 VALUES
@@ -120,6 +130,9 @@ WHERE Role = 'dosen';
 
 SELECT *
 FROM Users;
+
+DELETE FROM Users
+WHERE UserID = 39;
 
 SELECT *
 FROM Dosen;
@@ -156,13 +169,17 @@ ALTER TABLE Pelanggaran
 DROP COLUMN SanksiID;
 
 
-ALTER TABLE Sanksi
+ALTER TABLE Sanksic
 ADD PelanggaranID INT
 CONSTRAINT fk_pelanggaran_id
 FOREIGN KEY (PelanggaranID) REFERENCES Pelanggaran(PelanggaranID);
 
 SELECT *
 FROM Sanksi;
+
+SELECT * FROM Pelanggaran;
+DELETE FROM Pelanggaran
+WHERE NamaPelanggaran IS NULL;
 
 DROP TABLE Pelanggaran;
 
@@ -204,3 +221,96 @@ SELECT * FROM Pelanggaran;
 INSERT INTO Pelanggaran (NamaPelanggaran, TingkatID)
 VALUES ('Berkomunikasi dengan tidak sopan, baik tertulis atau tidak
 tertulis kepada mahasiswa, dosen, karyawan, atau orang lain', 5);
+
+
+CREATE TABLE PengaduanPelanggaran (
+    PengaduanID INT IDENTITY(1,1) PRIMARY KEY,
+    MhsID INT NOT NULL,
+    PelanggaranID INT NOT NULL,
+    TanggalPengaduan DATE NOT NULL,
+    StatusPelanggaran VARCHAR(20) CHECK (StatusPelanggaran IN ('Diajukan', 'Diproses', 'Selesai')),
+    SanksiID INT,
+    Catatan TEXT,
+    BuktiPelanggaran VARCHAR(255)
+    FOREIGN KEY (MhsID) REFERENCES Mahasiswa(MhsID),
+    FOREIGN KEY (PelanggaranID) REFERENCES Pelanggaran(PelanggaranID),
+    FOREIGN KEY (SanksiID) REFERENCES Sanksi(SanksiID)
+);
+
+ALTER TABLE PengaduanPelanggaran
+ADD BuktiPelanggaran VARCHAR(255);
+
+SELECT TanggalPengaduan FROM PengaduanPelanggaran WHERE PelanggaranID = [ID_Pelanggaran];
+
+SELECT p.PelanggaranID, m.NIM, m.Nama, pp.Catatan, pp.StatusPelanggaran, m.FotoProfil,
+          pp.BuktiPelanggaran, p.NamaPelanggaran, pp.TanggalPengaduan
+          FROM PengaduanPelanggaran pp
+          JOIN Mahasiswa m ON pp.MhsID = m.MhsID
+          JOIN Pelanggaran p ON pp.PelanggaranID = p.PelanggaranID
+          WHERE 1=1
+
+SELECT p.PelanggaranID, m.NIM, m.Nama, pp.Catatan, pp.StatusPelanggaran, m.FotoProfil,
+          pp.BuktiPelanggaran, p.NamaPelanggaran, pp.TanggalPengaduan
+          FROM PengaduanPelanggaran pp
+          JOIN Mahasiswa m ON pp.MhsID = m.MhsID
+          JOIN Pelanggaran p ON pp.PelanggaranID = p.PelanggaranID
+          WHERE pp.MhsID = 8;
+
+
+-- Store Procedure Daftar Mahasiswa
+CREATE PROCEDURE sp_GetMahasiswa
+    @SearchTerm NVARCHAR(255),
+    @StartFrom INT,
+    @PerPage INT
+AS
+BEGIN
+    SELECT m.MhsID, m.NIM, m.Nama, m.Jurusan, m.Prodi, m.Kelas, m.Angkatan, u.Username, u.Password, m.FotoProfil
+    FROM Mahasiswa m
+    INNER JOIN Users u ON m.UserID = u.UserID
+    WHERE m.NIM LIKE @SearchTerm OR m.Nama LIKE @SearchTerm OR u.Username LIKE @SearchTerm
+    ORDER BY m.MhsID
+    OFFSET @StartFrom ROWS FETCH NEXT @PerPage ROWS ONLY
+END
+GO
+
+-- Store Procedure Count MHS
+CREATE PROCEDURE sp_CountMahasiswa
+    @SearchTerm NVARCHAR(255)
+AS
+BEGIN
+    SELECT COUNT(*) AS total
+    FROM Mahasiswa m
+    INNER JOIN Users u ON m.UserID = u.UserID
+    WHERE m.NIM LIKE @SearchTerm OR m.Nama LIKE @SearchTerm OR u.Username LIKE @SearchTerm
+END
+GO
+
+-- SP PelanggaranData
+CREATE PROCEDURE GetPelanggaranData
+    @Page INT,
+    @PerPage INT,
+    @Search NVARCHAR(255)
+AS
+BEGIN
+    -- Declare variables for pagination
+    DECLARE @StartFrom INT = (@Page - 1) * @PerPage;
+
+    -- Calculate total count of matching records
+    SELECT COUNT(*) AS Total
+    FROM Pelanggaran
+    WHERE Pelanggaran.NamaPelanggaran LIKE '%' + @Search + '%';
+
+    -- Fetch the paginated results
+    SELECT 
+        Pelanggaran.PelanggaranID, 
+        Pelanggaran.NamaPelanggaran, 
+        TingkatPelanggaran.Tingkat
+    FROM Pelanggaran
+    JOIN TingkatPelanggaran 
+        ON Pelanggaran.TingkatID = TingkatPelanggaran.TingkatID
+    WHERE Pelanggaran.NamaPelanggaran LIKE '%' + @Search + '%'
+    ORDER BY Pelanggaran.PelanggaranID
+    OFFSET @StartFrom ROWS 
+    FETCH NEXT @PerPage ROWS ONLY;
+END;
+GO
