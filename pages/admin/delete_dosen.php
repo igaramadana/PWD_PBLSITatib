@@ -9,6 +9,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     sqlsrv_begin_transaction($conn);
 
     try {
+        // Query untuk mengambil UserID berdasarkan DosenID
         $getUserIDQuery = "SELECT UserID FROM Dosen WHERE DosenID = ?";
         $getUserIDStmt = sqlsrv_query($conn, $getUserIDQuery, array($dosenID));
 
@@ -23,6 +24,14 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         }
 
         $userID = $userIDRow['UserID'];
+
+        // 1. Hapus data yang terkait dengan Dosen di tabel PengaduanPelanggaran
+        $deletePengaduanQuery = "DELETE FROM PengaduanPelanggaran WHERE DosenID = ?";
+        $deletePengaduanStmt = sqlsrv_query($conn, $deletePengaduanQuery, array($dosenID));
+
+        if ($deletePengaduanStmt === false) {
+            throw new Exception("Gagal menghapus data PengaduanPelanggaran: " . print_r(sqlsrv_errors(), true));
+        }
 
         // 2. Hapus data dosen dari tabel Dosen
         $deleteDosenQuery = "DELETE FROM Dosen WHERE DosenID = ?";
@@ -54,4 +63,3 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 } else {
     die("Error: DosenID tidak valid.");
 }
-?>

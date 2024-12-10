@@ -28,6 +28,14 @@ try {
 
     $UserID = $user['UserID'];
 
+    // Hapus data yang terkait dengan Mahasiswa di tabel lain (seperti PengaduanPelanggaran)
+    $deletePengaduanQuery = "DELETE FROM PengaduanPelanggaran WHERE MhsID = ?";
+    $stmtPengaduan = sqlsrv_query($conn, $deletePengaduanQuery, array($MhsID));
+
+    if ($stmtPengaduan === false) {
+        throw new Exception("Gagal menghapus data PengaduanPelanggaran: " . print_r(sqlsrv_errors(), true));
+    }
+
     // Query untuk menghapus data mahasiswa dari tabel Mahasiswa
     $deleteMahasiswaQuery = "DELETE FROM Mahasiswa WHERE MhsID = ?";
     $stmtMahasiswa = sqlsrv_query($conn, $deleteMahasiswaQuery, array($MhsID));
@@ -55,4 +63,3 @@ try {
     sqlsrv_rollback($conn);
     echo "Terjadi kesalahan saat menghapus data: " . $e->getMessage();
 }
-?>
