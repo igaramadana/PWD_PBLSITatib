@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $kelas = $_POST['kelas'];
     $prodi = $_POST['prodi'];
     $jenis_pelanggaran = $_POST['jenis_pelanggaran'];
-    $catatan = $_POST['catatan'];  
+    $catatan = $_POST['catatan'];
     $tanggal = $_POST['tanggal'];
     $sanksi = $_POST['sanksi'];
     $bukti = $_FILES['bukti']['name'];
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $mhs = sqlsrv_fetch_array($stmt_mhs, SQLSRV_FETCH_ASSOC);
         if (!$mhs) {
-            echo "Mahasiswa dengan NIM tersebut tidak ditemukan.";
+            echo "<script>alert('Mahasiswa dengan NIM tersebut tidak ditemukan.'); window.location.href='input_pelanggaran.php';</script>";
             exit();
         }
 
@@ -62,18 +62,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt === false) {
             // Jika query gagal, tampilkan error
-            die(print_r(sqlsrv_errors(), true));
+            echo "<script>alert('Gagal menyimpan pelanggaran. Silakan coba lagi.'); window.location.href='../../pages/admin/input_pelanggaran.php';</script>";
+        } else {
+            // Jika query berhasil, tampilkan pesan sukses
+            echo "<script>alert('Pelanggaran berhasil disimpan.'); window.location.href='../../pages/admin/input_pelanggaran.php';</script>";
         }
-
-        // Jika query berhasil, tampilkan pesan sukses
-        echo "Pelanggaran berhasil disimpan.";
 
         // Membersihkan statement setelah selesai
         sqlsrv_free_stmt($stmt);
         sqlsrv_free_stmt($stmt_mhs);
     } else {
         // Jika file gagal diupload, beri pesan error
-        echo "Gagal mengupload bukti foto.";
+        echo "<script>alert('Gagal mengupload bukti foto.'); window.location.href='../../pages/admin/   input_pelanggaran.php';</script>";
     }
 }
-?>
