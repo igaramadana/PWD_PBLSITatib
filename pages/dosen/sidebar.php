@@ -20,7 +20,6 @@
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="daftar_mhs.php">Daftar Mahasiswa</a></li>
-                    <li><a href="rekap_pelanggaran.php">Rekap Pelanggaran</a></li>
                 </ul>
             </li>
 
@@ -39,9 +38,9 @@
 
             <!-- Riwayat Pelanggaran Menu -->
             <li>
-                <a class="" href="riwayat_pelanggaran.php" aria-expanded="false">
+                <a class="" href="riwayat_pengaduan.php" aria-expanded="false">
                     <i class="bi bi-file-earmark-bar-graph-fill"></i>
-                    <span class="nav-text">Riwayat Pelanggaran</span>
+                    <span class="nav-text">Riwayat Pengaduan</span>
                 </a>
             </li>
 
