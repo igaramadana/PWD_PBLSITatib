@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $angkatan = $_POST['Angkatan'];
     $username = $_POST['Username'];
     $password = $_POST['Password'];
+    $email = $_POST['EmailMhs'];
 
     // Hash password menggunakan algoritma yang lebih aman (misalnya bcrypt)
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -41,12 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insert data ke tabel Mahasiswa (untuk NIM, Nama, Jurusan, Prodi, Kelas, Angkatan, dan UserID)
         $insertMahasiswaQuery = "
-            INSERT INTO Mahasiswa (UserID, NIM, Nama, Jurusan, Prodi, Kelas, Angkatan)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO Mahasiswa (UserID, NIM, Nama, Jurusan, Prodi, Kelas, Angkatan, EmailMhs)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ";
 
         // Insert data mahasiswa
-        $insertMahasiswaStmt = sqlsrv_query($conn, $insertMahasiswaQuery, array($userID, $nim, $nama, $jurusan, $prodi, $kelas, $angkatan));
+        $insertMahasiswaStmt = sqlsrv_query($conn, $insertMahasiswaQuery, array($userID, $nim, $nama, $jurusan, $prodi, $kelas, $angkatan, $email));
 
         if ($insertMahasiswaStmt === false) {
             throw new Exception("Gagal memasukkan data ke tabel Mahasiswa: " . print_r(sqlsrv_errors(), true));
@@ -140,6 +141,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="form-group">
                                         <label for="Angkatan">Angkatan</label>
                                         <input type="text" class="form-control" id="Angkatan" name="Angkatan" placeholder="Masukkan Angkatan Mahasiswa" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="EmailMhs">Email</label>
+                                        <input type="email" class="form-control" id="EmailMhs" name="EmailMhs" placeholder="Masukkan Email Mahasiswa" required>
                                     </div>
 
                                     <div class="form-group">

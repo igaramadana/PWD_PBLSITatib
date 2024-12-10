@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '72259b0e7463f36696eb2d1d2525309366e217da',
+        'reference' => 'ec0165f2a26ab8f85761589b49303f1936e622ec',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '72259b0e7463f36696eb2d1d2525309366e217da',
+            'reference' => 'ec0165f2a26ab8f85761589b49303f1936e622ec',
             'dev_requirement' => false,
         ),
         'maennchen/zipstream-php' => array(
@@ -44,6 +44,15 @@
             'install_path' => __DIR__ . '/../markbaker/matrix',
             'aliases' => array(),
             'reference' => '728434227fe21be27ff6d86621a1b13107a2562c',
+            'dev_requirement' => false,
+        ),
+        'phpmailer/phpmailer' => array(
+            'pretty_version' => 'v6.9.3',
+            'version' => '6.9.3.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpmailer/phpmailer',
+            'aliases' => array(),
+            'reference' => '2f5c94fe7493efc213f643c23b1b1c249d40f47e',
             'dev_requirement' => false,
         ),
         'phpoffice/phpspreadsheet' => array(

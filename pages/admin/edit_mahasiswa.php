@@ -10,7 +10,7 @@ $MhsID = $_GET['id'];
 
 // Query untuk mengambil data mahasiswa berdasarkan MhsID
 $query = "
-    SELECT m.MhsID, m.NIM, m.Nama, m.Jurusan, m.Prodi, m.Kelas, u.Username
+    SELECT m.MhsID, m.NIM, m.Nama, m.Jurusan, m.Prodi, m.Kelas, u.Username, m.EmailMhs
     FROM Mahasiswa m
     INNER JOIN Users u ON m.UserID = u.UserID
     WHERE m.MhsID = ?
@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $jurusan = $_POST['Jurusan'];
     $prodi = $_POST['Prodi'];
     $kelas = $_POST['Kelas'];
+    $email = $_POST['EmailMhs'];
     $username = $_POST['Username'];
 
     // 1. Update data di tabel Users
@@ -59,16 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // 2. Update data di tabel Mahasiswa
     $updateMahasiswaQuery = "
-        UPDATE Mahasiswa
-        SET NIM = ?, Nama = ?, Jurusan = ?, Prodi = ?, Kelas = ?
-        WHERE MhsID = ?
-    ";
+    UPDATE Mahasiswa
+    SET NIM = ?, Nama = ?, Jurusan = ?, Prodi = ?, Kelas = ?, EmailMhs = ?
+    WHERE MhsID = ?
+";
 
-    $updateMahasiswaStmt = sqlsrv_query($conn, $updateMahasiswaQuery, array($nim, $nama, $jurusan, $prodi, $kelas, $MhsID));
+    $updateMahasiswaStmt = sqlsrv_query($conn, $updateMahasiswaQuery, array($nim, $nama, $jurusan, $prodi, $kelas, $email, $MhsID));
 
     if ($updateMahasiswaStmt === false) {
         die("Update Mahasiswa gagal: " . print_r(sqlsrv_errors(), true));
     }
+
 
     // Redirect ke daftar mahasiswa setelah berhasil update
     header("Location: daftar_mahasiswa.php");
@@ -136,6 +138,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <div class="form-group mb-3">
                                                 <label for="Kelas">Kelas</label>
                                                 <input type="text" class="form-control" id="Kelas" name="Kelas" value="<?php echo htmlspecialchars($mahasiswa['Kelas']); ?>" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label for="EmailMhs">Email</label>
+                                                <input type="email" class="form-control" id="EmailMhs" name="EmailMhs" value="<?php echo htmlspecialchars($mahasiswa['EmailMhs']); ?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6">

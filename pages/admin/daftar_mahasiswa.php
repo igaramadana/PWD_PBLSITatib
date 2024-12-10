@@ -112,6 +112,7 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                                                 <th class="text-center">Jurusan</th>
                                                 <th class="text-center">Prodi</th>
                                                 <th class="text-center">Kelas</th>
+                                                <th class="text-center">Email</th>
                                                 <th class="text-center">Username</th>
                                                 <th class="text-center">Aksi</th>
                                             </tr>
@@ -133,6 +134,7 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                                                 echo "<td class='text-center'>{$mahasiswa['Jurusan']}</td>";
                                                 echo "<td class='text-center'>{$mahasiswa['Prodi']}</td>";
                                                 echo "<td class='text-center'>{$mahasiswa['Kelas']}</td>";
+                                                echo "<td class='text-center'>{$mahasiswa['EmailMhs']}</td>";
                                                 echo "<td class='text-center'>{$mahasiswa['Username']}</td>";
                                                 echo "<td class='text-center'>
                                                         <div class='dropdown'>
