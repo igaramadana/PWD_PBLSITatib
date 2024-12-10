@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
+
 <body>
 
     <!-- Main Wrapper -->
@@ -112,61 +114,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <form action="tambah_mahasiswa.php" method="post" class="form-container">
                                     <div class="form-group">
                                         <label for="NIM">NIM</label>
-                                        <input type="text" class="form-control" id="NIM" name="NIM" required>
+                                        <input type="text" class="form-control" id="NIM" name="NIM" placeholder="Masukkan Nomor Induk Mahasiswa" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="Nama">Nama Mahasiswa</label>
-                                        <input type="text" class="form-control" id="Nama" name="Nama" required>
+                                        <input type="text" class="form-control" id="Nama" name="Nama" placeholder="Masukkan Nama Mahasiswa" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="Jurusan">Jurusan</label>
-                                        <input type="text" class="form-control" id="Jurusan" name="Jurusan" required>
+                                        <input type="text" class="form-control" id="Jurusan" name="Jurusan" placeholder="Masukkan Jurusan Mahasiswa" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="Prodi">Prodi</label>
-                                        <input type="text" class="form-control" id="Prodi" name="Prodi" required>
+                                        <input type="text" class="form-control" id="Prodi" name="Prodi" placeholder="Masukkan Program Studi Mahasiswa" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="Kelas">Kelas</label>
-                                        <input type="text" class="form-control" id="Kelas" name="Kelas" required>
+                                        <input type="text" class="form-control" id="Kelas" name="Kelas" placeholder="Masukkan Kelas Mahasiswa" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="Angkatan">Angkatan</label>
-                                        <input type="text" class="form-control" id="Angkatan" name="Angkatan" required>
+                                        <input type="text" class="form-control" id="Angkatan" name="Angkatan" placeholder="Masukkan Angkatan Mahasiswa" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="Username">Username</label>
-                                        <input type="text" class="form-control" id="Username" name="Username" required>
+                                        <input type="text" class="form-control" id="Username" name="Username" placeholder="Masukkan Username Mahasiswa" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="Password">Password</label>
-                                        <input type="password" class="form-control" id="Password" name="Password" required>
+                                        <input type="password" class="form-control" id="Password" name="Password" placeholder="Masukkan Password Mahasiswa" required>
                                     </div>
-
-                                    <button type="submit" class="btn btn-success">Tambah Mahasiswa</button>
-                                    <a href="daftar_mahasiswa.php" class="btn btn-danger">Batal</a>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-success ">Tambah Mahasiswa</button>
+                                        <a href="daftar_mahasiswa.php" class="btn btn-danger">Batal</a>
+                                    </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
+    </div>
 
-        <?php include("footer.php"); ?>
+    <?php include("footer.php"); ?>
     </div>
 
     <!-- Include Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
