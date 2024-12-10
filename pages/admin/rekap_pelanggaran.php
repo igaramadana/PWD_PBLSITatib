@@ -178,15 +178,15 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                                     <!-- Tanggal Pelanggaran -->
                                                     <td class="text-center">
                                                         <?php
-                                                        // var_dump($pelanggaran['TanggalPengaduan']);  // Debugging
-                                                        // if ($pelanggaran['TanggalPengaduan'] != NULL) {
-                                                        //     echo date('d F Y', strtotime($pelanggaran['TanggalPengaduan']));
-                                                        // } else {
-                                                        //     echo 'Tidak ada tanggal';
-                                                        // }
+                                                        // Jika tanggal tersedia
+                                                        if ($pelanggaran['TanggalPengaduan'] instanceof DateTime) {
+                                                            // Format tanggal menggunakan DateTime
+                                                            echo $pelanggaran['TanggalPengaduan']->format('d F Y');
+                                                        } else {
+                                                            echo 'Tidak ada tanggal';
+                                                        }
                                                         ?>
                                                     </td>
-
                                                     <!-- Bukti pelanggaran -->
                                                     <?php
                                                     $buktiPelanggaran = $pelanggaran['BuktiPelanggaran'] ? "../../assets/uploads/" . $pelanggaran['BuktiPelanggaran'] : '../../assets/uploads/no-image.png';
