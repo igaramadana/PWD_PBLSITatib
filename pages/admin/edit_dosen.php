@@ -10,7 +10,7 @@ if (isset($_GET['id'])) {
 
 // Query untuk mengambil data dosen berdasarkan DosenID
 $query = "
-    SELECT d.DosenID, d.NIP, d.Nama, u.Username, u.Password
+    SELECT d.DosenID, d.NIP, d.Nama, d.JKDosen, d.PhoneDosen, d.EmailDosen, u.Username, u.Password
     FROM Dosen d
     INNER JOIN Users u ON d.UserID = u.UserID
     WHERE d.DosenID = ?
@@ -38,39 +38,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama = $_POST['Nama'];
     $username = $_POST['Username'];
     $password = $_POST['Password'];
+    $jenisKelamin = $_POST['JKDosen'];
+    $phone = $_POST['PhoneDosen'];
+    $email = $_POST['EmailDosen'];
 
-    // Update data username dan password pada tabel Users
-    $updateQuery = "
-    UPDATE Users
-    SET Username = ?, Password = CONVERT(varbinary(max), ?)
-    WHERE UserID = (SELECT UserID FROM Dosen WHERE DosenID = ?)
-";
-
-    $updateStmt = sqlsrv_query($conn, $updateQuery, array($username, $password, $dosenID));
-
-    if ($updateStmt === false) {
-        die("Update gagal: " . print_r(sqlsrv_errors(), true));
+    // Hash password jika password diubah
+    if (!empty($password)) {
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    } else {
+        // Jika password kosong, biarkan password tetap sama (tidak diubah)
+        $hashedPassword = $dosen['Password'];  // Menyimpan password lama
     }
 
-    // Update data NIP dan Nama pada tabel Dosen
-    $updateDosenQuery = "
-        UPDATE Dosen
-        SET NIP = ?, Nama = ?
-        WHERE DosenID = ?
+    // Mulai transaksi untuk memastikan data tersimpan secara atomik
+    sqlsrv_begin_transaction($conn);
+
+    try {
+        // Update data username dan password pada tabel Users
+        $updateQuery = "
+        UPDATE Users
+        SET Username = ?, Password = ?
+        WHERE UserID = (SELECT UserID FROM Dosen WHERE DosenID = ?)
     ";
 
-    $updateDosenStmt = sqlsrv_query($conn, $updateDosenQuery, array($nip, $nama, $dosenID));
+        $updateStmt = sqlsrv_query($conn, $updateQuery, array($username, $hashedPassword, $dosenID));
 
-    if ($updateDosenStmt === false) {
-        die("Update data dosen gagal: " . print_r(sqlsrv_errors(), true));
+        if ($updateStmt === false) {
+            throw new Exception("Update gagal: " . print_r(sqlsrv_errors(), true));
+        }
+
+        // Update data NIP, Nama, Jenis Kelamin, No HP, dan Email pada tabel Dosen
+        $updateDosenQuery = "
+            UPDATE Dosen
+            SET NIP = ?, Nama = ?, JKDosen = ?, PhoneDosen = ?, EmailDosen = ?
+            WHERE DosenID = ?
+        ";
+
+        $updateDosenStmt = sqlsrv_query($conn, $updateDosenQuery, array($nip, $nama, $jenisKelamin, $phone, $email, $dosenID));
+
+        if ($updateDosenStmt === false) {
+            throw new Exception("Update data dosen gagal: " . print_r(sqlsrv_errors(), true));
+        }
+
+        // Commit transaksi
+        sqlsrv_commit($conn);
+
+        // Redirect setelah sukses update
+        header("Location: daftar_dosen.php");
+        exit();
+    } catch (Exception $e) {
+        // Jika terjadi error, rollback transaksi
+        sqlsrv_rollback($conn);
+        die("Error: " . $e->getMessage());
     }
-
-    // Redirect setelah sukses update
-    header("Location: daftar_dosen.php");
-    exit();
 }
-
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Dosen</title>
+</head>
 
 <body>
     <div id="main-wrapper">
@@ -106,13 +137,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </div>
 
                                     <div class="form-group mb-3">
+                                        <label for="JKDosen"><strong>Jenis Kelamin</strong></label>
+                                        <select class="form-control" id="JKDosen" name="JKDosen" required>
+                                            <option value="Laki-laki" <?php echo ($dosen['JKDosen'] == 'Laki-laki') ? 'selected' : ''; ?>>Laki-laki</option>
+                                            <option value="Perempuan" <?php echo ($dosen['JKDosen'] == 'Perempuan') ? 'selected' : ''; ?>>Perempuan</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="PhoneDosen"><strong>No. Telepon</strong></label>
+                                        <input type="text" class="form-control" id="PhoneDosen" name="PhoneDosen" value="<?php echo $dosen['PhoneDosen']; ?>" required>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="EmailDosen"><strong>Email</strong></label>
+                                        <input type="email" class="form-control" id="EmailDosen" name="EmailDosen" value="<?php echo $dosen['EmailDosen']; ?>" required>
+                                    </div>
+
+                                    <div class="form-group mb-3">
                                         <label for="Username"><strong>Username</strong></label>
                                         <input type="text" class="form-control" id="Username" name="Username" value="<?php echo $dosen['Username']; ?>" required>
                                     </div>
 
                                     <div class="form-group mb-3">
                                         <label for="Password"><strong>Password</strong></label>
-                                        <input type="password" class="form-control" id="Password" name="Password" value="<?php echo $dosen['Password']; ?>" required>
+                                        <input type="password" class="form-control" id="Password" name="Password" placeholder="Masukkan Password baru (biarkan kosong jika tidak diubah)">
                                     </div>
 
                                     <div class="text-end">

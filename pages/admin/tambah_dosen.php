@@ -8,6 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama = $_POST['Nama'];
     $username = $_POST['Username'];
     $password = $_POST['Password'];
+    $jkdosen = $_POST['JKDosen'];
+    $phoneDosen = $_POST['PhoneDosen'];
+    $emailDosen = $_POST['EmailDosen'];
 
     // Hash password menggunakan algoritma yang lebih aman (misalnya bcrypt)
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
@@ -21,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insertUserQuery = "
             INSERT INTO Users (Username, Password, Role)
             OUTPUT INSERTED.UserID
-            VALUES (?, CONVERT(VARBINARY(MAX), ?), ?)
+            VALUES (?, ?, ?)
         ";
 
         // Kirimkan data username, hashed password, dan role
@@ -35,14 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $row = sqlsrv_fetch_array($insertUserStmt, SQLSRV_FETCH_ASSOC);
         $userID = $row['UserID'];
 
-        // Insert data ke tabel Dosen (untuk NIP, Nama, dan UserID yang dimasukkan secara manual)
+        // Insert data ke tabel Dosen (untuk NIP, Nama, UserID, JKDosen, PhoneDosen, EmailDosen)
         $insertDosenQuery = "
-            INSERT INTO Dosen (UserID, NIP, Nama)
-            VALUES (?, ?, ?)
+            INSERT INTO Dosen (UserID, NIP, Nama, JKDosen, PhoneDosen, EmailDosen)
+            VALUES (?, ?, ?, ?, ?, ?)
         ";
 
-        // Insert data dosen (NIP, Nama, UserID)
-        $insertDosenStmt = sqlsrv_query($conn, $insertDosenQuery, array($userID, $nip, $nama));
+        // Insert data dosen (UserID, NIP, Nama, JKDosen, PhoneDosen, EmailDosen)
+        $insertDosenStmt = sqlsrv_query($conn, $insertDosenQuery, array($userID, $nip, $nama, $jkdosen, $phoneDosen, $emailDosen));
 
         if ($insertDosenStmt === false) {
             throw new Exception("Gagal memasukkan data ke tabel Dosen: " . print_r(sqlsrv_errors(), true));
@@ -102,6 +105,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="form-group mb-3">
                                         <label for="Nama"><strong>Nama Dosen</strong></label>
                                         <input type="text" class="form-control" id="Nama" name="Nama" placeholder="Masukkan Nama Dosen..." required>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="JKDosen"><strong>Jenis Kelamin</strong></label>
+                                        <select class="form-control" id="JKDosen" name="JKDosen" required>
+                                            <option value="">-- Pilih Jenis Kelamin --</option>
+                                            <option value="Laki-laki">Laki-laki</option>
+                                            <option value="Perempuan">Perempuan</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="PhoneDosen"><strong>No. Telepon</strong></label>
+                                        <input type="text" class="form-control" id="PhoneDosen" name="PhoneDosen" placeholder="Masukkan No. Telepon..." required>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="EmailDosen"><strong>Email</strong></label>
+                                        <input type="email" class="form-control" id="EmailDosen" name="EmailDosen" placeholder="Masukkan Email..." required>
                                     </div>
 
                                     <div class="form-group mb-3">
