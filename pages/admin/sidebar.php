@@ -48,14 +48,6 @@
                 </ul>
             </li>
 
-            <!-- Laporan Menu -->
-            <li>
-                <a class="" href="laporan.php" aria-expanded="false">
-                    <i class="bi bi-file-earmark-bar-graph-fill"></i>
-                    <span class="nav-text">Laporan</span>
-                </a>
-            </li>
-
             <!-- Profile Menu -->
             <li>
                 <a class="" href="form_beritaAcara.php" aria-expanded="false">

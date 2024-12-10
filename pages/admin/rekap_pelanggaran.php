@@ -79,6 +79,17 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                     <li class="breadcrumb-item active"><a href="javascript:void(0)">Rekap Pelanggaran</a></li>
                 </ol>
             </div>
+            <!-- Tombol untuk Ekspor ke Excel -->
+            <div class="row mb-3">
+                <div class="col-md-12 text-end">
+                    <form action="export_excel.php" method="get" class="d-inline">
+                        <button type="submit" name="export_excel" class="btn btn-success">
+                            <i class="fa fa-download"></i> Ekspor ke Excel
+                        </button>
+                    </form>
+                </div>
+            </div>
+
 
             <!-- Rekap Pelanggaran Section -->
             <div class="row">
