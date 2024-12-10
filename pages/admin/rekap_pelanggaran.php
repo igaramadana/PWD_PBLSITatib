@@ -230,61 +230,108 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
 
     </html>
 
-    <!-- Add CSS for the status dropdown -->
     <style>
-        .status-diajukan {
-            border-radius: 1.5rem;
-            background-color: #ffc107;
-            /* Warna kuning untuk 'Diajukan' */
-            color: white;
-            text-align: center;
-            /* Center the text */
-            font-weight: bold;
-            /* Make text bold */
+        /* Gaya Umum untuk Tabel */
+        .table {
+            table-layout: auto;
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
         }
 
-        .status-diproses {
-            border-radius: 1.5rem;
-            background-color: #3498db;
-            /* Warna biru untuk 'Diproses' */
-            color: white;
-            text-align: center;
-            /* Center the text */
-            font-weight: bold;
-            /* Make text bold */
+        /* Wrapper tabel agar responsif */
+        .table-container {
+            overflow-x: auto;
         }
 
-        .status-selesai {
-            border-radius: 1.5rem;
-            background-color: #28a745;
-            /* Warna hijau untuk 'Selesai' */
-            color: white;
+        /* Gaya Header dan Isi Tabel */
+        .table th,
+        .table td {
+            padding: 10px;
             text-align: center;
-            /* Center the text */
-            font-weight: bold;
-            /* Make text bold */
+            vertical-align: middle;
+            word-wrap: break-word;
         }
 
+        /* Batas Minimum dan Maksimum Kolom */
+        .table th,
+        .table td {
+            min-width: 100px;
+            max-width: 250px;
+            white-space: normal;
+        }
 
-        /* CSS untuk mencegah kolom status terpotong */
-        .table td,
+        /* Warna Header */
         .table th {
-            white-space: nowrap;
-            /* Menghindari pembungkusan teks */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            /* Menambahkan elipsis jika teks panjang */
+            background-color: #886CC0;
+            color: white;
+            font-weight: bold;
         }
 
-        /* Lebar kolom status */
-        .table td:last-child,
-        .table th:last-child {
-            min-width: 50px;
-            /* Atur lebar minimal kolom status */
-            width: auto;
-            /* Biarkan lebar kolom status otomatis menyesuaikan */
+        /* Baris Bergantian */
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        /* Hover Effect untuk Baris */
+        .table tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Dropdown Status */
+        .table .status-dropdown {
+            border-radius: 4px;
+            padding: 6px;
+            text-align: center;
+            width: 100%;
+            max-width: 150px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Gaya Khusus untuk Status */
+        .table .status-diajukan {
+            background-color: #ffce34;
+            color: white;
+            border: none;
+            border-radius: 24px;
+        }
+
+        .table .status-diproses {
+            background-color: #03a9f4;
+            color: white;
+            border: none;
+            border-radius: 24px;
+        }
+
+        .table .status-selesai {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 24px;
+        }
+
+        /* Mengatur Gambar Profil dalam Tabel */
+        .table img {
+            object-fit: cover;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
+
+        /* Gaya untuk Tabel Responsif pada Layar Lebar Tanpa Media Query */
+        .table th,
+        .table td {
+            padding: calc(8px + 4 * (100vw / 1920));
         }
     </style>
+
 
     <!-- JavaScript to dynamically change the dropdown color -->
     <script>
