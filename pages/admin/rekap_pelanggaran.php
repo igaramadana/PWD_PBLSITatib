@@ -196,13 +196,14 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                                     <td class="text-center">
                                                         <form action="../../process/admin/update_status.php" method="post">
                                                             <input type="hidden" name="pelanggaran_id" value="<?php echo $pelanggaran['PelanggaranID']; ?>">
-                                                            <select name="status" class="form-control status-dropdown" onchange="updateStatusColor(this)">
+                                                            <select name="status" class="form-control status-dropdown" onchange="this.form.submit()">
                                                                 <option value="Diajukan" <?php echo ($pelanggaran['StatusPelanggaran'] == 'Diajukan') ? 'selected' : ''; ?> class="status-diajukan">Diajukan</option>
                                                                 <option value="Diproses" <?php echo ($pelanggaran['StatusPelanggaran'] == 'Diproses') ? 'selected' : ''; ?> class="status-diproses">Diproses</option>
                                                                 <option value="Selesai" <?php echo ($pelanggaran['StatusPelanggaran'] == 'Selesai') ? 'selected' : ''; ?> class="status-selesai">Selesai</option>
                                                             </select>
                                                         </form>
                                                     </td>
+
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php else : ?>
@@ -287,14 +288,15 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
 
     <!-- JavaScript to dynamically change the dropdown color -->
     <script>
+        // JavaScript untuk mengubah warna dropdown berdasarkan status yang dipilih
         function updateStatusColor(selectElement) {
             const selectedValue = selectElement.value;
             const classes = selectElement.classList;
 
-            // Reset any previous color classes
+            // Reset class sebelumnya
             classes.remove('status-diajukan', 'status-diproses', 'status-selesai');
 
-            // Add the class corresponding to the selected value
+            // Tambahkan class sesuai dengan nilai yang dipilih
             if (selectedValue === 'Diajukan') {
                 classes.add('status-diajukan');
             } else if (selectedValue === 'Diproses') {
@@ -303,6 +305,12 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                 classes.add('status-selesai');
             }
         }
+
+        // Inisialisasi dropdown saat halaman dimuat
+        document.querySelectorAll('.status-dropdown').forEach(function(selectElement) {
+            updateStatusColor(selectElement);
+        });
+
 
         // Initialize dropdown color based on the current selected status
         document.querySelectorAll('.status-dropdown').forEach(function(selectElement) {
