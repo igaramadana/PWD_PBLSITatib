@@ -6,6 +6,7 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $startFrom = ($page - 1) * $perPage;
 
 $countQuery = "SELECT COUNT(*) AS total FROM Pelanggaran WHERE Pelanggaran.NamaPelanggaran LIKE ?";
+$search = isset($_GET['search']) ? $_GET['search'] : '';  // Inisialisasi dengan nilai default
 $searchParam = "%" . $search . "%";
 $countParams = array($searchParam);
 $countResult = sqlsrv_query($conn, $countQuery, $countParams);
