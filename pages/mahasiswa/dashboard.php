@@ -117,10 +117,10 @@ Main wrapper start
                                     <!-- Content Pelanggaran Terkini -->
                                     <div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
                                         <div class="card border-0 shadow-sm rounded-4">
-                                            <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #6f42c1;">
+                                            <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #805CC8;">
                                                 <h4 class="card-title mb-0" style="color: white">Pelanggaran Terkini</h4>
                                                 <a href="riwayat.php" class="btn btn-sm" style="color: white; border: 1px solid white; background-color: transparent; transition: background-color 0.3s ease, color 0.3s ease;"
-                                                    onmouseover="this.style.backgroundColor='white'; this.style.color='#007bff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';">
+                                                    onmouseover="this.style.backgroundColor='white'; this.style.color='#805CC8';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';">
                                                     Selengkapnya
                                                 </a>
                                             </div>
