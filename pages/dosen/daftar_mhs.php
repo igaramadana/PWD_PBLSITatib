@@ -110,7 +110,7 @@ $totalPages = ceil($totalMahasiswa / $perPage);
                                     </div>
                                 </form>
                                 <div class="table-responsive">
-                                    <table class="table table-striped">
+                                    <table class="table table-bordered text-center">
                                         <thead class="bg-primary text-white">
                                             <tr>
                                                 <th class="text-center">No.</th>
