@@ -4,8 +4,8 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -491.4737,
-    "scrollLeft": -262.3658,
+    "scrollTop": -162.9195,
+    "scrollLeft": 0,
     "zoomLevel": 0.82,
     "show": 447,
     "database": 2,
@@ -130,7 +130,8 @@
           "7x-IkcmQhEia4f2sCYlQ-",
           "I-_i8I9nku66i3WhI-lOY",
           "6dTUYGY3QAyLyAUAFiFGP",
-          "fbz7Oj12pPzvvc68kM7Qs"
+          "fbz7Oj12pPzvvc68kM7Qs",
+          "qlXYeLM_IIc-NGSCTb-lT"
         ],
         "seqColumnIds": [
           "RkXze-_IvsIrXIXnRAMwZ",
@@ -142,7 +143,8 @@
           "7x-IkcmQhEia4f2sCYlQ-",
           "I-_i8I9nku66i3WhI-lOY",
           "6dTUYGY3QAyLyAUAFiFGP",
-          "fbz7Oj12pPzvvc68kM7Qs"
+          "fbz7Oj12pPzvvc68kM7Qs",
+          "qlXYeLM_IIc-NGSCTb-lT"
         ],
         "ui": {
           "x": 906.1277,
@@ -153,7 +155,7 @@
           "color": ""
         },
         "meta": {
-          "updateAt": 1733643980941,
+          "updateAt": 1733886934851,
           "createAt": 1733640359449
         }
       },
@@ -287,7 +289,8 @@
           "jBWTS1CX0I_XVLkd7b7R6",
           "vOk3rldgpKB6gahppwC-6",
           "dczoHz7vL8hwjNi7dwOKf",
-          "4WTDffSpxDRxSew_bBI_Y"
+          "4WTDffSpxDRxSew_bBI_Y",
+          "z8PEZke2hLfZlE9gs2XNF"
         ],
         "seqColumnIds": [
           "vU6LpTS0nIbQD10qxEm__",
@@ -298,7 +301,8 @@
           "jBWTS1CX0I_XVLkd7b7R6",
           "vOk3rldgpKB6gahppwC-6",
           "dczoHz7vL8hwjNi7dwOKf",
-          "4WTDffSpxDRxSew_bBI_Y"
+          "4WTDffSpxDRxSew_bBI_Y",
+          "z8PEZke2hLfZlE9gs2XNF"
         ],
         "ui": {
           "x": 535.4394,
@@ -309,7 +313,7 @@
           "color": ""
         },
         "meta": {
-          "updateAt": 1733643980941,
+          "updateAt": 1733886918139,
           "createAt": 1733641640748
         }
       }
@@ -1334,6 +1338,46 @@
           "updateAt": 1733641934096,
           "createAt": 1733641927586
         }
+      },
+      "z8PEZke2hLfZlE9gs2XNF": {
+        "id": "z8PEZke2hLfZlE9gs2XNF",
+        "tableId": "tCaTVTO8p51V0vFM7WzhY",
+        "name": "BuktiPelanggaran",
+        "comment": "",
+        "dataType": "varchar",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 97,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1733886925671,
+          "createAt": 1733886918138
+        }
+      },
+      "qlXYeLM_IIc-NGSCTb-lT": {
+        "id": "qlXYeLM_IIc-NGSCTb-lT",
+        "tableId": "5pIT_Xr9lCiHBny6arfJw",
+        "name": "EmailMhs",
+        "comment": "",
+        "dataType": "varchar",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1733886942690,
+          "createAt": 1733886934851
+        }
       }
     },
     "relationshipEntities": {
@@ -1553,7 +1597,7 @@
             "fbz7Oj12pPzvvc68kM7Qs"
           ],
           "x": 1295.1277,
-          "y": 1209.5125,
+          "y": 1221.5125,
           "direction": 2
         },
         "meta": {
@@ -1637,7 +1681,7 @@
             "PzXtWz73-1oeCYEEint5g"
           ],
           "x": 1116.4394,
-          "y": 788.9373,
+          "y": 800.9373,
           "direction": 2
         },
         "meta": {
@@ -1693,7 +1737,7 @@
             "dczoHz7vL8hwjNi7dwOKf"
           ],
           "x": 825.9394,
-          "y": 900.9373,
+          "y": 924.9373,
           "direction": 8
         },
         "meta": {
@@ -2410,6 +2454,24 @@
       {
         "name": 1733641929779,
         "dataType": 1733641934095
+      }
+    ],
+    "z8PEZke2hLfZlE9gs2XNF": [
+      "tableColumnEntities",
+      1733886918134,
+      -1,
+      {
+        "name": 1733886923443,
+        "dataType": 1733886925670
+      }
+    ],
+    "qlXYeLM_IIc-NGSCTb-lT": [
+      "tableColumnEntities",
+      1733886934849,
+      -1,
+      {
+        "name": 1733886940512,
+        "dataType": 1733886942689
       }
     ]
   }
