@@ -54,7 +54,7 @@ Main wrapper start
                                 <h4 class="card-title">Input Pelanggaran Mahasiswa</h4>
                             </div>
                             <div class="card-body">
-                                <form action="../../process/fungsi/simpan_pelanggaran.php" method="post" enctype="multipart/form-data">
+                                <form action="../../process/dosen/simpan_pelanggaran.php" method="post" enctype="multipart/form-data">
 
                                     <div class="mb-3">
                                         <label for="nim" class="form-label">NIM</label>

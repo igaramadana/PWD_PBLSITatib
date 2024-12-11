@@ -9,25 +9,42 @@ if (!isset($_SESSION['MhsID'])) {
 
 $UserID = $_SESSION['MhsID'];
 
-// Filter dan query untuk mengambil pelanggaran terbaru
-$query = "SELECT TOP 5 p.PelanggaranID, m.NIM, m.Nama, pp.Catatan, pp.StatusPelanggaran,
+// Jumlah data per halaman
+$perPage = 10;
+
+// Mengambil nomor halaman dari URL, jika tidak ada maka default ke halaman 1
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Menghitung posisi awal (offset) untuk query
+$startFrom = ($page - 1) * $perPage;
+
+// Mengambil parameter pencarian dan status filter dari URL
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$statusFilter = isset($_GET['status']) ? $_GET['status'] : '';
+
+// Query untuk mengambil pelanggaran terbaru dengan pagination
+$query = "SELECT p.PelanggaranID, m.NIM, m.Nama, pp.Catatan, pp.StatusPelanggaran,
           p.NamaPelanggaran, pp.TanggalPengaduan, p.TingkatID, pp.BuktiPelanggaran
           FROM PengaduanPelanggaran pp
           JOIN Mahasiswa m ON pp.MhsID = m.MhsId
           JOIN Pelanggaran p ON pp.PelanggaranID = p.PelanggaranID
           WHERE pp.MhsID = ?";  // Filter berdasarkan MhsID yang login
 
+// Jika ada parameter pencarian, tambahkan kondisi pencarian
 if (!empty($search)) {
     $query .= " AND (m.NIM LIKE ? OR m.Nama LIKE ?)";
 }
 
+// Jika ada status filter, tambahkan kondisi untuk status
 if (!empty($statusFilter)) {
     $query .= " AND pp.StatusPelanggaran = ?";
 }
 
-$query .= " ORDER BY pp.TanggalPengaduan DESC";  // Urutkan berdasarkan tanggal pelanggaran terbaru
+// Menambahkan limit dan offset untuk pagination
+$query .= " ORDER BY pp.TanggalPengaduan DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
-$params = [$UserID];  // Menambahkan MhsID dari session untuk filter
+// Menyusun parameter query
+$params = [$UserID];
 if (!empty($search)) {
     $params[] = "%$search%";  // Pencarian berdasarkan NIM atau Nama
     $params[] = "%$search%";  // Pencarian berdasarkan Nama
@@ -35,6 +52,8 @@ if (!empty($search)) {
 if (!empty($statusFilter)) {
     $params[] = $statusFilter;  // Filter status pelanggaran
 }
+$params[] = $startFrom; // OFFSET
+$params[] = $perPage;   // FETCH NEXT
 
 // Eksekusi query
 $stmt = sqlsrv_query($conn, $query, $params);
@@ -51,6 +70,28 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
 }
 
 sqlsrv_free_stmt($stmt);
+
+// Query untuk menghitung total data pelanggaran
+$totalQuery = "SELECT COUNT(*) AS total
+               FROM PengaduanPelanggaran pp
+               JOIN Mahasiswa m ON pp.MhsID = m.MhsId
+               WHERE pp.MhsID = ?";  // Filter berdasarkan MhsID yang login
+
+if (!empty($search)) {
+    $totalQuery .= " AND (m.NIM LIKE ? OR m.Nama LIKE ?)";
+}
+
+if (!empty($statusFilter)) {
+    $totalQuery .= " AND pp.StatusPelanggaran = ?";
+}
+
+$totalStmt = sqlsrv_query($conn, $totalQuery, [$UserID, "%$search%", "%$search%", $statusFilter]);
+
+$totalRow = sqlsrv_fetch_array($totalStmt, SQLSRV_FETCH_ASSOC);
+$totalPelanggaran = $totalRow['total'];
+
+$totalPages = ceil($totalPelanggaran / $perPage);
+sqlsrv_free_stmt($totalStmt);
 ?>
 
 <!-- Preloader -->
@@ -91,15 +132,12 @@ sqlsrv_free_stmt($stmt);
 
                             <!-- Search and Sort Buttons -->
                             <div class="row mb-3">
-                                <!-- Search Form -->
                                 <div class="col-md-6">
                                     <form action="riwayat_pelanggaran.php" method="get" class="d-flex">
                                         <div class="input-group">
-                                            <!-- Input pencarian berdasarkan keyword -->
                                             <input type="text" class="form-control" name="search"
                                                 value="<?php echo htmlspecialchars($search ?? ''); ?>"
                                                 placeholder="Cari disini...">
-                                            <!-- Tombol submit pencarian -->
                                             <button type="submit" class="btn btn-primary">
                                                 <i class="fa fa-search"></i>
                                             </button>
@@ -107,12 +145,10 @@ sqlsrv_free_stmt($stmt);
                                     </form>
                                 </div>
 
-                                <!-- Sort by Status -->
                                 <div class="col-md-6 text-end">
                                     <form action="riwayat_pelanggaran.php" method="get">
                                         <div class="d-flex justify-content-end">
                                             <div class="input-group w-50">
-                                                <!-- Dropdown untuk sort -->
                                                 <select name="status" class="form-control" onchange="this.form.submit()">
                                                     <option value="">Sort by</option>
                                                     <option value="Diajukan" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Diajukan') ? 'selected' : ''; ?>>Diajukan</option>
@@ -169,6 +205,24 @@ sqlsrv_free_stmt($stmt);
                                     </tbody>
                                 </table>
                             </div>
+
+                            <!-- Pagination -->
+                            <div class="pagination">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo ($page - 1); ?>">Previous</a>
+                                    </li>
+                                    <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                                        <li class="page-item <?php echo ($page == $i) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    <li class="page-item <?php echo ($page >= $totalPages) ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo ($page + 1); ?>">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+
                         </div>
                     </div>
                 </div>

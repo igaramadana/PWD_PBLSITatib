@@ -14,7 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 // Ambil UserID dari sesi
 $UserID = $_SESSION['user_id'];
 
-// Query untuk mengambil data mahasiswa
+// Query untuk mengambil data dosen
 $sql = "SELECT DosenID, NIP, Nama, JKDosen, PhoneDosen, EmailDosen, ProfilDosen FROM Dosen WHERE UserID = ?";
 $params = array($UserID);
 

@@ -1,10 +1,14 @@
 <?php
 include('../../config/database.php');  // Pastikan koneksi DB sudah benar
 
-
 // Variabel untuk pencarian dan status
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $statusFilter = isset($_GET['status']) ? $_GET['status'] : '';
+
+// Pagination settings
+$perPage = 10;  // Jumlah data per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;  // Halaman saat ini
+$startFrom = ($page - 1) * $perPage;  // Posisi mulai data pada halaman
 
 // Query dasar
 $query = "SELECT p.PelanggaranID, m.NIM, m.Nama, pp.Catatan, pp.StatusPelanggaran, m.FotoProfil,
@@ -26,6 +30,9 @@ if (!empty($statusFilter)) {
 
 $query .= " ORDER BY pp.TanggalPengaduan DESC";  // Sorting berdasarkan tanggal pengaduan
 
+// Menambahkan pagination ke query
+$query .= " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";  // Menggunakan OFFSET dan FETCH untuk pagination
+
 // Persiapkan parameter
 $params = [];
 if (!empty($search)) {
@@ -35,6 +42,8 @@ if (!empty($search)) {
 if (!empty($statusFilter)) {
     $params[] = $statusFilter;  // Filter status pelanggaran
 }
+$params[] = $startFrom;  // OFFSET untuk pagination
+$params[] = $perPage;    // FETCH NEXT untuk pagination
 
 // Eksekusi query
 $stmt = sqlsrv_query($conn, $query, $params);
@@ -50,6 +59,37 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
 }
 
 sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
+
+// Menghitung jumlah total data
+$totalQuery = "SELECT COUNT(*) AS total
+               FROM PengaduanPelanggaran pp
+               JOIN Mahasiswa m ON pp.MhsID = m.MhsID
+               JOIN Pelanggaran p ON pp.PelanggaranID = p.PelanggaranID
+               WHERE 1=1";
+
+if (!empty($search)) {
+    $totalQuery .= " AND (m.NIM LIKE ? OR m.Nama LIKE ?)";
+}
+
+if (!empty($statusFilter)) {
+    $totalQuery .= " AND pp.StatusPelanggaran = ?";
+}
+
+$totalParams = [];
+if (!empty($search)) {
+    $totalParams[] = "%$search%";  // Pencarian berdasarkan NIM atau Nama
+    $totalParams[] = "%$search%";  // Pencarian berdasarkan Nama
+}
+if (!empty($statusFilter)) {
+    $totalParams[] = $statusFilter;  // Filter status pelanggaran
+}
+
+$totalStmt = sqlsrv_query($conn, $totalQuery, $totalParams);
+$totalRow = sqlsrv_fetch_array($totalStmt, SQLSRV_FETCH_ASSOC);
+$totalPelanggaran = $totalRow['total'];
+
+$totalPages = ceil($totalPelanggaran / $perPage);  // Menghitung jumlah halaman
+sqlsrv_free_stmt($totalStmt);
 ?>
 
 <!-- Preloader -->
@@ -218,6 +258,31 @@ sqlsrv_free_stmt($stmt);  // Membersihkan statement setelah digunakan
                                         </tbody>
                                     </table>
                                 </div>
+                                <!-- Pagination Section -->
+                                <nav class="pb-2 mt-4">
+                                    <ul class="pagination pagination-gutter justify-content-center">
+                                        <!-- Tombol Prev -->
+                                        <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($statusFilter); ?>">
+                                                <i class="la la-angle-left"></i>
+                                            </a>
+                                        </li>
+
+                                        <!-- Menampilkan nomor halaman -->
+                                        <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                                            <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($statusFilter); ?>"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+
+                                        <!-- Tombol Next -->
+                                        <li class="page-item <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($statusFilter); ?>">
+                                                <i class="la la-angle-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
 
                             </div>
                         </div>
