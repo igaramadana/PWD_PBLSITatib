@@ -136,7 +136,7 @@ $totalPages = ceil($totalDosen / $perPage);
 
                                 <!-- Table -->
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-responsive-md">
+                                    <table class="table table-bordered table-responsive-md">
                                         <thead class="bg-primary text-white">
                                             <tr>
                                                 <th class="text-center">No.</th>
